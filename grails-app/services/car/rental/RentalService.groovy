@@ -233,4 +233,21 @@ class RentalService {
 
         rental
     }
+    Rental save(Rental rental) {
+    rental.save(
+            flush: true,
+            failOnError: true
+    )
+}
+
+void delete(Long id) {
+
+    Rental rental = Rental.get(id)
+
+    if (!rental) {
+        return
+    }
+
+    rental.delete(flush: true)
+}
 }

@@ -23,6 +23,30 @@ class UrlMappings {
             DELETE: 'delete'
     ]
 }
+get "/api/rentals"(
+        controller: "rentalApi",
+        action: "index"
+)
+
+post "/api/rentals"(
+        controller: "rentalApi",
+        action: "save"
+)
+
+get "/api/rentals/$id"(
+        controller: "rentalApi",
+        action: "show"
+)
+
+put "/api/rentals/$id"(
+        controller: "rentalApi",
+        action: "update"
+)
+
+delete "/api/rentals/$id"(
+        controller: "rentalApi",
+        action: "delete"
+)
 
         "/"(view:"/index")
         "500"(view:'/error')
