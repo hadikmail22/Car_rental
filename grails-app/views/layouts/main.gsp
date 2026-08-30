@@ -2,375 +2,2050 @@
 <html lang="en" class="no-js">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+    <meta charset="UTF-8"/>
+
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"/>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"/>
 
     <title>
         <g:layoutTitle default="Car Rental"/>
     </title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
+    <!-- Favicon -->
     <asset:link
         rel="icon"
         href="favicon.ico"
         type="image/x-ico"/>
 
+
+    <!-- Fonts -->
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"/>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin/>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet"/>
+
+
+    <!-- Application CSS -->
     <asset:stylesheet src="application.css"/>
 
+
+    <style>
+
+        /* =========================================================
+           PREMIUM APPLICATION SHELL
+           ========================================================= */
+
+        :root {
+
+            --shell-black: #0b0c0f;
+            --shell-black-soft: #111318;
+            --shell-black-light: #191b20;
+
+            --shell-gold: #f5a623;
+            --shell-gold-light: #ffc861;
+            --shell-gold-dark: #c9860f;
+
+            --shell-white: #f8f8f6;
+
+            --shell-muted: #96989f;
+
+            --shell-border:
+                rgba(255,255,255,0.08);
+        }
+
+
+        html {
+            min-height: 100%;
+            scrollbar-gutter: stable;
+        }
+
+
+        body.application-shell {
+
+            min-height: 100vh;
+
+            display: flex;
+            flex-direction: column;
+
+            margin: 0;
+
+            font-family:
+                'Inter',
+                sans-serif;
+        }
+
+
+
+        /* =========================================================
+           TOP SHELL
+           ========================================================= */
+
+        .top-shell {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1040;
+
+            padding:
+                14px 18px 0;
+
+            pointer-events: none;
+        }
+
+
+
+        /* =========================================================
+           NAVBAR
+           ========================================================= */
+
+        .premium-navbar {
+
+            position: relative;
+
+            pointer-events: auto;
+
+            padding:
+                0 !important;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0a0b0e 0%,
+                    #111318 55%,
+                    #17191e 100%
+                ) !important;
+
+            border:
+                1px solid
+                rgba(245,166,35,.14) !important;
+
+            border-radius:
+                21px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(0,0,0,.25),
+                inset 0 1px 0
+                rgba(255,255,255,.025);
+
+            backdrop-filter:
+                blur(20px);
+
+            -webkit-backdrop-filter:
+                blur(20px);
+        }
+
+
+        /* subtle gold glow */
+
+        .premium-navbar::before {
+
+            content: "";
+
+            position: absolute;
+
+            width: 430px;
+            height: 230px;
+
+            top: -150px;
+            left: -80px;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(245,166,35,.16),
+                    transparent 68%
+                );
+        }
+
+
+        /* bottom gold line */
+
+        .premium-navbar::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 28px;
+            right: 28px;
+            bottom: 0;
+
+            height: 2px;
+
+            border-radius:
+                999px;
+
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--shell-gold) 12%,
+                    var(--shell-gold-light) 50%,
+                    var(--shell-gold) 88%,
+                    transparent
+                );
+
+            opacity: .9;
+        }
+
+
+        .premium-navbar-inner {
+
+            position: relative;
+
+            z-index: 2;
+
+            min-height: 88px;
+
+            display: flex;
+
+            align-items: center;
+
+            width: 100%;
+        }
+
+
+
+        /* =========================================================
+           BRAND
+           ========================================================= */
+
+        .premium-brand {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            flex-shrink: 0;
+
+            margin-right: 30px;
+
+            color:
+                #ffffff !important;
+
+            text-decoration:
+                none !important;
+        }
+
+
+        .premium-brand-mark {
+
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex: 0 0 auto;
+
+            color:
+                var(--shell-gold);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(245,166,35,.17),
+                    rgba(245,166,35,.045)
+                );
+
+            border:
+                1px solid
+                rgba(245,166,35,.32);
+
+            border-radius:
+                17px;
+
+            font-size:
+                1.35rem;
+
+            box-shadow:
+                0 10px 28px
+                rgba(0,0,0,.26),
+                inset 0 1px 0
+                rgba(255,255,255,.04);
+
+            transition:
+                transform .18s ease,
+                border-color .18s ease;
+        }
+
+
+        .premium-brand:hover
+        .premium-brand-mark {
+
+            transform:
+                translateY(-2px);
+
+            border-color:
+                rgba(245,166,35,.65);
+        }
+
+
+        .premium-brand-copy {
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        .premium-brand-title {
+
+            color:
+                #f8f8f6;
+
+            font-family:
+                'Space Grotesk',
+                sans-serif;
+
+            font-size:
+                1.24rem;
+
+            font-weight:
+                700;
+
+            line-height:
+                1;
+
+            letter-spacing:
+                -.03em;
+        }
+
+
+        .premium-brand-subtitle {
+
+            margin-top:
+                7px;
+
+            color:
+                var(--shell-gold);
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size:
+                .58rem;
+
+            font-weight:
+                600;
+
+            letter-spacing:
+                .19em;
+
+            text-transform:
+                uppercase;
+        }
+
+
+
+        /* =========================================================
+           NAVIGATION
+           ========================================================= */
+
+        .premium-nav-list {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+        }
+
+
+        .premium-navbar .premium-nav-link {
+
+            position: relative;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding:
+                11px 15px !important;
+
+            color:
+                #a7a9b0 !important;
+
+            border:
+                1px solid transparent;
+
+            border-radius:
+                11px;
+
+            font-size:
+                .91rem;
+
+            font-weight:
+                600;
+
+            text-decoration:
+                none;
+
+            transition:
+                color .17s ease,
+                background .17s ease,
+                border-color .17s ease;
+        }
+
+
+        .premium-nav-link i {
+
+            color:
+                #767981;
+
+            font-size:
+                .98rem;
+
+            transition:
+                color .17s ease;
+        }
+
+
+        .premium-navbar
+        .premium-nav-link:hover {
+
+            color:
+                #ffffff !important;
+
+            background:
+                rgba(255,255,255,.045);
+
+            border-color:
+                rgba(255,255,255,.04);
+        }
+
+
+        .premium-nav-link:hover i {
+
+            color:
+                var(--shell-gold);
+        }
+
+
+
+        /* =========================================================
+           ACTIVE NAVIGATION
+           ========================================================= */
+
+        .premium-navbar
+        .premium-nav-link.active {
+
+            color:
+                #ffffff !important;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(245,166,35,.14),
+                    rgba(245,166,35,.055)
+                );
+
+            border-color:
+                rgba(245,166,35,.20);
+
+            box-shadow:
+                inset 0 1px 0
+                rgba(255,255,255,.025);
+        }
+
+
+        .premium-nav-link.active i {
+
+            color:
+                var(--shell-gold);
+        }
+
+
+        .premium-nav-link.active::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 16px;
+            right: 16px;
+            bottom: 4px;
+
+            height: 2px;
+
+            border-radius:
+                999px;
+
+            background:
+                var(--shell-gold);
+
+            box-shadow:
+                0 0 10px
+                rgba(245,166,35,.45);
+        }
+
+
+
+        /* =========================================================
+           USER AREA
+           ========================================================= */
+
+        .premium-user-area {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding-left:
+                19px;
+
+            margin-left:
+                18px;
+
+            border-left:
+                1px solid
+                rgba(255,255,255,.09);
+        }
+
+
+        .premium-user-card {
+
+            min-width:
+                225px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                8px 12px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.07);
+
+            border-radius:
+                14px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.045),
+                    rgba(255,255,255,.018)
+                );
+        }
+
+
+        .premium-user-avatar {
+
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex: 0 0 auto;
+
+            color:
+                var(--shell-gold);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(245,166,35,.16),
+                    rgba(245,166,35,.07)
+                );
+
+            border:
+                1px solid
+                rgba(245,166,35,.26);
+
+            border-radius:
+                50%;
+
+            font-size:
+                1.05rem;
+        }
+
+
+        .premium-user-meta {
+
+            min-width: 0;
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+
+        .premium-user-name {
+
+            max-width:
+                165px;
+
+            overflow:
+                hidden;
+
+            color:
+                #f1f1ef;
+
+            font-size:
+                .83rem;
+
+            font-weight:
+                650;
+
+            white-space:
+                nowrap;
+
+            text-overflow:
+                ellipsis;
+        }
+
+
+
+        /* =========================================================
+           ROLE BADGES
+           ========================================================= */
+
+        .premium-role {
+
+            width:
+                fit-content;
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap: 5px;
+
+            margin-top:
+                5px;
+
+            padding:
+                3px 8px;
+
+            border-radius:
+                999px;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size:
+                .54rem;
+
+            font-weight:
+                600;
+
+            letter-spacing:
+                .08em;
+
+            text-transform:
+                uppercase;
+        }
+
+
+        .premium-role.admin {
+
+            color:
+                var(--shell-gold);
+
+            background:
+                rgba(245,166,35,.10);
+        }
+
+
+        .premium-role.customer {
+
+            color:
+                #65d797;
+
+            background:
+                rgba(31,138,82,.13);
+        }
+
+
+        .premium-role::before {
+
+            content: "";
+
+            width: 5px;
+            height: 5px;
+
+            border-radius:
+                50%;
+
+            background:
+                currentColor;
+
+            box-shadow:
+                0 0 6px
+                currentColor;
+        }
+
+
+
+        /* =========================================================
+           LOGOUT
+           ========================================================= */
+
+        .premium-logout {
+
+            min-height:
+                44px;
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap: 7px;
+
+            padding:
+                0 14px;
+
+            color:
+                #ef7074;
+
+            background:
+                rgba(229,72,77,.035);
+
+            border:
+                1px solid
+                rgba(229,72,77,.28);
+
+            border-radius:
+                10px;
+
+            font-size:
+                .76rem;
+
+            font-weight:
+                650;
+
+            cursor:
+                pointer;
+
+            transition:
+                all .17s ease;
+        }
+
+
+        .premium-logout:hover {
+
+            color:
+                #ffffff;
+
+            background:
+                #b9362b;
+
+            border-color:
+                #b9362b;
+
+            box-shadow:
+                0 9px 22px
+                rgba(185,54,43,.18);
+        }
+
+
+
+        /* =========================================================
+           SIGN IN
+           ========================================================= */
+
+        .premium-signin {
+
+            min-height:
+                43px;
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap: 7px;
+
+            padding:
+                0 17px;
+
+            color:
+                var(--shell-gold);
+
+            background:
+                rgba(245,166,35,.04);
+
+            border:
+                1px solid
+                rgba(245,166,35,.36);
+
+            border-radius:
+                10px;
+
+            font-size:
+                .8rem;
+
+            font-weight:
+                650;
+
+            text-decoration:
+                none;
+
+            transition:
+                all .17s ease;
+        }
+
+
+        .premium-signin:hover {
+
+            color:
+                #151009;
+
+            background:
+                var(--shell-gold);
+
+            border-color:
+                var(--shell-gold);
+        }
+
+
+
+        /* =========================================================
+           MOBILE TOGGLER
+           ========================================================= */
+
+        .premium-toggler {
+
+            padding:
+                8px 10px !important;
+
+            background:
+                rgba(255,255,255,.035) !important;
+
+            border:
+                1px solid
+                rgba(255,255,255,.13) !important;
+
+            border-radius:
+                11px !important;
+
+            box-shadow:
+                none !important;
+        }
+
+
+        .premium-toggler
+        .navbar-toggler-icon {
+
+            width:
+                1.25em;
+
+            height:
+                1.25em;
+
+            filter:
+                invert(1);
+        }
+
+
+
+        /* =========================================================
+           PAGE CONTENT
+           ========================================================= */
+
+        .application-content {
+
+            flex:
+                1 0 auto;
+
+            width:
+                100%;
+
+            min-height:
+                calc(100vh - 290px);
+
+            padding-top:
+                8px;
+
+            padding-bottom:
+                55px;
+        }
+
+
+
+        /* =========================================================
+           FOOTER
+           ========================================================= */
+
+        .premium-footer {
+
+            position:
+                relative;
+
+            flex-shrink:
+                0;
+
+            overflow:
+                hidden;
+
+            margin:
+                20px 18px 18px;
+
+            color:
+                #888b92;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0c0d10,
+                    #14161a
+                );
+
+            border:
+                1px solid
+                rgba(245,166,35,.10);
+
+            border-radius:
+                20px;
+
+            box-shadow:
+                0 18px 45px
+                rgba(0,0,0,.13);
+        }
+
+
+        .premium-footer::before {
+
+            content: "";
+
+            position:
+                absolute;
+
+            width:
+                350px;
+
+            height:
+                250px;
+
+            right:
+                -100px;
+
+            bottom:
+                -170px;
+
+            border-radius:
+                50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(245,166,35,.10),
+                    transparent 68%
+                );
+        }
+
+
+        .premium-footer::after {
+
+            content: "";
+
+            position:
+                absolute;
+
+            top:
+                0;
+
+            left:
+                28px;
+
+            right:
+                28px;
+
+            height:
+                2px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--shell-gold),
+                    var(--shell-gold-light),
+                    var(--shell-gold),
+                    transparent
+                );
+        }
+
+
+        .premium-footer-content {
+
+            position:
+                relative;
+
+            z-index:
+                2;
+
+            padding:
+                30px 0 20px;
+        }
+
+
+
+        /* =========================================================
+           FOOTER TOP
+           ========================================================= */
+
+        .premium-footer-top {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                30px;
+        }
+
+
+        .premium-footer-brand {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                12px;
+        }
+
+
+        .premium-footer-logo {
+
+            width:
+                43px;
+
+            height:
+                43px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            color:
+                var(--shell-gold);
+
+            background:
+                rgba(245,166,35,.055);
+
+            border:
+                1px solid
+                rgba(245,166,35,.27);
+
+            border-radius:
+                12px;
+        }
+
+
+        .premium-footer-name {
+
+            color:
+                #efefed;
+
+            font-family:
+                'Space Grotesk',
+                sans-serif;
+
+            font-size:
+                .95rem;
+
+            font-weight:
+                700;
+        }
+
+
+        .premium-footer-caption {
+
+            margin-top:
+                3px;
+
+            color:
+                #6d7077;
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size:
+                .56rem;
+
+            letter-spacing:
+                .1em;
+
+            text-transform:
+                uppercase;
+        }
+
+
+
+        /* =========================================================
+           FOOTER LINKS
+           ========================================================= */
+
+        .premium-footer-links {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                5px;
+
+            flex-wrap:
+                wrap;
+        }
+
+
+        .premium-footer-links a {
+
+            padding:
+                7px 10px;
+
+            color:
+                #8e9198;
+
+            border-radius:
+                7px;
+
+            font-size:
+                .76rem;
+
+            font-weight:
+                500;
+
+            text-decoration:
+                none;
+
+            transition:
+                color .15s ease,
+                background .15s ease;
+        }
+
+
+        .premium-footer-links a:hover {
+
+            color:
+                var(--shell-gold);
+
+            background:
+                rgba(245,166,35,.055);
+        }
+
+
+
+        /* =========================================================
+           FOOTER BOTTOM
+           ========================================================= */
+
+        .premium-footer-divider {
+
+            height:
+                1px;
+
+            margin:
+                24px 0 16px;
+
+            background:
+                rgba(255,255,255,.055);
+        }
+
+
+        .premium-footer-bottom {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            color:
+                #60636a;
+
+            font-size:
+                .68rem;
+        }
+
+
+        .system-online {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+        }
+
+
+        .online-dot {
+
+            width:
+                6px;
+
+            height:
+                6px;
+
+            border-radius:
+                50%;
+
+            background:
+                #32b66f;
+
+            box-shadow:
+                0 0 8px
+                rgba(50,182,111,.8);
+        }
+
+
+
+        /* =========================================================
+           LOADING SPINNER
+           ========================================================= */
+
+        #spinner {
+
+            position:
+                fixed;
+
+            right:
+                25px;
+
+            bottom:
+                25px;
+
+            z-index:
+                1090;
+
+            width:
+                45px;
+
+            height:
+                45px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            color:
+                var(--shell-gold);
+
+            background:
+                #111318;
+
+            border:
+                1px solid
+                rgba(245,166,35,.25);
+
+            border-radius:
+                12px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(0,0,0,.23);
+        }
+
+
+
+        /* =========================================================
+           TABLET
+           ========================================================= */
+
+        @media (max-width: 1199px) {
+
+            .premium-user-card {
+
+                min-width:
+                    auto;
+            }
+
+
+            .premium-user-name {
+
+                max-width:
+                    115px;
+            }
+
+
+            .premium-nav-link {
+
+                padding:
+                    10px 11px !important;
+            }
+        }
+
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 991.98px) {
+
+            .top-shell {
+
+                padding:
+                    10px 10px 0;
+            }
+
+
+            .premium-navbar {
+
+                border-radius:
+                    17px;
+            }
+
+
+            .premium-navbar-inner {
+
+                min-height:
+                    72px;
+            }
+
+
+            .premium-brand-mark {
+
+                width:
+                    49px;
+
+                height:
+                    49px;
+
+                border-radius:
+                    14px;
+            }
+
+
+            .premium-brand-title {
+
+                font-size:
+                    1.08rem;
+            }
+
+
+            .premium-navbar-collapse {
+
+                margin:
+                    10px 0 14px;
+
+                padding:
+                    14px;
+
+                background:
+                    rgba(255,255,255,.025);
+
+                border:
+                    1px solid
+                    rgba(255,255,255,.055);
+
+                border-radius:
+                    13px;
+            }
+
+
+            .premium-nav-list {
+
+                display:
+                    block;
+
+                width:
+                    100%;
+
+                margin-bottom:
+                    14px;
+            }
+
+
+            .premium-nav-list
+            .nav-item {
+
+                width:
+                    100%;
+            }
+
+
+            .premium-nav-link {
+
+                width:
+                    100%;
+
+                margin-bottom:
+                    3px;
+            }
+
+
+            .premium-user-area {
+
+                width:
+                    100%;
+
+                display:
+                    grid;
+
+                grid-template-columns:
+                    1fr auto;
+
+                padding:
+                    14px 0 0;
+
+                margin:
+                    8px 0 0;
+
+                border-top:
+                    1px solid
+                    rgba(255,255,255,.07);
+
+                border-left:
+                    0;
+            }
+
+
+            .premium-user-card {
+
+                width:
+                    100%;
+            }
+        }
+
+
+
+        /* =========================================================
+           SMALL MOBILE
+           ========================================================= */
+
+        @media (max-width: 576px) {
+
+            .premium-brand-subtitle {
+
+                display:
+                    none;
+            }
+
+
+            .premium-user-area {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .premium-logout {
+
+                width:
+                    100%;
+            }
+
+
+            .premium-footer {
+
+                margin:
+                    12px;
+            }
+
+
+            .premium-footer-top,
+            .premium-footer-bottom {
+
+                flex-direction:
+                    column;
+
+                text-align:
+                    center;
+            }
+
+
+            .premium-footer-brand,
+            .premium-footer-links {
+
+                justify-content:
+                    center;
+            }
+        }
+
+    </style>
+
+
     <g:layoutHead/>
+
 </head>
 
-<body>
+
+<body class="application-shell">
 
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
 
-    <div class="container-fluid">
+<!-- =========================================================
+     PREMIUM NAVBAR
+     ========================================================= -->
 
-        <!-- Logo / Home -->
-        <g:link
-            controller="car"
-            action="index"
-            class="navbar-brand d-flex align-items-center">
+<header class="top-shell">
 
-            <asset:image
-                src="grails.svg"
-                alt="Car Rental"
-                width="45"/>
+    <nav
+        class="navbar navbar-expand-lg premium-navbar"
+        data-bs-theme="dark">
 
-            <span class="ms-2 fw-bold">
-                Car Rental
-            </span>
+        <div class="container">
 
-        </g:link>
+            <div class="premium-navbar-inner">
 
 
-        <!-- Mobile Button -->
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarContent"
-            aria-controls="navbarContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
+                <!-- ============================
+                     BRAND
+                     ============================ -->
 
-            <span class="navbar-toggler-icon"></span>
+                <a
+                    href="${createLink(uri: '/')}"
+                    class="premium-brand">
 
-        </button>
+                    <span class="premium-brand-mark">
 
+                        <i class="bi bi-car-front-fill"></i>
 
-        <!-- Navbar Content -->
-        <div
-            class="collapse navbar-collapse"
-            id="navbarContent">
+                    </span>
 
 
-            <!-- Left Side -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <span class="premium-brand-copy">
+
+                        <span class="premium-brand-title">
+                            Car Rental
+                        </span>
+
+                        <span class="premium-brand-subtitle">
+                            Premium Mobility
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <!-- ============================
+                     MOBILE BUTTON
+                     ============================ -->
+
+                <button
+                    class="navbar-toggler premium-toggler ms-auto"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#premiumNavbar"
+                    aria-controls="premiumNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+
+                    <span class="navbar-toggler-icon"></span>
+
+                </button>
+
+
+
+                <!-- ============================
+                     NAVBAR CONTENT
+                     ============================ -->
+
+                <div
+                    class="collapse navbar-collapse premium-navbar-collapse"
+                    id="premiumNavbar">
+
+
+                    <!-- ========================
+                         LEFT / CENTER MENU
+                         ======================== -->
+
+                    <ul class="navbar-nav me-auto premium-nav-list">
+
+                        <sec:ifLoggedIn>
+
+
+
+                            <!-- =================
+                                 ADMIN
+                                 ================= -->
+
+                            <sec:ifAnyGranted roles="ROLE_ADMIN">
+
+
+                                <!-- Dashboard -->
+                                <li class="nav-item">
+
+                                    <g:link
+                                        controller="dashboard"
+                                        action="index"
+                                        class="nav-link premium-nav-link ${controllerName == 'dashboard' ? 'active' : ''}">
+
+                                        <i class="bi bi-grid"></i>
+
+                                        <span>
+                                            Dashboard
+                                        </span>
+
+                                    </g:link>
+
+                                </li>
+
+
+
+                                <!-- Cars -->
+                                <li class="nav-item">
+
+                                    <g:link
+                                        controller="car"
+                                        action="index"
+                                        class="nav-link premium-nav-link ${controllerName == 'car' ? 'active' : ''}">
+
+                                        <i class="bi bi-car-front"></i>
+
+                                        <span>
+                                            Fleet
+                                        </span>
+
+                                    </g:link>
+
+                                </li>
+
+
+
+                                <!-- Rentals -->
+                                <li class="nav-item">
+
+                                    <g:link
+                                        controller="rental"
+                                        action="index"
+                                        class="nav-link premium-nav-link ${controllerName == 'rental' ? 'active' : ''}">
+
+                                        <i class="bi bi-calendar-check"></i>
+
+                                        <span>
+                                            Rentals
+                                        </span>
+
+                                    </g:link>
+
+                                </li>
+
+
+                            </sec:ifAnyGranted>
+
+
+
+                            <!-- =================
+                                 CUSTOMER
+                                 ================= -->
+
+                            <sec:ifAnyGranted roles="ROLE_CUSTOMER">
+
+
+                                <!-- Browse Cars -->
+                                <li class="nav-item">
+
+                                    <g:link
+                                        controller="car"
+                                        action="index"
+                                        class="nav-link premium-nav-link ${controllerName == 'car' ? 'active' : ''}">
+
+                                        <i class="bi bi-car-front"></i>
+
+                                        <span>
+                                            Browse Cars
+                                        </span>
+
+                                    </g:link>
+
+                                </li>
+
+
+
+                                <!-- My Rentals -->
+                                <li class="nav-item">
+
+                                    <g:link
+                                        controller="rental"
+                                        action="index"
+                                        class="nav-link premium-nav-link ${controllerName == 'rental' ? 'active' : ''}">
+
+                                        <i class="bi bi-calendar-check"></i>
+
+                                        <span>
+                                            My Rentals
+                                        </span>
+
+                                    </g:link>
+
+                                </li>
+
+
+                            </sec:ifAnyGranted>
+
+
+                        </sec:ifLoggedIn>
+
+
+                        <g:pageProperty name="page.nav"/>
+
+                    </ul>
+
+
+
+                    <!-- ========================
+                         LOGGED USER
+                         ======================== -->
+
+                    <sec:ifLoggedIn>
+
+                        <div class="premium-user-area">
+
+
+                            <!-- User Card -->
+                            <div class="premium-user-card">
+
+
+                                <div class="premium-user-avatar">
+
+                                    <i class="bi bi-person-fill"></i>
+
+                                </div>
+
+
+                                <div class="premium-user-meta">
+
+
+                                    <div class="premium-user-name">
+
+                                        <sec:username/>
+
+                                    </div>
+
+
+
+                                    <!-- Admin Role -->
+                                    <sec:ifAnyGranted roles="ROLE_ADMIN">
+
+                                        <span class="premium-role admin">
+
+                                            Admin
+
+                                        </span>
+
+                                    </sec:ifAnyGranted>
+
+
+
+                                    <!-- Customer Role -->
+                                    <sec:ifAnyGranted roles="ROLE_CUSTOMER">
+
+                                        <span class="premium-role customer">
+
+                                            Customer
+
+                                        </span>
+
+                                    </sec:ifAnyGranted>
+
+
+                                </div>
+
+
+                            </div>
+
+
+
+                            <!-- Logout -->
+                            <form
+                                action="${createLink(uri: '/logout')}"
+                                method="POST"
+                                class="m-0">
+
+                                <button
+                                    type="submit"
+                                    class="premium-logout">
+
+                                    <i class="bi bi-box-arrow-right"></i>
+
+                                    Logout
+
+                                </button>
+
+                            </form>
+
+
+                        </div>
+
+                    </sec:ifLoggedIn>
+
+
+
+                    <!-- ========================
+                         NOT LOGGED
+                         ======================== -->
+
+                    <sec:ifNotLoggedIn>
+
+                        <a
+                            href="${createLink(uri: '/login/auth')}"
+                            class="premium-signin">
+
+                            <i class="bi bi-person"></i>
+
+                            Sign In
+
+                        </a>
+
+                    </sec:ifNotLoggedIn>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<!-- =========================================================
+     PAGE CONTENT
+     ========================================================= -->
+
+<main class="application-content">
+
+    <g:layoutBody/>
+
+</main>
+
+
+
+<!-- =========================================================
+     PREMIUM FOOTER
+     ========================================================= -->
+
+<footer
+    class="premium-footer"
+    role="contentinfo">
+
+    <div class="container premium-footer-content">
+
+
+        <!-- ================================
+             FOOTER TOP
+             ================================ -->
+
+        <div class="premium-footer-top">
+
+
+            <!-- Brand -->
+            <div class="premium-footer-brand">
+
+
+                <div class="premium-footer-logo">
+
+                    <i class="bi bi-car-front-fill"></i>
+
+                </div>
+
+
+                <div>
+
+                    <div class="premium-footer-name">
+
+                        Car Rental
+
+                    </div>
+
+
+                    <div class="premium-footer-caption">
+
+                        Premium Mobility Management
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Links -->
+            <div class="premium-footer-links">
+
+
+                <a href="${createLink(uri: '/')}">
+
+                    Home
+
+                </a>
+
 
                 <sec:ifLoggedIn>
 
 
-                    <!-- ADMIN -->
-                    <sec:ifAllGranted roles="ROLE_ADMIN">
+                    <g:link
+                        controller="car"
+                        action="index">
 
-                        <!-- Dashboard -->
-                        <li class="nav-item">
+                        Fleet
 
-                            <g:link
-                                controller="dashboard"
-                                action="index"
-                                class="nav-link">
-
-                                Dashboard
-
-                            </g:link>
-
-                        </li>
+                    </g:link>
 
 
-                        <!-- Cars -->
-                        <li class="nav-item">
+                    <g:link
+                        controller="rental"
+                        action="index">
 
-                            <g:link
-                                controller="car"
-                                action="index"
-                                class="nav-link">
+                        Rentals
 
-                                Cars
-
-                            </g:link>
-
-                        </li>
+                    </g:link>
 
 
-                        <!-- Rentals -->
-                        <li class="nav-item">
+                    <sec:ifAnyGranted roles="ROLE_ADMIN">
 
-                            <g:link
-                                controller="rental"
-                                action="index"
-                                class="nav-link">
+                        <g:link
+                            controller="dashboard"
+                            action="index">
 
-                                Rentals
+                            Dashboard
 
-                            </g:link>
+                        </g:link>
 
-                        </li>
-
-                    </sec:ifAllGranted>
-
-
-                    <!-- CUSTOMER -->
-                    <sec:ifAllGranted roles="ROLE_CUSTOMER">
-
-                        <!-- Browse Cars -->
-                        <li class="nav-item">
-
-                            <g:link
-                                controller="car"
-                                action="index"
-                                class="nav-link">
-
-                                Browse Cars
-
-                            </g:link>
-
-                        </li>
-
-
-                        <!-- My Rentals -->
-                        <li class="nav-item">
-
-                            <g:link
-                                controller="rental"
-                                action="index"
-                                class="nav-link">
-
-                                My Rentals
-
-                            </g:link>
-
-                        </li>
-
-                    </sec:ifAllGranted>
+                    </sec:ifAnyGranted>
 
 
                 </sec:ifLoggedIn>
 
 
-                <g:pageProperty name="page.nav"/>
+            </div>
 
-            </ul>
-
-
-            <!-- Right Side -->
-            <sec:ifLoggedIn>
-
-                <div class="d-flex align-items-center gap-3">
-
-                    <!-- Logged User -->
-                    <span class="text-muted">
-
-                        Signed in as
-
-                        <strong>
-                            <sec:username/>
-                        </strong>
-
-                    </span>
-
-
-                    <!-- Logout -->
-                    <form
-                        action="${createLink(uri: '/logout')}"
-                        method="POST"
-                        class="d-inline">
-
-                        <button
-                            type="submit"
-                            class="btn btn-outline-danger btn-sm">
-
-                            Logout
-
-                        </button>
-
-                    </form>
-
-                </div>
-
-            </sec:ifLoggedIn>
 
         </div>
 
-    </div>
-
-</nav>
 
 
-<!-- Page Content -->
-<g:layoutBody/>
+        <!-- Divider -->
+        <div class="premium-footer-divider"></div>
 
 
-<!-- Footer -->
-<div class="footer mt-5" role="contentinfo">
 
-    <div class="container-fluid">
+        <!-- ================================
+             FOOTER BOTTOM
+             ================================ -->
 
-        <div class="row">
-
-
-            <!-- Grails Guides -->
-            <div class="card border-0 col-12 col-md">
-
-                <div class="card-body">
-
-                    <h6 class="card-title">
-
-                        <a
-                            class="link-underline link-underline-opacity-0"
-                            href="https://guides.grails.org"
-                            target="_blank">
-
-                            <asset:image
-                                src="advancedgrails.svg"
-                                alt="Grails Guides"
-                                class="me-2"
-                                width="34"/>
-
-                            Grails Guides
-
-                        </a>
-
-                    </h6>
-
-                    <p class="card-text">
-
-                        Building your first Grails app?
-                        Looking to add security, or create a Single-Page-App?
-
-                        Check out the
-
-                        <a
-                            href="https://guides.grails.org"
-                            target="_blank">
-
-                            Grails Guides
-
-                        </a>
-
-                        for step-by-step tutorials.
-
-                    </p>
-
-                </div>
-
-            </div>
+        <div class="premium-footer-bottom">
 
 
-            <!-- Documentation -->
-            <div class="card border-0 col-12 col-md">
+            <span>
 
-                <div class="card-body">
+                © 2026 Car Rental Management System
 
-                    <h6 class="card-title">
-
-                        <a
-                            class="link-underline link-underline-opacity-0"
-                            href="https://grails.apache.org/docs/"
-                            target="_blank">
-
-                            <asset:image
-                                src="documentation.svg"
-                                alt="Grails Documentation"
-                                class="me-2"
-                                width="34"/>
-
-                            Documentation
-
-                        </a>
-
-                    </h6>
-
-                    <p class="card-text">
-
-                        Ready to dig in?
-
-                        You can find in-depth documentation for all the features
-                        of Grails in the
-
-                        <a
-                            href="https://grails.apache.org/docs/"
-                            target="_blank">
-
-                            User Guide
-
-                        </a>.
-
-                    </p>
-
-                </div>
-
-            </div>
+            </span>
 
 
-            <!-- Community -->
-            <div class="card border-0 col-12 col-md">
 
-                <div class="card-body">
+            <span class="system-online">
 
-                    <h6 class="card-title">
 
-                        <a
-                            class="link-underline link-underline-opacity-0"
-                            href="https://slack.grails.org"
-                            target="_blank">
+                <span class="online-dot"></span>
 
-                            <asset:image
-                                src="slack.svg"
-                                alt="Grails Slack"
-                                class="me-2"
-                                width="34"/>
 
-                            Join the Community
+                System Online
 
-                        </a>
 
-                    </h6>
+            </span>
 
-                    <p class="card-text">
-
-                        Get feedback and share your experience with other
-                        Grails developers in the community
-
-                        <a
-                            href="https://slack.grails.org"
-                            target="_blank">
-
-                            Slack channel
-
-                        </a>.
-
-                    </p>
-
-                </div>
-
-            </div>
 
         </div>
 
+
     </div>
 
-</div>
+</footer>
 
 
-<!-- Loading Spinner -->
+
+<!-- =========================================================
+     LOADING
+     ========================================================= -->
+
 <div
     id="spinner"
-    class="position-absolute top-0 end-0 p-1"
     style="display:none;">
 
     <div
@@ -378,7 +2053,9 @@
         role="status">
 
         <span class="visually-hidden">
+
             Loading...
+
         </span>
 
     </div>
@@ -386,7 +2063,11 @@
 </div>
 
 
+
+<!-- Application JavaScript -->
 <asset:javascript src="application.js"/>
 
+
 </body>
+
 </html>

@@ -1,14 +1,1812 @@
 /*
-* This is a manifest file that'll be compiled into application.css, which will include all the files
-* listed below.
-*
-* Any CSS file within this directory can be referenced here using a relative path.
-*
-* You're free to add application-wide styles to this file and they'll appear at the top of the
-* compiled file, but it's generally better to create a new file per style scope.
-*
-*= require webjars/bootstrap/5.3.7/dist/css/bootstrap
-*= require webjars/bootstrap-icons/1.13.1/font/bootstrap-icons
-*= require grails
-*= require_self
-*/
+ * ============================================================
+ * CAR RENTAL MANAGEMENT SYSTEM
+ * GLOBAL DESIGN SYSTEM
+ * ============================================================
+ *
+ *= require webjars/bootstrap/5.3.7/dist/css/bootstrap
+ *= require webjars/bootstrap-icons/1.13.1/font/bootstrap-icons
+ *= require grails
+ *= require_self
+ */
+
+
+/* ============================================================
+   01. DESIGN TOKENS
+   ============================================================ */
+
+:root {
+
+    /* Asphalt */
+    --cr-black: #0b0c0f;
+    --cr-black-2: #101216;
+    --cr-black-3: #17191e;
+    --cr-black-4: #202229;
+
+    /* Gold */
+    --cr-gold: #f5a623;
+    --cr-gold-light: #ffc861;
+    --cr-gold-soft: #fff3dc;
+    --cr-gold-dark: #c98512;
+
+    /* Surfaces */
+    --cr-page: #f2f0ea;
+    --cr-page-2: #ebe8e0;
+    --cr-card: #ffffff;
+
+    /* Typography */
+    --cr-ink: #111215;
+    --cr-text: #3f4147;
+    --cr-muted: #777980;
+    --cr-muted-2: #a2a4aa;
+
+    /* Functional */
+    --cr-green: #1f8a52;
+    --cr-green-soft: #e8f6ee;
+
+    --cr-blue: #2560c4;
+    --cr-blue-soft: #eaf1fb;
+
+    --cr-red: #c0392b;
+    --cr-red-soft: #fdecea;
+
+    /* Borders */
+    --cr-border: #dedbd3;
+    --cr-border-soft: #ebe8e1;
+
+    /* Radius */
+    --cr-radius-sm: 8px;
+    --cr-radius: 14px;
+    --cr-radius-lg: 20px;
+
+    /* Shadows */
+    --cr-shadow-sm:
+        0 5px 18px rgba(16, 17, 20, 0.05);
+
+    --cr-shadow:
+        0 12px 35px rgba(16, 17, 20, 0.08);
+
+    --cr-shadow-lg:
+        0 24px 70px rgba(16, 17, 20, 0.14);
+
+    --cr-gold-shadow:
+        0 10px 28px rgba(245, 166, 35, 0.20);
+}
+
+
+/* ============================================================
+   02. RESET / PAGE
+   ============================================================ */
+
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    margin: 0;
+
+    color: var(--cr-text);
+
+    background:
+        radial-gradient(
+            circle at 12% 0%,
+            rgba(245, 166, 35, 0.07),
+            transparent 26%
+        ),
+        radial-gradient(
+            circle at 90% 20%,
+            rgba(16, 17, 20, 0.025),
+            transparent 30%
+        ),
+        linear-gradient(
+            180deg,
+            #f7f5f0 0%,
+            var(--cr-page) 48%,
+            var(--cr-page-2) 100%
+        );
+
+    font-family:
+        'Inter',
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+::selection {
+    color: var(--cr-black);
+    background: var(--cr-gold-light);
+}
+
+
+/* ============================================================
+   03. LAYOUT
+   ============================================================ */
+
+.container {
+    max-width: 1240px;
+}
+
+
+main {
+    min-height: calc(100vh - 230px);
+}
+
+
+.page-content,
+.app-content,
+.app-main {
+
+    width: 100%;
+
+    min-height: calc(100vh - 230px);
+}
+
+
+/* ============================================================
+   04. TYPOGRAPHY
+   ============================================================ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+
+    color: var(--cr-ink);
+
+    font-family:
+        'Space Grotesk',
+        'Inter',
+        sans-serif;
+
+    font-weight: 700;
+
+    letter-spacing: -0.025em;
+}
+
+
+h1 {
+    letter-spacing: -0.04em;
+}
+
+
+h2 {
+    font-size: 1.9rem;
+}
+
+
+p {
+    line-height: 1.65;
+}
+
+
+.text-muted {
+    color: var(--cr-muted) !important;
+}
+
+
+code,
+.mono {
+
+    font-family:
+        'JetBrains Mono',
+        monospace;
+}
+
+
+/* ============================================================
+   05. LINKS
+   ============================================================ */
+
+a {
+    color: var(--cr-gold-dark);
+
+    text-decoration-thickness: 1px;
+
+    text-underline-offset: 3px;
+}
+
+
+a:hover {
+    color: var(--cr-gold);
+}
+
+
+/* ============================================================
+   06. CARDS
+   ============================================================ */
+
+.card {
+
+    background: var(--cr-card);
+
+    border:
+        1px solid var(--cr-border-soft) !important;
+
+    border-radius:
+        var(--cr-radius) !important;
+
+    box-shadow:
+        var(--cr-shadow-sm) !important;
+
+    overflow: hidden;
+
+    transition:
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+
+.card:hover {
+
+    border-color:
+        #d9d5cc !important;
+
+    box-shadow:
+        var(--cr-shadow) !important;
+}
+
+
+.card-header {
+
+    padding:
+        18px 22px;
+
+    color: var(--cr-ink);
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #faf9f6
+        );
+
+    border-bottom:
+        1px solid var(--cr-border-soft);
+
+    font-family:
+        'Space Grotesk',
+        sans-serif;
+
+    font-weight: 700;
+}
+
+
+.card-body {
+    padding: 22px;
+}
+
+
+/* ============================================================
+   07. CAR CARD — IMPORTANT FLICKER FIX
+   ============================================================ */
+
+.car-card {
+
+    background: #fff;
+
+    border:
+        1px solid var(--cr-border) !important;
+
+    border-radius:
+        16px !important;
+
+    box-shadow:
+        0 12px 34px rgba(16,17,20,.07) !important;
+
+    /*
+     * مهم:
+     * لا نحرك الكارد نفسه عند hover.
+     * هاي كانت سبب رمش الـModal.
+     */
+    transform: none !important;
+
+    transition:
+        box-shadow .18s ease,
+        border-color .18s ease;
+}
+
+
+.car-card:hover {
+
+    transform: none !important;
+
+    border-color:
+        #d2cdc2 !important;
+
+    box-shadow:
+        0 16px 42px rgba(16,17,20,.11) !important;
+}
+
+
+.car-thumbnail {
+
+    transform: none;
+
+    transition:
+        transform .25s ease,
+        opacity .2s ease;
+}
+
+
+.car-card:hover .car-thumbnail {
+
+    transform: scale(1.018);
+
+    opacity: .97;
+}
+
+
+/* Modal image NEVER inherits card animations */
+
+.modal-car-image {
+
+    transform: none !important;
+
+    transition: none !important;
+}
+
+
+/* ============================================================
+   08. BUTTON SYSTEM
+   ============================================================ */
+
+.btn {
+
+    min-height: 42px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        8px 16px;
+
+    border-radius:
+        var(--cr-radius-sm);
+
+    font-weight: 650;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        background-color .15s ease,
+        border-color .15s ease,
+        color .15s ease;
+}
+
+
+.btn:hover {
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* Main dark action */
+
+.btn-primary {
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            145deg,
+            #101114,
+            #1c1e23
+        );
+
+    border-color:
+        #101114;
+
+    box-shadow:
+        0 7px 17px rgba(16,17,20,.16);
+}
+
+
+.btn-primary:hover,
+.btn-primary:focus {
+
+    color:
+        var(--cr-gold-light);
+
+    background:
+        #0b0c0f;
+
+    border-color:
+        #0b0c0f;
+
+    box-shadow:
+        0 10px 25px rgba(16,17,20,.22);
+}
+
+
+/* Gold CTA */
+
+.btn-warning {
+
+    color: var(--cr-black);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cr-gold-light),
+            var(--cr-gold)
+        );
+
+    border-color:
+        var(--cr-gold);
+
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 18px rgba(245,166,35,.16);
+}
+
+
+.btn-warning:hover,
+.btn-warning:focus {
+
+    color: var(--cr-black);
+
+    background:
+        var(--cr-gold);
+
+    border-color:
+        var(--cr-gold-dark);
+
+    box-shadow:
+        var(--cr-gold-shadow);
+}
+
+
+/* Success */
+
+.btn-success {
+
+    background:
+        var(--cr-green);
+
+    border-color:
+        var(--cr-green);
+
+    box-shadow:
+        0 6px 16px rgba(31,138,82,.15);
+}
+
+
+.btn-success:hover,
+.btn-success:focus {
+
+    background:
+        #176d40;
+
+    border-color:
+        #176d40;
+}
+
+
+/* Danger */
+
+.btn-danger {
+
+    background:
+        var(--cr-red);
+
+    border-color:
+        var(--cr-red);
+
+    box-shadow:
+        0 6px 16px rgba(192,57,43,.14);
+}
+
+
+.btn-danger:hover,
+.btn-danger:focus {
+
+    background:
+        #9f2d21;
+
+    border-color:
+        #9f2d21;
+}
+
+
+/* Neutral */
+
+.btn-secondary {
+
+    color: var(--cr-text);
+
+    background: #fff;
+
+    border-color:
+        var(--cr-border);
+}
+
+
+.btn-secondary:hover {
+
+    color: var(--cr-ink);
+
+    background:
+        #f7f5f0;
+
+    border-color:
+        #ccc7bc;
+}
+
+
+/* Outline */
+
+.btn-outline-secondary {
+
+    color: var(--cr-muted);
+
+    background: transparent;
+
+    border-color:
+        var(--cr-border);
+}
+
+
+.btn-outline-secondary:hover {
+
+    color: #fff;
+
+    background:
+        var(--cr-black);
+
+    border-color:
+        var(--cr-black);
+}
+
+
+.btn-outline-warning {
+
+    color:
+        var(--cr-gold-dark);
+
+    border-color:
+        var(--cr-gold);
+
+    background:
+        rgba(245,166,35,.02);
+}
+
+
+.btn-outline-warning:hover {
+
+    color:
+        var(--cr-black);
+
+    background:
+        var(--cr-gold);
+
+    border-color:
+        var(--cr-gold);
+}
+
+
+/* ============================================================
+   09. FORMS
+   ============================================================ */
+
+.form-label {
+
+    margin-bottom: 7px;
+
+    color:
+        #61636a;
+
+    font-family:
+        'JetBrains Mono',
+        monospace;
+
+    font-size: .72rem;
+
+    font-weight: 600;
+
+    letter-spacing: .065em;
+
+    text-transform: uppercase;
+}
+
+
+.form-control,
+.form-select {
+
+    min-height: 47px;
+
+    padding:
+        10px 13px;
+
+    color:
+        var(--cr-ink);
+
+    background:
+        #fff;
+
+    border:
+        1px solid var(--cr-border);
+
+    border-radius:
+        9px;
+
+    box-shadow:
+        inset 0 1px 2px
+        rgba(16,17,20,.02);
+
+    transition:
+        border-color .16s ease,
+        box-shadow .16s ease,
+        background .16s ease;
+}
+
+
+.form-control:hover,
+.form-select:hover {
+
+    border-color:
+        #ccc7bc;
+}
+
+
+.form-control:focus,
+.form-select:focus {
+
+    color:
+        var(--cr-ink);
+
+    background:
+        #fff;
+
+    border-color:
+        var(--cr-gold);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(245,166,35,.11);
+}
+
+
+.form-control::placeholder {
+    color: #adaeb3;
+}
+
+
+input[type="file"].form-control {
+
+    padding:
+        8px 11px;
+}
+
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+
+    border-color:
+        var(--cr-red);
+}
+
+
+.form-control.is-invalid:focus {
+
+    box-shadow:
+        0 0 0 4px
+        rgba(192,57,43,.09);
+}
+
+
+/* ============================================================
+   10. TABLES
+   ============================================================ */
+
+.table-responsive {
+
+    background: #fff;
+
+    border:
+        1px solid var(--cr-border);
+
+    border-radius:
+        var(--cr-radius);
+
+    box-shadow:
+        var(--cr-shadow);
+
+    overflow: hidden;
+}
+
+
+.table {
+
+    margin-bottom: 0;
+
+    color: var(--cr-text);
+
+    vertical-align: middle;
+}
+
+
+.table thead th {
+
+    padding:
+        14px 17px;
+
+    color:
+        #e6e6e3;
+
+    background:
+        var(--cr-black) !important;
+
+    border: 0;
+
+    font-family:
+        'JetBrains Mono',
+        monospace;
+
+    font-size: .68rem;
+
+    font-weight: 600;
+
+    letter-spacing: .075em;
+
+    text-transform: uppercase;
+}
+
+
+.table tbody td {
+
+    padding:
+        15px 17px;
+
+    border-color:
+        var(--cr-border-soft);
+
+    color:
+        var(--cr-text);
+}
+
+
+.table tbody tr {
+
+    transition:
+        background-color .14s ease;
+}
+
+
+.table-hover tbody tr:hover {
+
+    background:
+        #f8f6f1;
+}
+
+
+/* ============================================================
+   11. STATUS BADGES
+   ============================================================ */
+
+.badge {
+
+    padding:
+        6px 10px;
+
+    border-radius: 999px;
+
+    font-family:
+        'JetBrains Mono',
+        monospace;
+
+    font-size: .67rem;
+
+    font-weight: 600;
+
+    letter-spacing: .04em;
+}
+
+
+.bg-success {
+
+    color:
+        var(--cr-green) !important;
+
+    background:
+        var(--cr-green-soft) !important;
+}
+
+
+.bg-warning {
+
+    color:
+        var(--cr-gold-dark) !important;
+
+    background:
+        #fff3df !important;
+}
+
+
+.bg-danger {
+
+    color:
+        var(--cr-red) !important;
+
+    background:
+        var(--cr-red-soft) !important;
+}
+
+
+.bg-primary {
+
+    color:
+        var(--cr-blue) !important;
+
+    background:
+        var(--cr-blue-soft) !important;
+}
+
+
+.bg-secondary {
+
+    color:
+        #5c5e64 !important;
+
+    background:
+        #ededeb !important;
+}
+
+
+/* ============================================================
+   12. ALERTS
+   ============================================================ */
+
+.alert {
+
+    padding:
+        14px 17px;
+
+    border-radius:
+        10px;
+
+    border-width:
+        1px !important;
+
+    box-shadow:
+        0 5px 16px rgba(16,17,20,.035);
+}
+
+
+.alert-info {
+
+    color:
+        #795710;
+
+    background:
+        #fff6e6;
+
+    border:
+        1px solid #efd8a5 !important;
+}
+
+
+.alert-success {
+
+    color:
+        var(--cr-green);
+
+    background:
+        var(--cr-green-soft);
+
+    border:
+        1px solid #bde1ca !important;
+}
+
+
+.alert-warning {
+
+    color:
+        #8b6310;
+
+    background:
+        #fff3df;
+
+    border:
+        1px solid #efd49b !important;
+}
+
+
+.alert-danger {
+
+    color:
+        var(--cr-red);
+
+    background:
+        var(--cr-red-soft);
+
+    border:
+        1px solid #efbcb6 !important;
+}
+
+
+.alert-secondary {
+
+    color:
+        var(--cr-muted);
+
+    background:
+        #f5f3ee;
+
+    border:
+        1px dashed var(--cr-border) !important;
+}
+
+
+/* ============================================================
+   13. SEARCH AREA
+   ============================================================ */
+
+.search-box,
+.search-card {
+
+    background:
+        rgba(255,255,255,.88);
+
+    border:
+        1px solid var(--cr-border) !important;
+
+    border-radius:
+        var(--cr-radius) !important;
+
+    box-shadow:
+        var(--cr-shadow-sm) !important;
+
+    backdrop-filter:
+        blur(8px);
+}
+
+
+/* ============================================================
+   14. MODALS
+   ============================================================ */
+
+.modal-backdrop.show {
+
+    opacity: .72;
+
+    background:
+        #08090b;
+}
+
+
+.modal-dialog {
+
+    transform: none !important;
+}
+
+
+.modal-content {
+
+    overflow: hidden;
+
+    background:
+        #fff;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius:
+        18px;
+
+    box-shadow:
+        0 35px 100px rgba(0,0,0,.30);
+}
+
+
+.modal-header {
+
+    padding:
+        17px 21px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #fff,
+            #faf8f4
+        );
+
+    border-bottom:
+        1px solid var(--cr-border-soft);
+}
+
+
+.modal-title {
+
+    font-family:
+        'Space Grotesk',
+        sans-serif;
+
+    font-weight: 700;
+}
+
+
+.modal-body {
+
+    padding: 22px;
+
+    background:
+        #f7f6f2;
+}
+
+
+.modal-footer {
+
+    padding:
+        14px 21px;
+
+    background:
+        #fff;
+
+    border-top:
+        1px solid var(--cr-border-soft);
+}
+
+
+/* ============================================================
+   15. PAGINATION — FIXES "12NEXT"
+   ============================================================ */
+
+/*
+ * يدعم الشكل الحالي عندك بدون ما تضطر تغير كل GSP.
+ */
+
+.app-pagination,
+.cars-page .pagination,
+.rentals-page .pagination {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin:
+        35px 0 10px;
+}
+
+
+/*
+ * Grails g:paginate غالباً يطلع الروابط مباشرة بدون UL.
+ */
+
+.app-pagination a,
+.app-pagination span,
+
+.cars-page .step,
+.cars-page .currentStep,
+.cars-page .prevLink,
+.cars-page .nextLink,
+
+.rentals-page .step,
+.rentals-page .currentStep,
+.rentals-page .prevLink,
+.rentals-page .nextLink {
+
+    min-width: 42px;
+    height: 42px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 0 3px;
+
+    padding:
+        0 13px;
+
+    color:
+        var(--cr-text);
+
+    background:
+        rgba(255,255,255,.92);
+
+    border:
+        1px solid var(--cr-border);
+
+    border-radius:
+        9px;
+
+    box-shadow:
+        0 4px 12px rgba(16,17,20,.045);
+
+    font-family:
+        'JetBrains Mono',
+        monospace;
+
+    font-size: .76rem;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    transition:
+        transform .15s ease,
+        color .15s ease,
+        background .15s ease,
+        border-color .15s ease,
+        box-shadow .15s ease;
+}
+
+
+.app-pagination a:hover,
+
+.cars-page .step:hover,
+.cars-page .prevLink:hover,
+.cars-page .nextLink:hover,
+
+.rentals-page .step:hover,
+.rentals-page .prevLink:hover,
+.rentals-page .nextLink:hover {
+
+    color:
+        var(--cr-black);
+
+    background:
+        var(--cr-gold);
+
+    border-color:
+        var(--cr-gold);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        var(--cr-gold-shadow);
+}
+
+
+.app-pagination .currentStep,
+
+.cars-page .currentStep,
+.rentals-page .currentStep {
+
+    color:
+        var(--cr-black);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--cr-gold-light),
+            var(--cr-gold)
+        );
+
+    border-color:
+        var(--cr-gold);
+
+    box-shadow:
+        0 7px 18px rgba(245,166,35,.20);
+}
+
+
+/* ============================================================
+   16. PAGE HEADER
+   ============================================================ */
+
+.page-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 18px;
+
+    margin-bottom: 28px;
+}
+
+
+.page-header h2 {
+    margin-bottom: 3px;
+}
+
+
+/* ============================================================
+   17. IMAGE UPLOAD
+   ============================================================ */
+
+.image-upload-box {
+
+    padding:
+        18px;
+
+    background:
+        repeating-linear-gradient(
+            135deg,
+            #faf9f6,
+            #faf9f6 11px,
+            #f4f2ed 11px,
+            #f4f2ed 22px
+        );
+
+    border:
+        1.5px dashed
+        var(--cr-border);
+
+    border-radius:
+        11px;
+
+    transition:
+        border-color .16s ease,
+        background .16s ease;
+}
+
+
+.image-upload-box:focus-within {
+
+    border-color:
+        var(--cr-gold);
+
+    background:
+        #fff9ed;
+}
+
+
+/* ============================================================
+   18. FORM CARDS
+   ============================================================ */
+
+.car-form-card,
+.car-info-card,
+.rental-details-card,
+.rent-car-card,
+.quick-actions-card {
+
+    background: #fff;
+
+    border:
+        1px solid var(--cr-border) !important;
+
+    border-radius:
+        var(--cr-radius) !important;
+
+    box-shadow:
+        var(--cr-shadow) !important;
+}
+
+
+/* ============================================================
+   19. PRICE PANEL
+   ============================================================ */
+
+.price-box,
+.rental-price-box {
+
+    color: #fff !important;
+
+    background:
+        linear-gradient(
+            145deg,
+            #101114,
+            #1a1c21
+        ) !important;
+
+    border:
+        1px solid #292b31 !important;
+
+    border-radius:
+        13px !important;
+
+    box-shadow:
+        0 12px 30px rgba(16,17,20,.18);
+}
+
+
+.price-box h5,
+.price-box strong {
+
+    color: #fff;
+}
+
+
+.price-box #totalPrice {
+
+    color:
+        var(--cr-gold-light) !important;
+}
+
+
+/* ============================================================
+   20. EMPTY STATE
+   ============================================================ */
+
+.empty-state {
+
+    padding:
+        55px 25px;
+
+    color:
+        var(--cr-muted);
+
+    text-align: center;
+
+    background:
+        rgba(255,255,255,.65);
+
+    border:
+        1px dashed var(--cr-border);
+
+    border-radius:
+        var(--cr-radius);
+}
+
+
+/* ============================================================
+   21. SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+
+    width: 10px;
+    height: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+
+    background:
+        #e7e4dc;
+}
+
+
+::-webkit-scrollbar-thumb {
+
+    background:
+        #b8b4aa;
+
+    border:
+        2px solid #e7e4dc;
+
+    border-radius: 999px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+
+    background:
+        var(--cr-gold-dark);
+}
+
+
+/* ============================================================
+   22. ACCESSIBILITY
+   ============================================================ */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+
+    outline:
+        2px solid
+        var(--cr-gold);
+
+    outline-offset:
+        3px;
+}
+
+
+/* ============================================================
+   23. MOBILE
+   ============================================================ */
+
+@media (max-width: 991.98px) {
+
+    .container {
+
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+
+    .table-responsive {
+
+        border-radius:
+            11px;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    body {
+
+        font-size:
+            .94rem;
+    }
+
+
+    h2 {
+
+        font-size:
+            1.55rem;
+    }
+
+
+    .page-header {
+
+        flex-direction:
+            column;
+
+        align-items:
+            stretch;
+    }
+
+
+    .page-header .btn {
+
+        width: 100%;
+    }
+
+
+    .card-body {
+
+        padding:
+            18px;
+    }
+
+
+    .btn {
+
+        min-height:
+            40px;
+    }
+
+
+    .table tbody td {
+
+        padding:
+            12px 13px;
+    }
+
+
+    .app-pagination a,
+    .app-pagination span,
+
+    .cars-page .step,
+    .cars-page .currentStep,
+    .cars-page .prevLink,
+    .cars-page .nextLink,
+
+    .rentals-page .step,
+    .rentals-page .currentStep,
+    .rentals-page .prevLink,
+    .rentals-page .nextLink {
+
+        min-width:
+            38px;
+
+        height:
+            38px;
+
+        padding:
+            0 10px;
+    }
+}
+/* ============================================================
+   PREMIUM TOP NAVBAR
+   ============================================================ */
+
+.top-shell {
+    padding: 18px 22px 0;
+}
+
+.luxury-navbar {
+    background:
+        linear-gradient(135deg, #0b0c0f 0%, #13151a 55%, #171a20 100%);
+    border: 1px solid rgba(245, 166, 35, 0.12);
+    border-radius: 22px;
+    box-shadow:
+        0 18px 45px rgba(0,0,0,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.03);
+    padding: 14px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.luxury-navbar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top left,
+        rgba(245,166,35,0.10),
+        transparent 28%);
+    pointer-events: none;
+}
+
+.luxury-navbar::after {
+    content: "";
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 0;
+    height: 2px;
+    border-radius: 999px;
+    background:
+        linear-gradient(90deg,
+        transparent,
+        #f5a623 12%,
+        #ffc861 50%,
+        #f5a623 88%,
+        transparent);
+    opacity: 0.9;
+}
+
+.luxury-navbar-inner {
+    align-items: center;
+}
+
+/* Brand */
+.luxury-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.brand-icon-wrap {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(145deg,
+        rgba(245,166,35,0.16),
+        rgba(245,166,35,0.08));
+    border: 1px solid rgba(245,166,35,0.28);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 10px 24px rgba(0,0,0,0.22);
+}
+
+.brand-icon-wrap i {
+    font-size: 1.45rem;
+    color: #f5a623;
+}
+
+.brand-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.brand-title {
+    color: #f8f8f6;
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.brand-subtitle {
+    margin-top: 6px;
+    color: #f5a623;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Nav Links */
+.luxury-nav-list {
+    gap: 8px;
+}
+
+.luxury-nav-link {
+    color: rgba(255,255,255,0.78) !important;
+    border-radius: 12px;
+    padding: 12px 18px !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 650;
+    font-size: 1.03rem;
+    transition: all .18s ease;
+    position: relative;
+}
+
+.luxury-nav-link i {
+    font-size: 1rem;
+    color: #9da2ad;
+    transition: all .18s ease;
+}
+
+.luxury-nav-link:hover,
+.luxury-nav-link:focus {
+    color: #ffffff !important;
+    background: rgba(255,255,255,0.05);
+    transform: translateY(-1px);
+}
+
+.luxury-nav-link:hover i,
+.luxury-nav-link:focus i {
+    color: #f5a623;
+}
+
+/* Active link */
+.luxury-nav-link.active,
+.navbar .nav-link.active {
+    color: #ffffff !important;
+    background:
+        linear-gradient(135deg,
+        rgba(245,166,35,0.16),
+        rgba(245,166,35,0.06));
+    border: 1px solid rgba(245,166,35,0.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+}
+
+.luxury-nav-link.active i,
+.navbar .nav-link.active i {
+    color: #f5a623;
+}
+
+/* User Panel */
+.luxury-user-panel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    min-width: 250px;
+}
+
+.luxury-user-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        linear-gradient(145deg,
+        rgba(245,166,35,0.18),
+        rgba(245,166,35,0.09));
+    border: 1px solid rgba(245,166,35,0.22);
+    color: #f5a623;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.luxury-user-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.luxury-user-name {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.98rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.luxury-user-role {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    margin-top: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(31,138,82,0.16);
+    color: #5bd08d;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Logout */
+.luxury-logout-btn {
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(229,72,77,0.35) !important;
+    background: rgba(229,72,77,0.04);
+    color: #ff7b7f !important;
+    font-weight: 700;
+}
+
+.luxury-logout-btn:hover {
+    background: #c0392b !important;
+    border-color: #c0392b !important;
+    color: #fff !important;
+}
+
+/* Mobile */
+.luxury-toggler {
+    border-color: rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px;
+}
+
+.luxury-toggler:focus {
+    box-shadow: 0 0 0 4px rgba(245,166,35,0.12);
+}
+
+@media (max-width: 991.98px) {
+
+    .top-shell {
+        padding: 12px 14px 0;
+    }
+
+    .luxury-navbar {
+        border-radius: 18px;
+    }
+
+    .luxury-brand {
+        margin-bottom: 4px;
+    }
+
+    .brand-title {
+        font-size: 1.45rem;
+    }
+
+    .brand-icon-wrap {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+    }
+
+    .luxury-nav-list {
+        margin-top: 18px;
+        margin-bottom: 18px;
+        gap: 6px;
+    }
+
+    .luxury-nav-link {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .luxury-user-panel {
+        min-width: unset;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+
+    .luxury-logout-btn {
+        width: 100%;
+    }
+}

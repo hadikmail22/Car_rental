@@ -111,7 +111,7 @@ class CarController {
             return
         }
 
-        MultipartFile image = request.getFile('carImage')
+        MultipartFile image = request.getFile('newCarImage')
 
         if (image && !image.empty) {
 

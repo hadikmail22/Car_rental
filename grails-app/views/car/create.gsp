@@ -4,11 +4,178 @@
 <head>
     <meta name="layout" content="main"/>
     <title>Add Car</title>
+
+    <style>
+        :root{
+            --asphalt-900:#101114;
+            --asphalt-800:#17181c;
+            --headlight:#f5a623;
+            --headlight-dim:#c9860f;
+            --taillight:#e5484d;
+            --brake-red:#c0392b;
+            --paper:#f6f5f2;
+            --ink:#101114;
+            --ink-soft:#5b5d63;
+            --hairline:#e4e2dc;
+        }
+
+        .car-form-page{
+            font-family:'Inter', -apple-system, sans-serif;
+            color:var(--ink);
+            max-width:760px;
+        }
+
+        .car-form-page h2{
+            font-family:'Space Grotesk', sans-serif;
+            font-weight:700;
+            letter-spacing:-0.01em;
+            color:var(--asphalt-900);
+        }
+
+        .btn-outline-secondary{
+            border-radius:8px;
+            border-color:var(--hairline);
+            color:var(--ink-soft);
+        }
+
+        .btn-outline-secondary:hover,
+        .btn-outline-secondary:focus-visible{
+            background:var(--asphalt-900);
+            border-color:var(--asphalt-900);
+        }
+
+        .alert-danger{
+            background:#fdecea;
+            border:1px solid #f3b8b2;
+            color:var(--brake-red);
+            border-radius:8px;
+        }
+
+        /* ---------- Form card ---------- */
+        .car-form-card{
+            background:#fff;
+            border:1px solid var(--hairline);
+            border-radius:14px;
+            padding:2rem;
+        }
+
+        /* Signature: form fields feel like a spec sheet — mono labels, eyebrow numbering */
+        .field-group{
+            margin-bottom:1.5rem;
+            position:relative;
+        }
+
+        .field-group .form-label{
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.72rem;
+            font-weight:600;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+            color:var(--ink-soft);
+            margin-bottom:0.4rem;
+        }
+
+        .form-control,
+        .form-select{
+            border:1px solid var(--hairline);
+            border-radius:8px;
+            padding:0.6rem 0.9rem;
+            font-size:0.98rem;
+            color:var(--ink);
+        }
+
+        .form-control:focus,
+        .form-select:focus{
+            border-color:var(--headlight);
+            box-shadow:0 0 0 0.2rem rgba(245,166,35,0.18);
+        }
+
+        .form-control.is-invalid,
+        .form-select.is-invalid{
+            border-color:var(--taillight);
+        }
+
+        .form-control.is-invalid:focus{
+            box-shadow:0 0 0 0.2rem rgba(229,72,77,0.18);
+        }
+
+        .text-danger{
+            font-size:0.82rem;
+            margin-top:0.3rem;
+        }
+
+        /* ---------- Image uploader ---------- */
+        .image-upload-box{
+            border:1.5px dashed var(--hairline);
+            border-radius:10px;
+            padding:1.25rem;
+            background:repeating-linear-gradient(
+                135deg,
+                #faf9f6,
+                #faf9f6 10px,
+                #f6f5f2 10px,
+                #f6f5f2 20px
+            );
+        }
+
+        .image-upload-box:focus-within{
+            border-color:var(--headlight);
+        }
+
+        .image-upload-box input[type="file"]{
+            border:none;
+            background:transparent;
+            padding-left:0;
+        }
+
+        .image-upload-box small{
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.72rem;
+            letter-spacing:0.02em;
+            color:#a9a7a0;
+        }
+
+        /* ---------- Buttons ---------- */
+        .form-actions{
+            display:flex;
+            gap:0.75rem;
+            margin-top:0.5rem;
+            padding-top:1.5rem;
+            border-top:1px solid var(--hairline);
+        }
+
+        .btn-primary{
+            background:var(--asphalt-900);
+            border:none;
+            border-radius:8px;
+            font-weight:600;
+            padding:0.6rem 1.4rem;
+        }
+        .btn-primary:hover,
+        .btn-primary:focus-visible{
+            background:var(--asphalt-800);
+        }
+
+        .btn-secondary{
+            background:transparent;
+            border:1px solid var(--hairline);
+            color:var(--ink-soft);
+            border-radius:8px;
+            font-weight:600;
+            padding:0.6rem 1.4rem;
+        }
+        .btn-secondary:hover,
+        .btn-secondary:focus-visible{
+            background:var(--paper);
+            color:var(--ink);
+            border-color:var(--hairline);
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container mt-4">
+<div class="container mt-4 car-form-page">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
@@ -46,11 +213,13 @@
 
 
     <!-- Car Form -->
+    <div class="car-form-card">
+
     <g:uploadForm action="save">
 
 
         <!-- Brand -->
-        <div class="mb-3">
+        <div class="mb-3 field-group">
 
             <label
                 for="brand"
@@ -77,7 +246,7 @@
 
 
         <!-- Model -->
-        <div class="mb-3">
+        <div class="mb-3 field-group">
 
             <label
                 for="model"
@@ -104,7 +273,7 @@
 
 
         <!-- Year -->
-        <div class="mb-3">
+        <div class="mb-3 field-group">
 
             <label
                 for="year"
@@ -133,7 +302,7 @@
 
 
         <!-- Plate Number -->
-        <div class="mb-3">
+        <div class="mb-3 field-group">
 
             <label
                 for="plateNumber"
@@ -160,7 +329,7 @@
 
 
         <!-- Price Per Day -->
-        <div class="mb-3">
+        <div class="mb-3 field-group">
 
             <label
                 for="pricePerDay"
@@ -190,7 +359,7 @@
 
 
         <!-- Status -->
-        <div class="mb-3">
+        <div class="mb-3 field-group">
 
             <label
                 for="status"
@@ -218,7 +387,7 @@
 
 
         <!-- Car Image -->
-        <div class="mb-4">
+        <div class="mb-4 field-group">
 
             <label
                 for="carImage"
@@ -228,40 +397,50 @@
 
             </label>
 
-            <input
-                type="file"
-                name="carImage"
-                id="carImage"
-                class="form-control"
-                accept="image/*"/>
+            <div class="image-upload-box">
 
-            <small class="text-muted">
-                JPG, PNG or WEBP. Maximum size: 10MB.
-            </small>
+                <input
+                    type="file"
+                    name="carImage"
+                    id="carImage"
+                    class="form-control"
+                    accept="image/*"/>
+
+                <small class="text-muted d-block mt-2">
+                    JPG, PNG or WEBP. Maximum size: 10MB.
+                </small>
+
+            </div>
 
         </div>
 
 
         <!-- Buttons -->
-        <button
-            type="submit"
-            class="btn btn-primary">
+        <div class="form-actions">
 
-            Save Car
+            <button
+                type="submit"
+                class="btn btn-primary">
 
-        </button>
+                Save Car
+
+            </button>
 
 
-        <g:link
-            action="index"
-            class="btn btn-secondary">
+            <g:link
+                action="index"
+                class="btn btn-secondary">
 
-            Cancel
+                Cancel
 
-        </g:link>
+            </g:link>
+
+        </div>
 
 
     </g:uploadForm>
+
+    </div>
 
 </div>
 

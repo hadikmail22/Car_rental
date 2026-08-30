@@ -3,11 +3,189 @@
 <head>
     <meta name="layout" content="main"/>
     <title>Car Details</title>
+
+    <style>
+        :root{
+            --asphalt-900:#101114;
+            --asphalt-800:#17181c;
+            --headlight:#f5a623;
+            --headlight-dim:#c9860f;
+            --taillight:#e5484d;
+            --brake-red:#c0392b;
+            --go-green:#1f8a52;
+            --paper:#f6f5f2;
+            --ink:#101114;
+            --ink-soft:#5b5d63;
+            --hairline:#e4e2dc;
+        }
+
+        .car-show-page{
+            font-family:'Inter', -apple-system, sans-serif;
+            color:var(--ink);
+            max-width:760px;
+        }
+
+        .car-show-page h2{
+            font-family:'Space Grotesk', sans-serif;
+            font-weight:700;
+            letter-spacing:-0.01em;
+            color:var(--asphalt-900);
+        }
+
+        .btn-outline-secondary{
+            border-radius:8px;
+            border-color:var(--hairline);
+            color:var(--ink-soft);
+        }
+
+        .btn-outline-secondary:hover,
+        .btn-outline-secondary:focus-visible{
+            background:var(--asphalt-900);
+            border-color:var(--asphalt-900);
+        }
+
+        .alert-info{
+            background:#fff6e6;
+            border:1px solid #f0d9a6;
+            color:#7a5a10;
+            border-radius:8px;
+        }
+
+        .alert-secondary{
+            background:var(--paper);
+            border:1px dashed var(--hairline);
+            border-radius:12px;
+            color:var(--ink-soft);
+        }
+
+        /* ---------- Image ---------- */
+        .car-image-frame{
+            display:inline-block;
+            padding:0.6rem;
+            background:#fff;
+            border:1px solid var(--hairline);
+            border-radius:12px;
+        }
+
+        .car-image-frame img{
+            border-radius:8px;
+            border:none !important;
+        }
+
+        .car-image-frame:hover{
+            box-shadow:0 6px 18px rgba(16,17,20,0.08);
+        }
+
+        /* ---------- Info card: signature spec-sheet layout ---------- */
+        .car-info-card{
+            border:1px solid var(--hairline) !important;
+            border-radius:14px;
+        }
+
+        .car-info-card .card-title{
+            font-family:'Space Grotesk', sans-serif;
+            font-weight:700;
+            color:var(--asphalt-900);
+        }
+
+        .spec-row{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:0.85rem 0;
+            border-bottom:1px solid var(--hairline);
+        }
+
+        .spec-row:last-child{
+            border-bottom:none;
+        }
+
+        .spec-label{
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.72rem;
+            font-weight:600;
+            letter-spacing:0.08em;
+            text-transform:uppercase;
+            color:var(--ink-soft);
+        }
+
+        .spec-value{
+            font-weight:600;
+            color:var(--ink);
+            text-align:right;
+        }
+
+        .spec-value.mono{
+            font-family:'JetBrains Mono', monospace;
+            font-weight:500;
+        }
+
+        .spec-value.price{
+            font-family:'Space Grotesk', sans-serif;
+            font-weight:700;
+            font-size:1.05rem;
+        }
+
+        /* Status badge — same dashboard-light style as the list page */
+        .status-badge{
+            font-family:'JetBrains Mono', monospace;
+            font-weight:600;
+            font-size:0.72rem;
+            letter-spacing:0.06em;
+            padding:0.4rem 0.7rem;
+            border-radius:999px;
+            display:inline-flex;
+            align-items:center;
+            gap:0.4rem;
+        }
+
+        .status-badge::before{
+            content:"";
+            width:7px;
+            height:7px;
+            border-radius:50%;
+            display:inline-block;
+        }
+
+        .status-available{ background:#e8f6ee; color:var(--go-green); }
+        .status-available::before{ background:var(--go-green); box-shadow:0 0 6px var(--go-green); }
+
+        .status-rented{ background:#eaf1fb; color:#2560c4; }
+        .status-rented::before{ background:#2560c4; box-shadow:0 0 6px #2560c4; }
+
+        .status-maintenance{ background:#fff3e0; color:var(--headlight-dim); }
+        .status-maintenance::before{ background:var(--headlight); box-shadow:0 0 6px var(--headlight); }
+
+        /* ---------- Actions ---------- */
+        .btn-warning{
+            background:var(--headlight);
+            border:none;
+            color:var(--asphalt-900);
+            font-weight:600;
+            border-radius:8px;
+        }
+        .btn-warning:hover,
+        .btn-warning:focus-visible{
+            background:var(--headlight-dim);
+            color:var(--asphalt-900);
+        }
+
+        .btn-danger{
+            background:var(--brake-red);
+            border:none;
+            font-weight:600;
+            border-radius:8px;
+        }
+        .btn-danger:hover,
+        .btn-danger:focus-visible{
+            background:#a3291d;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container mt-4">
+<div class="container mt-4 car-show-page">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Car Details</h2>
@@ -34,6 +212,7 @@
     href="${createLink(controller: 'car', action: 'image', id: car.id)}"
     target="_blank">
 
+    <span class="car-image-frame">
     <img
         src="${createLink(controller: 'car', action: 'image', id: car.id)}"
         alt="${car.brand} ${car.model}"
@@ -44,6 +223,7 @@
             object-fit:cover;
             cursor:pointer;
         "/>
+    </span>
 
 </a>
 
@@ -58,7 +238,7 @@
 
 
     <!-- Car Information -->
-    <div class="card shadow-sm">
+    <div class="card shadow-sm car-info-card">
 
         <div class="card-body">
 
@@ -66,45 +246,51 @@
                 ${car.brand} ${car.model}
             </h4>
 
-            <p>
-                <strong>Brand:</strong>
-                ${car.brand}
-            </p>
+            <div class="spec-row">
+                <span class="spec-label">Brand</span>
+                <span class="spec-value">${car.brand}</span>
+            </div>
 
-            <p>
-                <strong>Model:</strong>
-                ${car.model}
-            </p>
+            <div class="spec-row">
+                <span class="spec-label">Model</span>
+                <span class="spec-value">${car.model}</span>
+            </div>
 
-            <p>
-                <strong>Year:</strong>
-                ${car.year}
-            </p>
+            <div class="spec-row">
+                <span class="spec-label">Year</span>
+                <span class="spec-value mono">${car.year}</span>
+            </div>
 
-            <p>
-                <strong>Plate Number:</strong>
-                ${car.plateNumber}
-            </p>
+            <div class="spec-row">
+                <span class="spec-label">Plate Number</span>
+                <span class="spec-value mono">${car.plateNumber}</span>
+            </div>
 
-            <p>
-                <strong>Price Per Day:</strong>
-                ${car.pricePerDay}
-            </p>
+            <div class="spec-row">
+                <span class="spec-label">Price Per Day</span>
+                <span class="spec-value price">${car.pricePerDay}</span>
+            </div>
 
-            <p>
-                <strong>Status:</strong>
+            <div class="spec-row">
+                <span class="spec-label">Status</span>
 
-                <span class="badge bg-secondary">
-                    ${car.status}
-                </span>
-            </p>
+                <g:if test="${car.status == 'AVAILABLE'}">
+                    <span class="status-badge status-available">AVAILABLE</span>
+                </g:if>
+                <g:elseif test="${car.status == 'RENTED'}">
+                    <span class="status-badge status-rented">RENTED</span>
+                </g:elseif>
+                <g:else>
+                    <span class="status-badge status-maintenance">MAINTENANCE</span>
+                </g:else>
+            </div>
 
         </div>
     </div>
 
 
     <!-- Actions -->
-    <div class="mt-4">
+    <div class="mt-4 d-flex gap-2">
 
  <sec:ifAllGranted roles="ROLE_ADMIN">
 

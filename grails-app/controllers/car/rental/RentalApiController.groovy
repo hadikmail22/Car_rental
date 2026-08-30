@@ -35,21 +35,29 @@ class RentalApiController {
         int max = Math.min(params.int('max') ?: 10, 100)
         int offset = params.int('offset') ?: 0
 
-        def rentalList = Rental.createCriteria().list(
-                max: max,
-                offset: offset
-        ) {
+        def rentalList
 
-            if (!isAdmin(user)) {
-                eq('customer', user)
-            }
+if (isAdmin(user)) {
 
-            if (params.status) {
-                eq('status', params.status)
-            }
+    rentalList =
+            rentalService.listForAdmin(
+                    [
+                            max   : max,
+                            offset: offset
+                    ]
+            )
 
-            order('id', 'desc')
-        }
+} else {
+
+    rentalList =
+            rentalService.listActiveForCustomer(
+                    user,
+                    [
+                            max   : max,
+                            offset: offset
+                    ]
+            )
+}
 
         def items = rentalList.collect { Rental rental ->
 
