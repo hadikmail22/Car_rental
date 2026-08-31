@@ -12,7 +12,12 @@ class Car {
     byte[] carImage
     String imageContentType
 
-    static hasMany = [rentals: Rental]
+    static hasMany = [
+        rentals      : Rental,
+        galleryImages: CarImage
+]
+
+    
 
     static constraints = {
         brand blank: false

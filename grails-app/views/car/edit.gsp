@@ -183,6 +183,134 @@
             color:var(--ink);
             border-color:var(--hairline);
         }
+
+        /* ---------- Gallery management ---------- */
+        .gallery-management{
+            margin-top:2rem;
+            padding-top:2rem;
+            border-top:1px solid var(--hairline);
+        }
+
+        .gallery-management-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:1rem;
+            margin-bottom:1rem;
+        }
+
+        .gallery-management-title{
+            font-family:'Space Grotesk', sans-serif;
+            font-size:1.05rem;
+            font-weight:700;
+            margin:0;
+            color:var(--asphalt-900);
+        }
+
+        .gallery-count{
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.7rem;
+            color:var(--ink-soft);
+            background:var(--paper);
+            border:1px solid var(--hairline);
+            border-radius:999px;
+            padding:0.3rem 0.65rem;
+            white-space:nowrap;
+        }
+
+        .gallery-grid{
+            display:grid;
+            grid-template-columns:repeat(2, minmax(0, 1fr));
+            gap:1rem;
+        }
+
+        .gallery-card{
+            border:1px solid var(--hairline);
+            border-radius:12px;
+            background:#fff;
+            padding:0.85rem;
+        }
+
+        .gallery-card img{
+            width:100%;
+            height:180px;
+            object-fit:cover;
+            border-radius:8px;
+            border:1px solid var(--hairline);
+            display:block;
+            margin-bottom:0.85rem;
+        }
+
+        .gallery-card .form-control{
+            font-size:0.85rem;
+        }
+
+        .gallery-card .btn{
+            width:100%;
+        }
+
+        .gallery-card .btn-warning{
+            background:var(--headlight);
+            border:none;
+            color:var(--asphalt-900);
+            font-weight:600;
+            border-radius:8px;
+        }
+
+        .gallery-card .btn-warning:hover,
+        .gallery-card .btn-warning:focus-visible{
+            background:var(--headlight-dim);
+            color:var(--asphalt-900);
+        }
+
+        .gallery-card .btn-danger{
+            background:var(--brake-red);
+            border:none;
+            font-weight:600;
+            border-radius:8px;
+        }
+
+        .gallery-card .btn-danger:hover,
+        .gallery-card .btn-danger:focus-visible{
+            background:#a3291d;
+        }
+
+        .selected-files-box{
+            display:none;
+            margin-top:0.75rem;
+            padding:0.75rem;
+            border:1px solid var(--hairline);
+            border-radius:8px;
+            background:#fff;
+        }
+
+        .selected-files-box.active{
+            display:block;
+        }
+
+        .selected-files-title{
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.7rem;
+            font-weight:600;
+            text-transform:uppercase;
+            letter-spacing:0.06em;
+            color:var(--ink-soft);
+            margin-bottom:0.45rem;
+        }
+
+        .selected-files-list{
+            margin:0;
+            padding-left:1.1rem;
+            color:var(--ink-soft);
+            font-size:0.85rem;
+        }
+
+        @media (max-width:700px){
+            .gallery-grid{
+                grid-template-columns:1fr;
+            }
+        }
+
     </style>
 </head>
 <script>
@@ -199,6 +327,51 @@ function previewImage(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const galleryInput = document.getElementById('galleryImages');
+
+    if (!galleryInput) {
+        return;
+    }
+
+    const selectedFiles = new DataTransfer();
+    const selectedFilesBox = document.getElementById('selectedGalleryFiles');
+    const selectedFilesList = document.getElementById('selectedGalleryFilesList');
+
+    galleryInput.addEventListener('change', function () {
+
+        Array.from(this.files).forEach(function (file) {
+
+            const alreadyExists =
+                Array.from(selectedFiles.files).some(function (existingFile) {
+                    return existingFile.name === file.name &&
+                           existingFile.size === file.size;
+                });
+
+            if (!alreadyExists) {
+                selectedFiles.items.add(file);
+            }
+        });
+
+        this.files = selectedFiles.files;
+
+        selectedFilesList.innerHTML = '';
+
+        Array.from(this.files).forEach(function (file) {
+            const item = document.createElement('li');
+            item.textContent = file.name;
+            selectedFilesList.appendChild(item);
+        });
+
+        if (this.files.length > 0) {
+            selectedFilesBox.classList.add('active');
+        } else {
+            selectedFilesBox.classList.remove('active');
+        }
+    });
+});
 </script>
 <body>
 
@@ -269,7 +442,7 @@ function previewImage(input) {
         <div class="mb-4 field-group">
 
             <label
-                for="carImage"
+                for="newCarImage"
                 class="form-label">
 
                 Change Car Image
@@ -423,6 +596,44 @@ function previewImage(input) {
 
         </div>
 
+        <div class="mb-4 field-group">
+
+    <label
+        for="galleryImages"
+        class="form-label">
+
+        Add More Images
+
+    </label>
+
+    <div class="image-upload-box">
+
+        <input
+    type="file"
+    name="newGalleryImages"
+    id="newGalleryImages"
+    class="form-control"
+    accept="image/*"
+    multiple/>
+
+        <small class="text-muted d-block mt-2">
+            Add more interior, dashboard,
+            seats or trunk photos.
+            Maximum gallery size: 6 photos.
+        </small>
+
+        <div id="selectedGalleryFiles" class="selected-files-box">
+            <div class="selected-files-title">
+                Selected new images
+            </div>
+
+            <ul id="selectedGalleryFilesList" class="selected-files-list"></ul>
+        </div>
+
+    </div>
+
+</div>
+
 
         <!-- Buttons -->
         <div class="form-actions">
@@ -448,6 +659,102 @@ function previewImage(input) {
         </div>
 
     </g:uploadForm>
+
+
+    <!-- Current Gallery Management -->
+    <g:if test="${car?.galleryImages && car.galleryImages.size() > 0}">
+
+        <div class="gallery-management">
+
+            <div class="gallery-management-header">
+
+                <h4 class="gallery-management-title">
+                    Current Gallery
+                </h4>
+
+                <span class="gallery-count">
+                    ${car.galleryImages.size()} / 6 photos
+                </span>
+
+            </div>
+
+
+            <div class="gallery-grid">
+
+                <g:each
+                    in="${car.galleryImages.sort { it.id }}"
+                    var="galleryImage">
+
+                    <div class="gallery-card">
+
+                        <img
+                            src="${createLink(
+                                    controller: 'car',
+                                    action: 'galleryImage',
+                                    id: galleryImage.id
+                            )}"
+                            alt="${car.brand} ${car.model} gallery image"/>
+
+
+                        <!-- Replace this image -->
+                        <g:uploadForm
+                            action="replaceGalleryImage"
+                            id="${galleryImage.id}"
+                            class="mb-2">
+
+                            <g:hiddenField
+                                name="carId"
+                                value="${car.id}"/>
+
+                            <input
+                                type="file"
+                                name="replacementImage"
+                                accept="image/*"
+                                class="form-control mb-2"
+                                required/>
+
+                            <button
+                                type="submit"
+                                class="btn btn-warning">
+
+                                Replace Image
+
+                            </button>
+
+                        </g:uploadForm>
+
+
+                        <!-- Delete this image -->
+                        <g:form
+                            action="deleteGalleryImage"
+                            id="${galleryImage.id}"
+                            method="POST">
+
+                            <g:hiddenField
+                                name="carId"
+                                value="${car.id}"/>
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                                onclick="return confirm('Delete this gallery image?');">
+
+                                Delete Image
+
+                            </button>
+
+                        </g:form>
+
+                    </div>
+
+                </g:each>
+
+            </div>
+
+        </div>
+
+    </g:if>
+
 
     </div>
 

@@ -6,13 +6,13 @@ class HomeController {
 
     def springSecurityService
 
+
     @Secured(['permitAll'])
     def index() {
 
         /*
          * إذا المستخدم عامل Login
-         * ما في داعي نظل نعرضله Landing Page.
-         * بنوديه مباشرة حسب Role.
+         * نوديه حسب الـRole.
          */
         if (springSecurityService.isLoggedIn()) {
 
@@ -20,7 +20,10 @@ class HomeController {
                     springSecurityService.currentUser as User
 
             boolean isAdmin =
-                    currentUser.authorities*.authority.contains('ROLE_ADMIN')
+                    currentUser.authorities*.authority.contains(
+                            'ROLE_ADMIN'
+                    )
+
 
             if (isAdmin) {
 
@@ -42,19 +45,46 @@ class HomeController {
 
 
         /*
-         * أرقام حقيقية من قاعدة البيانات
-         * للـLanding Page.
+         * آخر 3 سيارات AVAILABLE
+         * لعرضهم بالـLanding Page.
+         */
+        def featuredCars =
+                Car.createCriteria().list(
+                        max: 3
+                ) {
+
+                    eq(
+                            'status',
+                            'AVAILABLE'
+                    )
+
+                    order(
+                            'id',
+                            'desc'
+                    )
+                }
+
+
+        /*
+         * أرقام حقيقية من قاعدة البيانات.
          */
         Long totalCars =
                 Car.count()
 
         Long availableCars =
-                Car.countByStatus('AVAILABLE')
+                Car.countByStatus(
+                        'AVAILABLE'
+                )
 
 
+        /*
+         * البيانات التي سيتم إرسالها إلى
+         * home/index.gsp
+         */
         [
                 totalCars    : totalCars,
-                availableCars: availableCars
+                availableCars: availableCars,
+                featuredCars : featuredCars
         ]
     }
 }

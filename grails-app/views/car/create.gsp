@@ -415,6 +415,37 @@
         </div>
 
 
+        <!-- Additional Car Images -->
+        <div class="mb-4 field-group">
+
+            <label
+                for="galleryImages"
+                class="form-label">
+
+                Additional Images
+
+            </label>
+
+            <div class="image-upload-box">
+
+                <input
+                    type="file"
+                    name="newGalleryImages"
+                    id="newGalleryImages"
+                    class="form-control"
+                    accept="image/*"
+                    multiple/>
+
+                <small class="text-muted d-block mt-2">
+                    Select multiple photos such as interior,
+                    dashboard, seats or trunk.
+                </small>
+
+            </div>
+
+        </div>
+
+
         <!-- Buttons -->
         <div class="form-actions">
 
@@ -443,6 +474,36 @@
     </div>
 
 </div>
+<script>
+    const galleryInput =
+        document.getElementById('galleryImages');
 
+    const selectedFiles =
+        new DataTransfer();
+
+    galleryInput.addEventListener('change', function () {
+
+        Array.from(this.files).forEach(file => {
+
+            const alreadyExists =
+                Array.from(selectedFiles.files).some(existingFile =>
+                    existingFile.name === file.name &&
+                    existingFile.size === file.size
+                );
+
+            if (!alreadyExists) {
+                selectedFiles.items.add(file);
+            }
+
+        });
+
+        this.files = selectedFiles.files;
+
+        console.log(
+            'Gallery images selected:',
+            this.files.length
+        );
+    });
+</script>
 </body>
 </html>

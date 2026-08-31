@@ -63,6 +63,9 @@ class CarService {
                     'Cannot delete a car that has rental records.'
             )
         }
+        CarImage.findAllByCar(car).each { CarImage image ->
+    image.delete(failOnError: true)
+}
 
         car.delete(flush: true)
     }
@@ -100,4 +103,132 @@ class CarService {
     Long countByStatus(String status) {
         Car.countByStatus(status)
     }
+
+    Car saveWithGallery(
+        Car car,
+        List<Map> galleryFiles) {
+
+    car.save(
+            flush: true,
+            failOnError: true
+    )
+
+    galleryFiles.each { file ->
+
+        CarImage carImage =
+                new CarImage(
+                        car: car,
+                        imageData: file.bytes as byte[],
+                        contentType: file.contentType as String
+                )
+
+        carImage.save(
+                failOnError: true
+        )
+    }
+
+    car
+}
+Car updateWithGallery(
+        Car car,
+        List<Map> galleryFiles) {
+
+    car.save(
+            failOnError: true
+    )
+
+    galleryFiles.each { file ->
+
+        new CarImage(
+                car: car,
+                imageData: file.bytes as byte[],
+                contentType: file.contentType as String
+        ).save(
+                failOnError: true
+        )
+    }
+
+    car
+}
+
+
+int countGalleryImages(Long carId) {
+
+    Car car = Car.get(carId)
+
+    if (!car) {
+        return 0
+    }
+
+    CarImage.countByCar(car)
+}
+
+
+CarImage replaceGalleryImage(
+        Long imageId,
+        Long carId,
+        byte[] bytes,
+        String contentType) {
+
+    Car car = Car.get(carId)
+
+    if (!car) {
+        throw new IllegalArgumentException(
+                'Car not found.'
+        )
+    }
+
+    CarImage image =
+            CarImage.findByIdAndCar(
+                    imageId,
+                    car
+            )
+
+    if (!image) {
+        throw new IllegalArgumentException(
+                'Gallery image not found.'
+        )
+    }
+
+    image.imageData = bytes
+    image.contentType = contentType
+
+    image.save(
+            flush: true,
+            failOnError: true
+    )
+
+    image
+}
+
+
+void deleteGalleryImage(
+        Long imageId,
+        Long carId) {
+
+    Car car = Car.get(carId)
+
+    if (!car) {
+        throw new IllegalArgumentException(
+                'Car not found.'
+        )
+    }
+
+    CarImage image =
+            CarImage.findByIdAndCar(
+                    imageId,
+                    car
+            )
+
+    if (!image) {
+        throw new IllegalArgumentException(
+                'Gallery image not found.'
+        )
+    }
+
+    image.delete(
+            flush: true,
+            failOnError: true
+    )
+}
 }
