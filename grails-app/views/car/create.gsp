@@ -358,6 +358,38 @@
         </div>
 
 
+        <!-- Category -->
+        <div class="mb-3 field-group">
+
+            <label
+                for="categoryId"
+                class="form-label">
+
+                Category
+
+            </label>
+
+            <g:select
+                name="categoryId"
+                from="${categoryList}"
+                optionKey="id"
+                optionValue="name"
+                value="${car?.category?.id}"
+                noSelection="${['': 'Select a category']}"
+                required="required"
+                class="form-select ${hasErrors(bean: car, field: 'category', 'is-invalid')}"/>
+
+            <div class="text-danger">
+
+                <g:fieldError
+                    bean="${car}"
+                    field="category"/>
+
+            </div>
+
+        </div>
+
+
         <!-- Status -->
         <div class="mb-3 field-group">
 
@@ -419,7 +451,7 @@
         <div class="mb-4 field-group">
 
             <label
-                for="galleryImages"
+                for="newGalleryImages"
                 class="form-label">
 
                 Additional Images
@@ -476,7 +508,7 @@
 </div>
 <script>
     const galleryInput =
-        document.getElementById('galleryImages');
+        document.getElementById('newGalleryImages');
 
     const selectedFiles =
         new DataTransfer();

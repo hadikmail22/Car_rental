@@ -9,15 +9,15 @@ class Car {
     BigDecimal pricePerDay
     String status = 'AVAILABLE'
 
+    CarCategory category
+
     byte[] carImage
     String imageContentType
 
     static hasMany = [
         rentals      : Rental,
         galleryImages: CarImage
-]
-
-    
+    ]
 
     static constraints = {
         brand blank: false
@@ -27,10 +27,12 @@ class Car {
         pricePerDay nullable: false, min: 0.0
 
         status blank: false, inList: [
-                'AVAILABLE',
-                'RENTED',
-                'MAINTENANCE'
+            'AVAILABLE',
+            'RENTED',
+            'MAINTENANCE'
         ]
+
+        category nullable: true
 
         carImage nullable: true
         imageContentType nullable: true

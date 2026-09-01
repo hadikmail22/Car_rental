@@ -7,6 +7,19 @@ class CarApiController {
 
     CarService carService
 
+    private CarCategory findCategory(def rawCategoryId) {
+
+        if (rawCategoryId == null) {
+            return null
+        }
+
+        try {
+            CarCategory.get(rawCategoryId as Long)
+        } catch (Exception ignored) {
+            null
+        }
+    }
+
     static responseFormats = ['json']
 
     static allowedMethods = [
@@ -88,6 +101,10 @@ class CarApiController {
                             year       : car.year,
                             plateNumber: car.plateNumber,
                             pricePerDay: car.pricePerDay,
+                            category   : car.category ? [
+                                    id  : car.category.id,
+                                    name: car.category.name
+                            ] : null,
                             status     : car.status,
                             imageUrl   : createLink(
                                     controller: 'car',
@@ -146,6 +163,10 @@ class CarApiController {
                         year       : car.year,
                         plateNumber: car.plateNumber,
                         pricePerDay: car.pricePerDay,
+                        category   : car.category ? [
+                                id  : car.category.id,
+                                name: car.category.name
+                        ] : null,
                         status     : car.status,
                         imageUrl   : createLink(
                                 controller: 'car',
@@ -170,6 +191,25 @@ class CarApiController {
                 request.JSON
 
 
+        CarCategory category =
+                findCategory(body.categoryId)
+
+
+        if (body.categoryId != null && !category) {
+
+            render(
+                    status: 422,
+                    text: (
+                            [
+                                    error: 'Please provide a valid categoryId.'
+                            ] as JSON
+                    )
+            )
+
+            return
+        }
+
+
         Car car =
                 new Car(
                         brand:
@@ -188,7 +228,10 @@ class CarApiController {
                                 body.pricePerDay as BigDecimal,
 
                         status:
-                                body.status ?: 'AVAILABLE'
+                                body.status ?: 'AVAILABLE',
+
+                        category:
+                                category
                 )
 
 
@@ -267,6 +310,30 @@ class CarApiController {
 
         def body =
                 request.JSON
+
+
+        if (body.containsKey('categoryId')) {
+
+            CarCategory category =
+                    findCategory(body.categoryId)
+
+
+            if (!category) {
+
+                render(
+                        status: 422,
+                        text: (
+                                [
+                                        error: 'Please provide a valid categoryId.'
+                                ] as JSON
+                        )
+                )
+
+                return
+            }
+
+            car.category = category
+        }
 
 
         if (body.brand != null) {

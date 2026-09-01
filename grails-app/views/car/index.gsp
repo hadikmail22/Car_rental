@@ -331,14 +331,29 @@
                 method="GET"
                 class="row g-2">
 
-                <div class="col-md-8">
+                <div class="col-md-5">
 
                     <input
                         type="text"
                         name="q"
                         value="${q}"
                         class="form-control"
-                        placeholder="Search by brand, model, or plate number"/>
+                        placeholder="Search by brand, model, plate, or category"/>
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <g:select
+                        name="categoryId"
+                        from="${categoryList}"
+                        optionKey="id"
+                        optionValue="name"
+                        value="${categoryId}"
+                        noSelection="${['': 'All Categories']}"
+                        class="form-select"
+                        aria-label="Filter cars by category"/>
 
                 </div>
 
@@ -551,7 +566,7 @@
                                     <!-- Details -->
                                     <div class="row mb-3">
 
-                                        <div class="col-sm-6 mb-3">
+                                        <div class="col-sm-4 mb-3">
 
                                             <small class="text-muted d-block detail-label">
                                                 Plate Number
@@ -564,7 +579,20 @@
                                         </div>
 
 
-                                        <div class="col-sm-6 mb-3">
+                                        <div class="col-sm-4 mb-3">
+
+                                            <small class="text-muted d-block detail-label">
+                                                Category
+                                            </small>
+
+                                            <strong class="detail-value">
+                                                ${car.category?.name ?: 'Not assigned'}
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="col-sm-4 mb-3">
 
                                             <small class="text-muted d-block detail-label">
                                                 Price Per Day
@@ -672,7 +700,7 @@
         <g:paginate
             total="${carCount ?: 0}"
             max="5"
-            params="[q: q]"/>
+            params="[q: q, categoryId: categoryId]"/>
 
     </div>
 

@@ -6,6 +6,17 @@ import org.springframework.web.multipart.MultipartFile
 class CarController {
 
     CarService carService
+
+    private Map formModel(Car car) {
+        [
+                car         : car,
+                categoryList: CarCategory.list(
+                        sort: 'name',
+                        order: 'asc'
+                )
+        ]
+    }
+
 static allowedMethods = [
         save               : 'POST',
         update             : 'PUT',
@@ -18,8 +29,17 @@ static allowedMethods = [
         params.max = Math.min(params.int('max') ?: 5, 100)
         params.offset = params.int('offset') ?: 0
 
+        Long categoryId =
+                params.long('categoryId')
+
+        CarCategory selectedCategory =
+                categoryId ?
+                        CarCategory.get(categoryId) :
+                        null
+
         def carList = carService.search(
                 params.q,
+                selectedCategory,
                 [
                         max   : params.max,
                         offset: params.offset
@@ -29,7 +49,12 @@ static allowedMethods = [
         [
                 carList : carList,
                 carCount: carList.totalCount,
-                q       : params.q
+                q       : params.q,
+                categoryList: CarCategory.list(
+                        sort: 'name',
+                        order: 'asc'
+                ),
+                categoryId: selectedCategory?.id
         ]
     }
 
@@ -47,7 +72,7 @@ static allowedMethods = [
 
     @Secured(['ROLE_ADMIN'])
     def create() {
-        [car: new Car()]
+        formModel(new Car())
     }
 
  @Secured(['ROLE_ADMIN'])
@@ -57,6 +82,30 @@ def save(Car car) {
         notFound()
         return
     }
+
+    Long categoryId =
+            params.long('categoryId')
+
+    CarCategory category =
+            categoryId ?
+                    CarCategory.get(categoryId) :
+                    null
+
+    if (!category) {
+
+        car.errors.rejectValue(
+                'category',
+                'car.category.required',
+                'Please select a valid category.'
+        )
+
+        render view: 'create',
+                model: formModel(car)
+
+        return
+    }
+
+    car.category = category
 
     // Main image
     MultipartFile image =
@@ -69,7 +118,7 @@ def save(Car car) {
                     'Only image files are allowed.'
 
             render view: 'create',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -79,7 +128,7 @@ def save(Car car) {
                     'Car image must be smaller than 10MB.'
 
             render view: 'create',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -108,7 +157,7 @@ def save(Car car) {
                 'You can upload a maximum of 6 additional images.'
 
         render view: 'create',
-                model: [car: car]
+                model: formModel(car)
 
         return
     }
@@ -123,7 +172,7 @@ def save(Car car) {
                     'Only image files are allowed in the gallery.'
 
             render view: 'create',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -134,7 +183,7 @@ def save(Car car) {
                     'Each gallery image must be smaller than 5MB.'
 
             render view: 'create',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -145,7 +194,7 @@ def save(Car car) {
     if (car.hasErrors()) {
 
         render view: 'create',
-                model: [car: car]
+                model: formModel(car)
 
         return
     }
@@ -196,10 +245,10 @@ def save(Car car) {
             return
         }
 
-        [car: car]
+        formModel(car)
     }
 
-   
+
 @Secured(['ROLE_ADMIN'])
 def update(Long id) {
 
@@ -209,6 +258,30 @@ def update(Long id) {
         notFound()
         return
     }
+
+    Long categoryId =
+            params.long('categoryId')
+
+    CarCategory category =
+            categoryId ?
+                    CarCategory.get(categoryId) :
+                    null
+
+    if (!category) {
+
+        car.errors.rejectValue(
+                'category',
+                'car.category.required',
+                'Please select a valid category.'
+        )
+
+        render view: 'edit',
+                model: formModel(car)
+
+        return
+    }
+
+    car.category = category
 
 
     // Update normal car fields manually
@@ -241,7 +314,7 @@ def update(Long id) {
                     'Only image files are allowed.'
 
             render view: 'edit',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -252,7 +325,7 @@ def update(Long id) {
                     'Car image must be smaller than 10MB.'
 
             render view: 'edit',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -282,7 +355,7 @@ def update(Long id) {
                 'A car can have a maximum of 6 additional images.'
 
         render view: 'edit',
-                model: [car: car]
+                model: formModel(car)
 
         return
     }
@@ -297,7 +370,7 @@ def update(Long id) {
                     'Only image files are allowed in the gallery.'
 
             render view: 'edit',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -308,7 +381,7 @@ def update(Long id) {
                     'Each gallery image must be smaller than 5MB.'
 
             render view: 'edit',
-                    model: [car: car]
+                    model: formModel(car)
 
             return
         }
@@ -318,7 +391,7 @@ def update(Long id) {
     if (!car.validate()) {
 
         render view: 'edit',
-                model: [car: car]
+                model: formModel(car)
 
         return
     }

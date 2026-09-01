@@ -5,8 +5,9 @@ import grails.gorm.transactions.Transactional
 class BootStrap {
 
     def init = {
-        createSecurityUsers()
-    }
+    createSecurityUsers()
+    createCarCategories()
+}
 
     @Transactional
     void createSecurityUsers() {
@@ -105,6 +106,33 @@ class BootStrap {
             )
         }
     }
+
+    @Transactional
+void createCarCategories() {
+
+    List<String> categoryNames = [
+        'Economy',
+        'Sedan',
+        'SUV',
+        'Luxury',
+        'Van',
+        'Sports'
+    ]
+
+    categoryNames.each { String categoryName ->
+
+        CarCategory category =
+                CarCategory.findByName(categoryName)
+
+        if (!category) {
+            new CarCategory(
+                    name: categoryName
+            ).save(
+                    failOnError: true
+            )
+        }
+    }
+}
 
 
     def destroy = {

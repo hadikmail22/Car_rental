@@ -542,6 +542,19 @@
             <div class="spec-row">
 
                 <span class="spec-label">
+                    Category
+                </span>
+
+                <span class="spec-value">
+                    ${car.category?.name ?: 'Not assigned'}
+                </span>
+
+            </div>
+
+
+            <div class="spec-row">
+
+                <span class="spec-label">
                     Model
                 </span>
 

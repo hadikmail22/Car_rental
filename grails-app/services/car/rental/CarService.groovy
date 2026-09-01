@@ -71,23 +71,51 @@ class CarService {
     }
 
     /**
-     * Searches cars by brand, model, or plate number.
+     * Searches cars by brand, model, plate number, or category name.
      *
      * @param query search text
+     * @param selectedCategory optional category filter
      * @param params pagination parameters
      * @return filtered car list
      */
-    def search(String query, Map params = [:]) {
+    def search(
+            String query,
+            CarCategory selectedCategory,
+            Map params = [:]) {
+
+        String normalizedQuery =
+                query?.trim()
+
+        List<CarCategory> matchingCategories =
+                normalizedQuery ?
+                        CarCategory.findAllByNameIlike(
+                                "%${normalizedQuery}%"
+                        ) :
+                        []
 
         Car.createCriteria().list(params) {
 
-            if (query) {
+            if (normalizedQuery) {
 
                 or {
-                    ilike('brand', "%${query}%")
-                    ilike('model', "%${query}%")
-                    ilike('plateNumber', "%${query}%")
+                    ilike('brand', "%${normalizedQuery}%")
+                    ilike('model', "%${normalizedQuery}%")
+                    ilike('plateNumber', "%${normalizedQuery}%")
+
+                    if (matchingCategories) {
+                        inList(
+                                'category',
+                                matchingCategories
+                        )
+                    }
                 }
+            }
+
+            if (selectedCategory) {
+                eq(
+                        'category',
+                        selectedCategory
+                )
             }
 
             order('id', 'desc')

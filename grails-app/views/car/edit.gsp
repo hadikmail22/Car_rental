@@ -330,7 +330,7 @@ function previewImage(input) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    const galleryInput = document.getElementById('galleryImages');
+    const galleryInput = document.getElementById('newGalleryImages');
 
     if (!galleryInput) {
         return;
@@ -579,6 +579,32 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
 
 
+        <!-- Category -->
+        <div class="mb-3 field-group">
+
+            <label
+                for="categoryId"
+                class="form-label">
+                Category
+            </label>
+
+            <g:select
+                name="categoryId"
+                from="${categoryList}"
+                optionKey="id"
+                optionValue="name"
+                value="${car?.category?.id}"
+                noSelection="${['': 'Select a category']}"
+                required="required"
+                class="form-select ${hasErrors(bean: car, field: 'category', 'is-invalid')}"/>
+
+            <div class="text-danger">
+                <g:fieldError bean="${car}" field="category"/>
+            </div>
+
+        </div>
+
+
         <!-- Status -->
         <div class="mb-3 field-group">
 
@@ -599,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="mb-4 field-group">
 
     <label
-        for="galleryImages"
+        for="newGalleryImages"
         class="form-label">
 
         Add More Images
