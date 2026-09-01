@@ -7,76 +7,110 @@ class CarService {
 
     /**
      * Returns a car by its id.
-     *
-     * @param id car id
-     * @return matching car or null if not found
      */
     Car get(Long id) {
         Car.get(id)
     }
 
+
     /**
      * Returns a paginated list of cars.
-     *
-     * @param params pagination and query parameters
-     * @return list of cars
      */
     List<Car> list(Map params = [:]) {
         Car.list(params)
     }
 
+
     /**
      * Returns the total number of cars.
-     *
-     * @return total car count
      */
     Long count() {
         Car.count()
     }
 
+
     /**
      * Saves a car.
-     *
-     * @param car car to save
-     * @return saved car
      */
     Car save(Car car) {
-        car.save(failOnError: true)
+
+        car.save(
+                failOnError: true
+        )
     }
+
 
     /**
      * Deletes a car if it has no rental records.
      *
-     * @param id car id
-     * @throws IllegalStateException when the car has rental records
+     * Pricing rules and gallery images belonging
+     * to the car are deleted first to avoid
+     * foreign-key errors.
      */
     void delete(Long id) {
 
-        Car car = Car.get(id)
+        Car car =
+                Car.get(id)
 
         if (!car) {
             return
         }
 
-        if (car.rentals && !car.rentals.isEmpty()) {
+
+        /*
+         * A car that has rental history cannot
+         * be deleted.
+         */
+        if (car.rentals &&
+                !car.rentals.isEmpty()) {
+
             throw new IllegalStateException(
                     'Cannot delete a car that has rental records.'
             )
         }
-        CarImage.findAllByCar(car).each { CarImage image ->
-    image.delete(failOnError: true)
-}
 
-        car.delete(flush: true)
+
+        /*
+         * Pricing rules no longer need to remain
+         * when the car itself is deleted.
+         *
+         * Existing rentals are not affected because
+         * their agreed price is stored in Rental.totalPrice.
+         */
+        PricingRule
+                .findAllByCar(car)
+                .each { PricingRule pricingRule ->
+
+                    pricingRule.delete(
+                            failOnError: true
+                    )
+                }
+
+
+        /*
+         * Delete gallery images before deleting
+         * the car to avoid the CarImage foreign key.
+         */
+        CarImage
+                .findAllByCar(car)
+                .each { CarImage image ->
+
+                    image.delete(
+                            failOnError: true
+                    )
+                }
+
+
+        car.delete(
+                flush: true,
+                failOnError: true
+        )
     }
 
+
     /**
-     * Searches cars by brand, model, plate number, or category name.
-     *
-     * @param query search text
-     * @param selectedCategory optional category filter
-     * @param params pagination parameters
-     * @return filtered car list
+     * Searches cars by brand, model,
+     * plate number, or category name.
      */
     def search(
             String query,
@@ -86,6 +120,7 @@ class CarService {
         String normalizedQuery =
                 query?.trim()
 
+
         List<CarCategory> matchingCategories =
                 normalizedQuery ?
                         CarCategory.findAllByNameIlike(
@@ -93,16 +128,30 @@ class CarService {
                         ) :
                         []
 
+
         Car.createCriteria().list(params) {
 
             if (normalizedQuery) {
 
                 or {
-                    ilike('brand', "%${normalizedQuery}%")
-                    ilike('model', "%${normalizedQuery}%")
-                    ilike('plateNumber', "%${normalizedQuery}%")
+
+                    ilike(
+                            'brand',
+                            "%${normalizedQuery}%"
+                    )
+
+                    ilike(
+                            'model',
+                            "%${normalizedQuery}%"
+                    )
+
+                    ilike(
+                            'plateNumber',
+                            "%${normalizedQuery}%"
+                    )
 
                     if (matchingCategories) {
+
                         inList(
                                 'category',
                                 matchingCategories
@@ -111,152 +160,208 @@ class CarService {
                 }
             }
 
+
             if (selectedCategory) {
+
                 eq(
                         'category',
                         selectedCategory
                 )
             }
 
-            order('id', 'desc')
+
+            order(
+                    'id',
+                    'desc'
+            )
         }
     }
 
+
     /**
      * Counts cars by status.
-     *
-     * @param status car status
-     * @return number of cars with the given status
      */
     Long countByStatus(String status) {
+
         Car.countByStatus(status)
     }
 
+
+    /**
+     * Saves a car together with its
+     * additional gallery images.
+     */
     Car saveWithGallery(
-        Car car,
-        List<Map> galleryFiles) {
+            Car car,
+            List<Map> galleryFiles) {
 
-    car.save(
-            flush: true,
-            failOnError: true
-    )
+        car.save(
+                flush: true,
+                failOnError: true
+        )
 
-    galleryFiles.each { file ->
 
-        CarImage carImage =
-                new CarImage(
-                        car: car,
-                        imageData: file.bytes as byte[],
-                        contentType: file.contentType as String
+        galleryFiles.each { Map file ->
+
+            CarImage carImage =
+                    new CarImage(
+                            car: car,
+                            imageData:
+                                    file.bytes as byte[],
+                            contentType:
+                                    file.contentType as String
+                    )
+
+
+            carImage.save(
+                    failOnError: true
+            )
+        }
+
+
+        car
+    }
+
+
+    /**
+     * Updates a car and adds new gallery images.
+     */
+    Car updateWithGallery(
+            Car car,
+            List<Map> galleryFiles) {
+
+        car.save(
+                failOnError: true
+        )
+
+
+        galleryFiles.each { Map file ->
+
+            new CarImage(
+                    car: car,
+                    imageData:
+                            file.bytes as byte[],
+                    contentType:
+                            file.contentType as String
+            ).save(
+                    failOnError: true
+            )
+        }
+
+
+        car
+    }
+
+
+    /**
+     * Counts additional gallery images
+     * for one car.
+     */
+    int countGalleryImages(Long carId) {
+
+        Car car =
+                Car.get(carId)
+
+
+        if (!car) {
+            return 0
+        }
+
+
+        CarImage.countByCar(car)
+    }
+
+
+    /**
+     * Replaces one existing gallery image.
+     */
+    CarImage replaceGalleryImage(
+            Long imageId,
+            Long carId,
+            byte[] bytes,
+            String contentType) {
+
+        Car car =
+                Car.get(carId)
+
+
+        if (!car) {
+
+            throw new IllegalArgumentException(
+                    'Car not found.'
+            )
+        }
+
+
+        CarImage image =
+                CarImage.findByIdAndCar(
+                        imageId,
+                        car
                 )
 
-        carImage.save(
+
+        if (!image) {
+
+            throw new IllegalArgumentException(
+                    'Gallery image not found.'
+            )
+        }
+
+
+        image.imageData =
+                bytes
+
+        image.contentType =
+                contentType
+
+
+        image.save(
+                flush: true,
+                failOnError: true
+        )
+
+
+        image
+    }
+
+
+    /**
+     * Deletes one gallery image.
+     */
+    void deleteGalleryImage(
+            Long imageId,
+            Long carId) {
+
+        Car car =
+                Car.get(carId)
+
+
+        if (!car) {
+
+            throw new IllegalArgumentException(
+                    'Car not found.'
+            )
+        }
+
+
+        CarImage image =
+                CarImage.findByIdAndCar(
+                        imageId,
+                        car
+                )
+
+
+        if (!image) {
+
+            throw new IllegalArgumentException(
+                    'Gallery image not found.'
+            )
+        }
+
+
+        image.delete(
+                flush: true,
                 failOnError: true
         )
     }
-
-    car
-}
-Car updateWithGallery(
-        Car car,
-        List<Map> galleryFiles) {
-
-    car.save(
-            failOnError: true
-    )
-
-    galleryFiles.each { file ->
-
-        new CarImage(
-                car: car,
-                imageData: file.bytes as byte[],
-                contentType: file.contentType as String
-        ).save(
-                failOnError: true
-        )
-    }
-
-    car
-}
-
-
-int countGalleryImages(Long carId) {
-
-    Car car = Car.get(carId)
-
-    if (!car) {
-        return 0
-    }
-
-    CarImage.countByCar(car)
-}
-
-
-CarImage replaceGalleryImage(
-        Long imageId,
-        Long carId,
-        byte[] bytes,
-        String contentType) {
-
-    Car car = Car.get(carId)
-
-    if (!car) {
-        throw new IllegalArgumentException(
-                'Car not found.'
-        )
-    }
-
-    CarImage image =
-            CarImage.findByIdAndCar(
-                    imageId,
-                    car
-            )
-
-    if (!image) {
-        throw new IllegalArgumentException(
-                'Gallery image not found.'
-        )
-    }
-
-    image.imageData = bytes
-    image.contentType = contentType
-
-    image.save(
-            flush: true,
-            failOnError: true
-    )
-
-    image
-}
-
-
-void deleteGalleryImage(
-        Long imageId,
-        Long carId) {
-
-    Car car = Car.get(carId)
-
-    if (!car) {
-        throw new IllegalArgumentException(
-                'Car not found.'
-        )
-    }
-
-    CarImage image =
-            CarImage.findByIdAndCar(
-                    imageId,
-                    car
-            )
-
-    if (!image) {
-        throw new IllegalArgumentException(
-                'Gallery image not found.'
-        )
-    }
-
-    image.delete(
-            flush: true,
-            failOnError: true
-    )
-}
 }

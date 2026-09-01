@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile
 class CarController {
 
     CarService carService
+    PricingService pricingService
 
     private Map formModel(Car car) {
         [
@@ -26,7 +27,7 @@ static allowedMethods = [
 ]
     @Secured(['ROLE_ADMIN', 'ROLE_CUSTOMER'])
     def index() {
-        params.max = Math.min(params.int('max') ?: 5, 100)
+        params.max = Math.min(params.int('max') ?: 6, 100)
         params.offset = params.int('offset') ?: 0
 
         Long categoryId =
@@ -46,6 +47,11 @@ static allowedMethods = [
                 ]
         )
 
+        Map<Long, List<Map>> pricingHighlightsByCar =
+                pricingService.getPricingHighlightsForCars(
+                        carList
+                )
+
         [
                 carList : carList,
                 carCount: carList.totalCount,
@@ -54,7 +60,9 @@ static allowedMethods = [
                         sort: 'name',
                         order: 'asc'
                 ),
-                categoryId: selectedCategory?.id
+                categoryId: selectedCategory?.id,
+                pricingHighlightsByCar:
+                        pricingHighlightsByCar
         ]
     }
 
@@ -67,7 +75,16 @@ static allowedMethods = [
             return
         }
 
-        [car: car]
+        Map<Long, List<Map>> pricingHighlightsByCar =
+                pricingService.getPricingHighlightsForCars(
+                        [car]
+                )
+
+        [
+                car              : car,
+                pricingHighlights:
+                        pricingHighlightsByCar[car.id] ?: []
+        ]
     }
 
     @Secured(['ROLE_ADMIN'])

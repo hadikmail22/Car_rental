@@ -1700,6 +1700,25 @@
                                 </li>
 
 
+                                <!-- Pricing Rules -->
+                                <li class="nav-item">
+
+                                    <g:link
+                                        controller="pricingRule"
+                                        action="index"
+                                        class="nav-link premium-nav-link ${controllerName == 'pricingRule' ? 'active' : ''}">
+
+                                        <i class="bi bi-tags"></i>
+
+                                        <span>
+                                            Pricing
+                                        </span>
+
+                                    </g:link>
+
+                                </li>
+
+
                             </sec:ifAnyGranted>
 
 

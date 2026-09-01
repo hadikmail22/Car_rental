@@ -139,8 +139,8 @@ environments:
         dataSource:
             dbCreate: update
             driverClassName: org.h2.Driver
-            url: 'jdbc:h2:mem:testDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE'
-            username: sa
+            dialect: org.hibernate.dialect.H2Dialect
+            url: 'jdbc:h2:mem:testDb;MODE=MySQL;NON_KEYWORDS=USER,ROLE,YEAR;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE'
             password: ''
 
     production:

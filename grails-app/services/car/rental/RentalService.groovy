@@ -5,6 +5,8 @@ import grails.gorm.transactions.Transactional
 @Transactional
 class RentalService {
 
+    PricingService pricingService
+
 
     /**
      * Returns a rental by id.
@@ -422,33 +424,20 @@ class RentalService {
 
 
         /*
-         * Calculate rental days.
+         * Calculate and lock the agreed rental price.
          *
-         * Example:
+         * PricingService calculates the price day by day and applies
+         * the highest-priority rule for each rental date.
          *
-         * 10 Aug -> 12 Aug
-         *
-         * = 3 rental days
+         * The result is stored once in Rental.totalPrice. It is not
+         * recalculated later when the deposit is paid or rules change.
          */
-        long milliseconds =
-                endDate.time -
-                startDate.time
-
-
-        long rentalDays =
-                (milliseconds /
-                        (1000 * 60 * 60 * 24)) + 1
-
-
-        if (rentalDays < 1) {
-            rentalDays = 1
-        }
-
-
-        // Calculate total rental price
         BigDecimal totalPrice =
-                car.pricePerDay *
-                        rentalDays
+                pricingService.calculateRentalPrice(
+                        car,
+                        startDate,
+                        endDate
+                )
 
 
         /*

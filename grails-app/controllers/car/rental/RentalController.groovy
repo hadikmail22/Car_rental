@@ -1,14 +1,17 @@
 package car.rental
 
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
 class RentalController {
 
     RentalService rentalService
+    PricingService pricingService
     def springSecurityService
 
     static allowedMethods = [
         save      : 'POST',
+        quote     : 'GET',
         payDeposit: 'POST',
         cancel    : 'POST',
         pickup    : 'POST',
@@ -162,6 +165,93 @@ class RentalController {
                 car     : car,
                 bookings: bookings
         ]
+    }
+
+
+    /**
+     * Returns a dynamic price preview for the selected car and dates.
+     *
+     * This action does not create or update any database records.
+     * RentalService still performs the final calculation and saves the
+     * locked total when the customer submits the rental.
+     */
+    @Secured(['ROLE_CUSTOMER'])
+    def quote() {
+
+        Long carId =
+                params.long('carId')
+
+
+        Car car =
+                carId ?
+                        Car.get(carId) :
+                        null
+
+
+        if (!car) {
+
+            response.status = 404
+
+            render([
+                    error: 'Car not found.'
+            ] as JSON)
+
+            return
+        }
+
+
+        Date startDate
+        Date endDate
+
+
+        try {
+
+            startDate =
+                    java.sql.Date.valueOf(
+                            params.startDate?.toString()
+                    )
+
+            endDate =
+                    java.sql.Date.valueOf(
+                            params.endDate?.toString()
+                    )
+
+        } catch (Exception ignored) {
+
+            response.status = 422
+
+            render([
+                    error:
+                            'Please select valid start and end dates.'
+            ] as JSON)
+
+            return
+        }
+
+
+        try {
+
+            Map rentalQuote =
+                    pricingService.calculateRentalQuote(
+                            car,
+                            startDate,
+                            endDate
+                    )
+
+
+            render rentalQuote as JSON
+
+        } catch (
+                IllegalArgumentException |
+                IllegalStateException exception
+        ) {
+
+            response.status = 422
+
+            render([
+                    error: exception.message
+            ] as JSON)
+        }
     }
 
 

@@ -191,6 +191,111 @@
             color:var(--headlight) !important;
         }
 
+        .price-adjustment{
+            padding-top:1rem;
+            border-top:1px solid rgba(255,255,255,0.12);
+        }
+
+        .price-adjustment-value{
+            font-family:'JetBrains Mono', monospace;
+            font-weight:700;
+        }
+
+        .price-adjustment-value.discount{
+            color:#68d391;
+        }
+
+        .price-adjustment-value.increase{
+            color:#f6c453;
+        }
+
+        .pricing-rules{
+            display:flex;
+            flex-wrap:wrap;
+            gap:0.5rem;
+            margin-top:0.75rem;
+        }
+
+        .pricing-rule-badge{
+            display:inline-flex;
+            align-items:center;
+            gap:0.35rem;
+            padding:0.35rem 0.6rem;
+            border:1px solid rgba(245,166,35,0.35);
+            border-radius:999px;
+            background:rgba(245,166,35,0.1);
+            color:#f6c453;
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.72rem;
+        }
+
+        .daily-pricing{
+            margin-top:1rem;
+            padding-top:1rem;
+            border-top:1px solid rgba(255,255,255,0.12);
+        }
+
+        .daily-pricing summary{
+            color:#fff;
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.78rem;
+            cursor:pointer;
+        }
+
+        .daily-price-list{
+            margin-top:0.75rem;
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:8px;
+            overflow:hidden;
+        }
+
+        .daily-price-row{
+            display:grid;
+            grid-template-columns:minmax(95px, 1fr) minmax(85px, auto) minmax(120px, 2fr);
+            gap:0.75rem;
+            align-items:center;
+            padding:0.65rem 0.75rem;
+            border-bottom:1px solid rgba(255,255,255,0.08);
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.75rem;
+        }
+
+        .daily-price-row:last-child{
+            border-bottom:none;
+        }
+
+        .daily-price-date{
+            color:#d6d6d8;
+        }
+
+        .daily-price-amount{
+            color:#fff;
+            font-weight:700;
+            text-align:right;
+        }
+
+        .daily-price-rule{
+            color:#9a9ba1;
+            text-align:right;
+        }
+
+        .pricing-note{
+            margin-top:0.8rem;
+            color:#9a9ba1;
+            font-size:0.78rem;
+        }
+
+        @media (max-width: 575.98px){
+            .daily-price-row{
+                grid-template-columns:1fr auto;
+            }
+
+            .daily-price-rule{
+                grid-column:1 / -1;
+                text-align:left;
+            }
+        }
+
         #dateError{
             border-radius:8px;
         }
@@ -558,8 +663,6 @@
                         id="startDate"
                         name="startDate"
                         class="form-control"
-                        onchange="calculateRentalPrice()"
-                        oninput="calculateRentalPrice()"
                         required/>
 
                 </div>
@@ -581,8 +684,6 @@
                         id="endDate"
                         name="endDate"
                         class="form-control"
-                        onchange="calculateRentalPrice()"
-                        oninput="calculateRentalPrice()"
                         required/>
 
                 </div>
@@ -591,8 +692,7 @@
                 <!-- Price Summary -->
                 <div
                     id="priceBox"
-                    class="card border-0 mb-4 price-box"
-                    data-price="${car.pricePerDay}">
+                    class="card border-0 mb-4 price-box">
 
                     <div class="card-body">
 
@@ -603,22 +703,26 @@
                         <div class="row">
 
 
-                            <!-- Price Per Day -->
-                            <div class="col-md-4 mb-3">
+                            <!-- Base Price Per Day -->
+                            <div class="col-md-6 col-xl-3 mb-3">
 
                                 <small class="d-block">
-                                    Price Per Day
+                                    Base Price Per Day
                                 </small>
 
-                                <strong class="fs-5">
+                                <strong
+                                    id="basePricePerDay"
+                                    class="fs-5">
+
                                     ${car.pricePerDay}
+
                                 </strong>
 
                             </div>
 
 
                             <!-- Rental Days -->
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 col-xl-3 mb-3">
 
                                 <small class="d-block">
                                     Rental Days
@@ -635,11 +739,29 @@
                             </div>
 
 
-                            <!-- Total Price -->
-                            <div class="col-md-4 mb-3">
+                            <!-- Base Total -->
+                            <div class="col-md-6 col-xl-3 mb-3">
 
                                 <small class="d-block">
-                                    Total Price
+                                    Base Total
+                                </small>
+
+                                <strong
+                                    id="baseTotal"
+                                    class="fs-5">
+
+                                    Select dates
+
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Final Total Price -->
+                            <div class="col-md-6 col-xl-3 mb-3">
+
+                                <small class="d-block">
+                                    Final Total
                                 </small>
 
                                 <strong
@@ -652,6 +774,57 @@
 
                             </div>
 
+                        </div>
+
+
+                        <!-- Dynamic Pricing Result -->
+                        <div
+                            id="pricingAdjustment"
+                            class="price-adjustment"
+                            style="display:none;">
+
+                            <div class="d-flex justify-content-between gap-3">
+
+                                <small id="pricingAdjustmentLabel">
+                                    Pricing Adjustment
+                                </small>
+
+                                <span
+                                    id="pricingAdjustmentValue"
+                                    class="price-adjustment-value">
+                                </span>
+
+                            </div>
+
+                            <div
+                                id="appliedPricingRules"
+                                class="pricing-rules">
+                            </div>
+
+                        </div>
+
+
+                        <!-- Daily Price Breakdown -->
+                        <details
+                            id="dailyPricing"
+                            class="daily-pricing"
+                            style="display:none;">
+
+                            <summary>
+                                View daily price breakdown
+                            </summary>
+
+                            <div
+                                id="dailyPriceList"
+                                class="daily-price-list">
+                            </div>
+
+                        </details>
+
+
+                        <div class="pricing-note">
+                            The final booking price is calculated and locked
+                            when the rental request is created.
                         </div>
 
                     </div>
@@ -831,19 +1004,246 @@
 
 <script>
 
-function calculateRentalPrice() {
+const rentalQuoteUrl =
+    '${g.createLink(controller: 'rental', action: 'quote')}';
 
-    const startInput =
-        document.getElementById('startDate');
+let activeQuoteRequest = null;
+let latestQuoteRequestNumber = 0;
 
-    const endInput =
-        document.getElementById('endDate');
 
-    const priceBox =
-        document.getElementById('priceBox');
+function formatMoney(value) {
+
+    const number = Number(value);
+
+    return Number.isFinite(number) ?
+        number.toFixed(2) :
+        '0.00';
+}
+
+
+function resetDynamicPricingDetails() {
+
+    document.getElementById('pricingAdjustment').style.display =
+        'none';
+
+    document.getElementById('appliedPricingRules').replaceChildren();
+
+    const dailyPricing =
+        document.getElementById('dailyPricing');
+
+    dailyPricing.style.display =
+        'none';
+
+    dailyPricing.open =
+        false;
+
+    document.getElementById('dailyPriceList').replaceChildren();
+}
+
+
+function showQuoteError(message) {
+
+    const dateError =
+        document.getElementById('dateError');
+
+    dateError.textContent =
+        message;
+
+    dateError.style.display =
+        'block';
+
+    document.getElementById('rentalDays').textContent =
+        '-';
+
+    document.getElementById('baseTotal').textContent =
+        '-';
+
+    document.getElementById('totalPrice').textContent =
+        '-';
+
+    document.getElementById('createRentalButton').disabled =
+        true;
+
+    resetDynamicPricingDetails();
+}
+
+
+function renderAppliedRules(rules) {
+
+    const rulesContainer =
+        document.getElementById('appliedPricingRules');
+
+    rulesContainer.replaceChildren();
+
+    rules.forEach(function (rule) {
+
+        const badge =
+            document.createElement('span');
+
+        badge.className =
+            'pricing-rule-badge';
+
+        const sign =
+            rule.adjustmentType === 'DISCOUNT' ? '-' : '+';
+
+        badge.textContent =
+            rule.name +
+            ' (' +
+            sign +
+            formatMoney(rule.percentage) +
+            '%, ' +
+            rule.scope +
+            ')';
+
+        rulesContainer.appendChild(badge);
+    });
+}
+
+
+function renderDailyPrices(dailyPrices) {
+
+    const dailyPricing =
+        document.getElementById('dailyPricing');
+
+    const dailyPriceList =
+        document.getElementById('dailyPriceList');
+
+    dailyPriceList.replaceChildren();
+
+    dailyPrices.forEach(function (dailyPrice) {
+
+        const row =
+            document.createElement('div');
+
+        row.className =
+            'daily-price-row';
+
+        const date =
+            document.createElement('span');
+
+        date.className =
+            'daily-price-date';
+
+        date.textContent =
+            dailyPrice.date;
+
+        const amount =
+            document.createElement('span');
+
+        amount.className =
+            'daily-price-amount';
+
+        amount.textContent =
+            formatMoney(dailyPrice.finalPrice);
+
+        const rule =
+            document.createElement('span');
+
+        rule.className =
+            'daily-price-rule';
+
+        if (dailyPrice.ruleName) {
+
+            const sign =
+                dailyPrice.adjustmentType === 'DISCOUNT' ? '-' : '+';
+
+            rule.textContent =
+                dailyPrice.ruleName +
+                ' ' +
+                sign +
+                formatMoney(dailyPrice.percentage) +
+                '%';
+
+        } else {
+
+            rule.textContent =
+                'Base price';
+        }
+
+        row.append(date, amount, rule);
+        dailyPriceList.appendChild(row);
+    });
+
+    dailyPricing.style.display =
+        dailyPrices.length ? 'block' : 'none';
+}
+
+
+function renderRentalQuote(quote) {
+
+    const rentalDays =
+        Number(quote.rentalDays);
+
+    document.getElementById('basePricePerDay').textContent =
+        formatMoney(quote.basePricePerDay);
+
+    document.getElementById('rentalDays').textContent =
+        rentalDays +
+        (rentalDays === 1 ? ' day' : ' days');
+
+    document.getElementById('baseTotal').textContent =
+        formatMoney(quote.baseTotal);
+
+    document.getElementById('totalPrice').textContent =
+        formatMoney(quote.totalPrice);
+
+    resetDynamicPricingDetails();
+
+    if (quote.hasDynamicPricing) {
+
+        const adjustment =
+            Number(quote.adjustmentAmount);
+
+        const isDiscount =
+            adjustment < 0;
+
+        const adjustmentValue =
+            document.getElementById('pricingAdjustmentValue');
+
+        document.getElementById('pricingAdjustmentLabel').textContent =
+            isDiscount ?
+                'Discount Applied' :
+                'Seasonal Price Increase';
+
+        adjustmentValue.className =
+            'price-adjustment-value ' +
+            (isDiscount ? 'discount' : 'increase');
+
+        adjustmentValue.textContent =
+            (isDiscount ? '-' : '+') +
+            formatMoney(Math.abs(adjustment));
+
+        document.getElementById('pricingAdjustment').style.display =
+            'block';
+
+        renderAppliedRules(
+            Array.isArray(quote.appliedRules) ?
+                quote.appliedRules :
+                []
+        );
+    }
+
+    renderDailyPrices(
+        Array.isArray(quote.dailyPrices) ?
+            quote.dailyPrices :
+            []
+    );
+}
+
+
+async function calculateRentalPrice() {
+
+    const startValue =
+        document.getElementById('startDate').value;
+
+    const endValue =
+        document.getElementById('endDate').value;
 
     const rentalDaysElement =
         document.getElementById('rentalDays');
+
+    const baseTotalElement =
+        document.getElementById('baseTotal');
 
     const totalPriceElement =
         document.getElementById('totalPrice');
@@ -855,16 +1255,18 @@ function calculateRentalPrice() {
         document.getElementById('createRentalButton');
 
 
-    const startValue =
-        startInput.value;
-
-    const endValue =
-        endInput.value;
+    if (activeQuoteRequest) {
+        activeQuoteRequest.abort();
+        activeQuoteRequest = null;
+    }
 
 
     if (!startValue || !endValue) {
 
         rentalDaysElement.textContent =
+            'Select dates';
+
+        baseTotalElement.textContent =
             'Select dates';
 
         totalPriceElement.textContent =
@@ -876,91 +1278,137 @@ function calculateRentalPrice() {
         createButton.disabled =
             false;
 
-        return;
-    }
-
-
-    const pricePerDay =
-        parseFloat(priceBox.dataset.price);
-
-
-    const startParts =
-        startValue.split('-');
-
-    const endParts =
-        endValue.split('-');
-
-
-    const startDate =
-        Date.UTC(
-            Number(startParts[0]),
-            Number(startParts[1]) - 1,
-            Number(startParts[2])
-        );
-
-
-    const endDate =
-        Date.UTC(
-            Number(endParts[0]),
-            Number(endParts[1]) - 1,
-            Number(endParts[2])
-        );
-
-
-    if (endDate < startDate) {
-
-        rentalDaysElement.textContent =
-            '-';
-
-        totalPriceElement.textContent =
-            '-';
-
-        dateError.style.display =
-            'block';
-
-        createButton.disabled =
-            true;
+        resetDynamicPricingDetails();
 
         return;
     }
 
+
+    if (endValue < startValue) {
+
+        showQuoteError(
+            'End date cannot be before start date.'
+        );
+
+        return;
+    }
+
+
+    const requestNumber =
+        ++latestQuoteRequestNumber;
+
+    activeQuoteRequest =
+        new AbortController();
 
     dateError.style.display =
         'none';
 
-    createButton.disabled =
-        false;
-
-
-    const oneDay =
-        1000 * 60 * 60 * 24;
-
-
-    const difference =
-        endDate - startDate;
-
-
-    const rentalDays =
-        Math.floor(
-            difference / oneDay
-        ) + 1;
-
-
-    const totalPrice =
-        rentalDays * pricePerDay;
-
-
     rentalDaysElement.textContent =
-        rentalDays +
-        (rentalDays === 1
-            ? ' day'
-            : ' days');
+        'Calculating...';
 
+    baseTotalElement.textContent =
+        'Calculating...';
 
     totalPriceElement.textContent =
-        totalPrice.toFixed(2);
+        'Calculating...';
 
+    createButton.disabled =
+        true;
+
+    resetDynamicPricingDetails();
+
+
+    const query =
+        new URLSearchParams({
+            carId: '${car.id}',
+            startDate: startValue,
+            endDate: endValue
+        });
+
+
+    try {
+
+        const response =
+            await fetch(
+                rentalQuoteUrl + '?' + query.toString(),
+                {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    credentials: 'same-origin',
+                    signal: activeQuoteRequest.signal
+                }
+            );
+
+
+        let responseBody = {};
+
+        try {
+            responseBody = await response.json();
+        } catch (ignored) {
+            responseBody = {};
+        }
+
+
+        if (requestNumber !== latestQuoteRequestNumber) {
+            return;
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                responseBody.error ||
+                'Unable to calculate the rental price.'
+            );
+        }
+
+
+        renderRentalQuote(responseBody);
+
+        dateError.style.display =
+            'none';
+
+        createButton.disabled =
+            false;
+
+    } catch (error) {
+
+        if (error.name === 'AbortError') {
+            return;
+        }
+
+        if (requestNumber !== latestQuoteRequestNumber) {
+            return;
+        }
+
+        showQuoteError(
+            error.message ||
+            'Unable to calculate the rental price.'
+        );
+
+    } finally {
+
+        if (requestNumber === latestQuoteRequestNumber) {
+            activeQuoteRequest = null;
+        }
+    }
 }
+
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.getElementById('startDate').addEventListener(
+        'change',
+        calculateRentalPrice
+    );
+
+    document.getElementById('endDate').addEventListener(
+        'change',
+        calculateRentalPrice
+    );
+});
 
 </script>
 

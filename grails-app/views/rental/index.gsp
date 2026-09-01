@@ -80,6 +80,9 @@
         }
 
         .table thead.table-light th{
+            position:sticky;
+            top:0;
+            z-index:2;
             background:var(--asphalt-900) !important;
             color:#fff;
             font-family:'JetBrains Mono', monospace;
@@ -104,9 +107,9 @@
         }
 
         .table td{
-            padding:0.8rem 0.65rem;
+            padding:0.55rem 0.65rem;
             vertical-align:middle;
-            font-size:0.9rem;
+            font-size:0.88rem;
         }
 
         .table td strong{
@@ -167,13 +170,15 @@
 
         .deposit-badge{
             font-family:'JetBrains Mono', monospace;
-            font-size:0.66rem;
+            font-size:0.6rem;
             font-weight:600;
-            letter-spacing:0.05em;
-            padding:0.25rem 0.55rem;
-            border-radius:6px;
-            display:inline-block;
-            margin-top:0.3rem;
+            letter-spacing:0.04em;
+            padding:0.18rem 0.45rem;
+            border-radius:5px;
+            display:block;
+            width:fit-content;
+            margin-top:0.35rem;
+            cursor:default;
         }
 
         .deposit-paid{
@@ -298,8 +303,8 @@
         /* ---------- Rental progress timeline ---------- */
 
         .rental-progress{
-            min-width:205px;
-            max-width:220px;
+            min-width:104px;
+            max-width:118px;
         }
 
         .progress-track{
@@ -311,14 +316,15 @@
         .progress-step{
             position:relative;
             flex:1;
-            min-width:38px;
+            min-width:20px;
             text-align:center;
+            cursor:default;
         }
 
         .progress-step:not(:last-child)::after{
             content:"";
             position:absolute;
-            top:9px;
+            top:7px;
             left:50%;
             width:100%;
             height:2px;
@@ -333,9 +339,9 @@
         .progress-dot{
             position:relative;
             z-index:1;
-            width:18px;
-            height:18px;
-            margin:0 auto 6px;
+            width:14px;
+            height:14px;
+            margin:0 auto;
             border-radius:50%;
             border:2px solid #d6d4ce;
             background:#fff;
@@ -353,18 +359,24 @@
                 0 0 12px rgba(245,166,35,.30);
         }
 
-        .progress-label{
-            display:block;
-            font-family:'JetBrains Mono', monospace;
-            font-size:.50rem;
-            line-height:1.15;
-            color:#9a9892;
-            white-space:normal;
+        /*
+         * .progress-label انحذف — الأسماء صارت
+         * بالـ title attribute (tooltip) على كل خطوة.
+         * الكلام تحت النقاط كان بينكسر على سطرين
+         * وبيضاعف ارتفاع الصف.
+         */
+
+        .date-range{
+            display:flex;
+            flex-direction:column;
+            gap:1px;
+            line-height:1.35;
         }
 
-        .progress-step.done .progress-label{
-            color:var(--asphalt-900);
-            font-weight:600;
+        .date-arrow{
+            font-size:.7rem;
+            color:#b6b4ae;
+            line-height:1;
         }
 
         .progress-cancelled{
@@ -452,6 +464,36 @@
         .table td:last-child{
             width:175px;
             min-width:175px;
+        }
+
+        /* ---------- Empty state ---------- */
+
+        .rentals-empty{
+            padding:3.2rem 1.5rem;
+            text-align:center;
+            background:#fff;
+            border:1px dashed var(--hairline);
+            border-radius:14px;
+        }
+
+        .rentals-empty-icon{
+            font-size:1.9rem;
+            color:#c8c6bf;
+            margin-bottom:.85rem;
+        }
+
+        .rentals-empty-title{
+            font-family:'Space Grotesk', sans-serif;
+            font-size:1.05rem;
+            font-weight:700;
+            color:var(--asphalt-900);
+            margin-bottom:.35rem;
+        }
+
+        .rentals-empty-text{
+            color:var(--ink-soft);
+            font-size:.88rem;
+            margin-bottom:1.2rem;
         }
 
         /* ---------- Mobile ---------- */
@@ -547,13 +589,9 @@
                         <th>Customer</th>
                     </sec:ifAllGranted>
 
-                    <th>Start</th>
+                    <th>Dates</th>
 
-                    <th>End</th>
-
-                    <th>Total Price</th>
-
-                    <th>Booking Deposit</th>
+                    <th>Total</th>
 
                     <th>Status</th>
 
@@ -626,26 +664,26 @@
                         </sec:ifAllGranted>
 
 
-                        <!-- Start Date -->
+                        <!-- Dates (Start + End merged) -->
                         <td>
 
-                            <span class="mono-date">
-                                <g:formatDate
-                                    date="${rental.startDate}"
-                                    format="yyyy-MM-dd"/>
-                            </span>
+                            <div class="date-range">
 
-                        </td>
+                                <span class="mono-date">
+                                    <g:formatDate
+                                        date="${rental.startDate}"
+                                        format="dd MMM yyyy"/>
+                                </span>
 
+                                <span class="date-arrow">&rarr;</span>
 
-                        <!-- End Date -->
-                        <td>
+                                <span class="mono-date">
+                                    <g:formatDate
+                                        date="${rental.endDate}"
+                                        format="dd MMM yyyy"/>
+                                </span>
 
-                            <span class="mono-date">
-                                <g:formatDate
-                                    date="${rental.endDate}"
-                                    format="yyyy-MM-dd"/>
-                            </span>
+                            </div>
 
                         </td>
 
@@ -660,33 +698,7 @@
                         </td>
 
 
-                        <!-- Booking Deposit -->
-                        <td>
-
-                            ${rental.bookingDeposit}
-
-                            <br/>
-
-
-                            <g:if test="${rental.depositPaid}">
-
-                                <span class="deposit-badge deposit-paid">
-                                    PAID
-                                </span>
-
-                            </g:if>
-                            <g:else>
-
-                                <span class="deposit-badge deposit-unpaid">
-                                    NOT PAID
-                                </span>
-
-                            </g:else>
-
-                        </td>
-
-
-                        <!-- Status -->
+                        <!-- Status + Booking Deposit merged -->
                         <td>
 
                             <g:if test="${rental.status == 'PENDING'}">
@@ -732,6 +744,34 @@
 
                             </g:else>
 
+
+                            <!--
+                                الوديعة انتقلت لهون من عمود مستقل.
+                                القيمة بتظهر بالـ tooltip عند الوقوف عليها.
+                            -->
+                            <g:if test="${rental.status != 'CANCELLED'}">
+
+                                <g:if test="${rental.depositPaid}">
+
+                                    <span
+                                        class="deposit-badge deposit-paid"
+                                        title="Booking deposit ${rental.bookingDeposit} — paid">
+                                        DEPOSIT PAID
+                                    </span>
+
+                                </g:if>
+                                <g:else>
+
+                                    <span
+                                        class="deposit-badge deposit-unpaid"
+                                        title="Booking deposit ${rental.bookingDeposit} — not paid yet">
+                                        DEPOSIT DUE
+                                    </span>
+
+                                </g:else>
+
+                            </g:if>
+
                         </td>
 
 
@@ -758,29 +798,29 @@
 
                                     <div class="progress-track">
 
-                                        <div class="progress-step ${progressLevel >= 1 ? 'done' : ''} ${progressLevel == 1 ? 'current' : ''}">
+                                        <div class="progress-step ${progressLevel >= 1 ? 'done' : ''} ${progressLevel == 1 ? 'current' : ''}"
+                                             title="Rental created">
                                             <div class="progress-dot"></div>
-                                            <span class="progress-label">Created</span>
                                         </div>
 
-                                        <div class="progress-step ${progressLevel >= 2 ? 'done' : ''} ${progressLevel == 2 ? 'current' : ''}">
+                                        <div class="progress-step ${progressLevel >= 2 ? 'done' : ''} ${progressLevel == 2 ? 'current' : ''}"
+                                             title="Deposit paid">
                                             <div class="progress-dot"></div>
-                                            <span class="progress-label">Deposit</span>
                                         </div>
 
-                                        <div class="progress-step ${progressLevel >= 3 ? 'done' : ''} ${progressLevel == 3 ? 'current' : ''}">
+                                        <div class="progress-step ${progressLevel >= 3 ? 'done' : ''} ${progressLevel == 3 ? 'current' : ''}"
+                                             title="Booking confirmed">
                                             <div class="progress-dot"></div>
-                                            <span class="progress-label">Confirmed</span>
                                         </div>
 
-                                        <div class="progress-step ${progressLevel >= 4 ? 'done' : ''} ${progressLevel == 4 ? 'current' : ''}">
+                                        <div class="progress-step ${progressLevel >= 4 ? 'done' : ''} ${progressLevel == 4 ? 'current' : ''}"
+                                             title="Vehicle picked up">
                                             <div class="progress-dot"></div>
-                                            <span class="progress-label">Picked Up</span>
                                         </div>
 
-                                        <div class="progress-step ${progressLevel >= 5 ? 'done' : ''} ${progressLevel == 5 ? 'current' : ''}">
+                                        <div class="progress-step ${progressLevel >= 5 ? 'done' : ''} ${progressLevel == 5 ? 'current' : ''}"
+                                             title="Vehicle returned">
                                             <div class="progress-dot"></div>
-                                            <span class="progress-label">Returned</span>
                                         </div>
 
                                     </div>
@@ -1021,9 +1061,46 @@
     </g:if>
     <g:else>
 
-        <div class="alert alert-secondary text-center">
+        <div class="rentals-empty">
 
-            No rentals found.
+            <div class="rentals-empty-icon">
+                <i class="bi bi-calendar-x"></i>
+            </div>
+
+            <sec:ifAllGranted roles="ROLE_ADMIN">
+
+                <div class="rentals-empty-title">
+                    No active rentals
+                </div>
+
+                <p class="rentals-empty-text">
+                    Confirmed and picked-up bookings will show up here.
+                </p>
+
+            </sec:ifAllGranted>
+
+
+            <sec:ifAllGranted roles="ROLE_CUSTOMER">
+
+                <div class="rentals-empty-title">
+                    You have no rentals yet
+                </div>
+
+                <p class="rentals-empty-text">
+                    Pick a car from the fleet to make your first booking.
+                </p>
+
+                <g:link
+                    controller="car"
+                    action="index"
+                    class="btn btn-primary">
+
+                    <i class="bi bi-car-front me-1"></i>
+                    Browse Cars
+
+                </g:link>
+
+            </sec:ifAllGranted>
 
         </div>
 
