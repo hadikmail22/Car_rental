@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <asset:stylesheet src="application.css"/>
@@ -537,85 +537,309 @@
                 #0a0b0e;
         }
 
-        .offer-card{
-            border-color:rgba(245,166,35,.22);
+        .coverflow{
+            --coverflow-card-width:clamp(250px,31vw,410px);
+            position:relative;
+            width:100%;
         }
 
-        .offer-badge{
+        .coverflow-stage{
+            position:relative;
+            height:470px;
+            overflow:hidden;
+            cursor:grab;
+            outline:none;
+            perspective:1200px;
+            touch-action:pan-y;
+            user-select:none;
+        }
+
+        .coverflow-stage:active{
+            cursor:grabbing;
+        }
+
+        .coverflow-stage:focus-visible{
+            border-radius:18px;
+            box-shadow:0 0 0 2px var(--home-gold);
+        }
+
+        .coverflow-track{
+            position:relative;
+            width:100%;
+            height:100%;
+            transform-style:preserve-3d;
+        }
+
+        .coverflow-card{
+            position:absolute;
+            top:50%;
+            left:50%;
+            z-index:1;
+            width:var(--coverflow-card-width);
+            aspect-ratio:1.38/1;
+            overflow:hidden;
+            border:1px solid rgba(255,255,255,.14);
+            border-radius:22px;
+            background:#111318;
+            box-shadow:0 24px 65px rgba(0,0,0,.48);
+            opacity:0;
+            transform-origin:center center;
+            will-change:transform,opacity;
+        }
+
+        .coverflow-card:first-child{
+            z-index:200;
+            opacity:1;
+            transform:translate3d(-50%,-50%,0);
+        }
+
+        .coverflow-card.is-active{
+            border-color:rgba(245,166,35,.72);
+            box-shadow:
+                0 34px 95px rgba(0,0,0,.62),
+                0 0 0 1px rgba(245,166,35,.15),
+                0 0 54px rgba(245,166,35,.13);
+        }
+
+        .coverflow-card-link{
+            position:absolute;
+            inset:0;
+            display:block;
+            color:#fff;
+            text-decoration:none;
+        }
+
+        .coverflow-card-link:hover{
+            color:#fff;
+        }
+
+        .coverflow-image,
+        .coverflow-fallback{
+            width:100%;
+            height:100%;
+        }
+
+        .coverflow-image{
+            display:block;
+            object-fit:cover;
+            pointer-events:none;
+        }
+
+        .coverflow-fallback{
+            display:grid;
+            place-items:center;
+            color:var(--home-gold);
+            font-size:5rem;
+            background:
+                radial-gradient(circle,rgba(245,166,35,.15),transparent 40%),
+                #111318;
+        }
+
+        .coverflow-card-link::after{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:
+                linear-gradient(to top,rgba(4,5,7,.96) 0%,rgba(4,5,7,.25) 52%,transparent 76%),
+                linear-gradient(to right,rgba(4,5,7,.22),transparent 55%);
+            pointer-events:none;
+        }
+
+        .coverflow-badge{
             position:absolute;
             z-index:3;
-            top:14px;
-            left:14px;
+            top:17px;
+            left:17px;
+            display:inline-flex;
+            align-items:center;
+            gap:6px;
             padding:7px 11px;
-            border:1px solid rgba(255,211,122,.72);
+            border:1px solid rgba(255,255,255,.16);
             border-radius:999px;
-            color:#17120a;
-            background:linear-gradient(135deg,#ffd37a,#f5a623);
-            box-shadow:0 8px 24px rgba(245,166,35,.2);
+            color:#8ee2ae;
+            background:rgba(14,67,37,.74);
+            backdrop-filter:blur(10px);
             font-family:'JetBrains Mono',monospace;
-            font-size:.6rem;
+            font-size:.58rem;
             font-weight:700;
             letter-spacing:.08em;
         }
 
-        .offer-prices{
+        .coverflow-badge-offer{
+            color:#17120a;
+            border-color:rgba(255,211,122,.8);
+            background:linear-gradient(135deg,#ffd37a,#f5a623);
+            box-shadow:0 10px 28px rgba(245,166,35,.25);
+        }
+
+        .coverflow-card-content{
+            position:absolute;
+            z-index:3;
+            left:20px;
+            right:20px;
+            bottom:18px;
             display:flex;
-            flex-direction:column;
             align-items:flex-end;
-            gap:3px;
-            white-space:nowrap;
+            justify-content:space-between;
+            gap:16px;
         }
 
-        .offer-price-old{
-            color:#777a83;
-            font-family:'JetBrains Mono',monospace;
-            font-size:.68rem;
-            text-decoration:line-through;
-        }
-
-        .offer-price-new{
-            color:var(--home-gold-light);
+        .coverflow-card-name{
+            margin:0;
+            color:#fff;
             font-family:'Space Grotesk',sans-serif;
-            font-size:1.1rem;
+            font-size:1.18rem;
             font-weight:700;
         }
 
-        .offer-price-new small{
-            color:#7d8089;
+        .coverflow-card-meta{
+            display:block;
+            margin-top:5px;
+            color:#a2a5ad;
+            font-family:'JetBrains Mono',monospace;
+            font-size:.6rem;
+        }
+
+        .coverflow-card-prices{
+            display:flex;
+            flex-direction:column;
+            align-items:flex-end;
+            flex:0 0 auto;
+        }
+
+        .coverflow-card-old-price{
+            color:#999ca4;
+            font-family:'JetBrains Mono',monospace;
+            font-size:.65rem;
+            text-decoration:line-through;
+        }
+
+        .coverflow-card-price{
+            color:var(--home-gold-light);
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.12rem;
+            font-weight:700;
+        }
+
+        .coverflow-card-price small{
+            color:#a2a5ad;
             font-family:'Inter',sans-serif;
-            font-size:.64rem;
+            font-size:.62rem;
             font-weight:500;
         }
 
-        .offer-meta{
+        .coverflow-navigation{
+            position:absolute;
+            z-index:220;
+            top:50%;
+            left:0;
+            right:0;
             display:flex;
-            align-items:center;
             justify-content:space-between;
-            gap:12px;
-            margin-top:17px;
-            padding-top:15px;
-            border-top:1px solid var(--home-line);
-            color:#858891;
-            font-size:.68rem;
+            padding:0 10px;
+            pointer-events:none;
+            transform:translateY(-50%);
         }
 
-        .offer-meta-name{
+        .coverflow-nav-button{
+            width:46px;
+            height:46px;
+            display:grid;
+            place-items:center;
+            border:1px solid rgba(245,166,35,.4);
+            border-radius:50%;
+            color:var(--home-gold-light);
+            background:rgba(8,9,11,.76);
+            backdrop-filter:blur(12px);
+            box-shadow:0 12px 30px rgba(0,0,0,.35);
+            pointer-events:auto;
+            transition:.2s ease;
+        }
+
+        .coverflow-nav-button:hover,
+        .coverflow-nav-button:focus-visible{
+            color:#17120a;
+            border-color:var(--home-gold);
+            background:var(--home-gold);
+            outline:none;
+        }
+
+        .coverflow-caption{
+            min-height:112px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:26px;
+            margin-top:-18px;
+            text-align:center;
+        }
+
+        .coverflow-caption-main{
             min-width:0;
-            overflow:hidden;
-            color:#c8cad0;
-            text-overflow:ellipsis;
+        }
+
+        .coverflow-caption-label{
+            display:block;
+            margin-bottom:6px;
+            color:var(--home-gold);
+            font-family:'JetBrains Mono',monospace;
+            font-size:.6rem;
+            font-weight:700;
+            letter-spacing:.12em;
+            text-transform:uppercase;
+        }
+
+        .coverflow-caption-title{
+            margin:0;
+            color:#fff;
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.45rem;
+            font-weight:700;
+        }
+
+        .coverflow-caption-subtitle{
+            margin:5px 0 0;
+            color:#8f929a;
+            font-size:.76rem;
+        }
+
+        .coverflow-caption-price{
+            color:var(--home-gold-light);
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.3rem;
+            font-weight:700;
             white-space:nowrap;
         }
 
-        .offer-meta i{
-            margin-right:5px;
-            color:var(--home-gold);
+        .coverflow-caption-price small{
+            color:#7d8089;
+            font-family:'Inter',sans-serif;
+            font-size:.66rem;
+            font-weight:500;
         }
 
-        .offer-login-action{
-            margin-top:16px;
-            padding-top:16px;
-            border-top:1px solid var(--home-line);
+        .coverflow-pagination{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            margin-top:8px;
+        }
+
+        .coverflow-dot{
+            width:7px;
+            height:7px;
+            padding:0;
+            border:0;
+            border-radius:50%;
+            background:#5d6068;
+            transition:width .2s ease,background .2s ease,border-radius .2s ease;
+        }
+
+        .coverflow-dot.is-active{
+            width:25px;
+            border-radius:999px;
+            background:var(--home-gold);
         }
 
         .featured-grid{
@@ -905,6 +1129,14 @@
 
             .home-stat:nth-child(2)::after{ display:none; }
 
+            .coverflow{
+                --coverflow-card-width:clamp(245px,48vw,380px);
+            }
+
+            .coverflow-stage{
+                height:430px;
+            }
+
             .featured-grid,
             .experience-grid{
                 grid-template-columns:1fr;
@@ -966,6 +1198,48 @@
                 flex-direction:column;
             }
 
+            .coverflow{
+                --coverflow-card-width:min(76vw,330px);
+            }
+
+            .coverflow-stage{
+                height:355px;
+            }
+
+            .coverflow-navigation{
+                padding:0 2px;
+            }
+
+            .coverflow-nav-button{
+                width:40px;
+                height:40px;
+            }
+
+            .coverflow-card{
+                border-radius:18px;
+            }
+
+            .coverflow-card-content{
+                left:15px;
+                right:15px;
+                bottom:14px;
+            }
+
+            .coverflow-card-name{
+                font-size:1rem;
+            }
+
+            .coverflow-caption{
+                min-height:124px;
+                flex-direction:column;
+                gap:10px;
+                margin-top:-6px;
+            }
+
+            .coverflow-caption-title{
+                font-size:1.25rem;
+            }
+
             .home-cta-panel{
                 padding:36px 28px;
                 align-items:flex-start;
@@ -978,6 +1252,8 @@
             }
         }
     </style>
+
+    <asset:stylesheet src="theme-advent.css"/>
 </head>
 
 <body>
@@ -1358,170 +1634,226 @@
             </div>
 
 
-            <div class="featured-grid">
+            <g:if test="${landingCars}">
 
-                <g:if test="${landingCars}">
+                <div
+                    class="coverflow"
+                    data-coverflow
+                    role="region"
+                    aria-roledescription="carousel"
+                    aria-label="Available rental vehicles">
 
-                    <g:each
-                        in="${landingCars}"
-                        var="offerItem">
+                    <div
+                        class="coverflow-stage"
+                        data-coverflow-stage
+                        tabindex="0">
 
-                        <g:set
-                            var="offerCar"
-                            value="${offerItem.car}"/>
+                        <div class="coverflow-track">
 
-                        <g:set
-                            var="offer"
-                            value="${offerItem.offer}"/>
+                            <g:each
+                                in="${landingCars}"
+                                var="offerItem"
+                                status="slideIndex">
 
+                                <g:set
+                                    var="offerCar"
+                                    value="${offerItem.car}"/>
 
-                        <article class="featured-card offer-card">
+                                <g:set
+                                    var="offer"
+                                    value="${offerItem.offer}"/>
 
-                            <div class="featured-image-wrap">
+                                <article
+                                    class="coverflow-card"
+                                    data-coverflow-card
+                                    data-slide-index="${slideIndex}"
+                                    data-title="${offerCar.brand} ${offerCar.model}"
+                                    data-year="${offerCar.year}"
+                                    data-category="${offerCar.category?.name ?: 'Vehicle'}"
+                                    data-price="${offer ? offer.dailyPrice : offerCar.pricePerDay}"
+                                    data-offer-name="${offer ? offer.name : ''}"
+                                    data-offer-end="${offer ? offer.endDate : ''}"
+                                    role="group"
+                                    aria-roledescription="slide"
+                                    aria-label="${slideIndex + 1} of ${landingCars.size()}">
 
-                                <g:if test="${offerCar.carImage}">
+                                    <a
+                                        href="${createLink(uri:'/login/auth')}"
+                                        class="coverflow-card-link"
+                                        draggable="false">
 
-                                    <img
-                                        src="${createLink(
-                                                controller:'car',
-                                                action:'image',
-                                                id:offerCar.id
-                                        )}"
-                                        alt="${offerCar.brand} ${offerCar.model}"
-                                        class="featured-image"/>
+                                        <g:if test="${offerCar.carImage}">
 
-                                </g:if><g:else>
+                                            <img
+                                                src="${createLink(
+                                                        controller:'car',
+                                                        action:'image',
+                                                        id:offerCar.id
+                                                )}"
+                                                alt="${offerCar.brand} ${offerCar.model}"
+                                                class="coverflow-image"
+                                                draggable="false"/>
 
-                                    <div class="featured-fallback">
-                                        <i class="bi bi-car-front-fill"></i>
-                                    </div>
+                                        </g:if><g:else>
 
-                                </g:else>
+                                            <div class="coverflow-fallback">
+                                                <i class="bi bi-car-front-fill"></i>
+                                            </div>
 
-                                <g:if test="${offer}">
+                                        </g:else>
 
-                                    <span class="offer-badge">
-                                        SAVE ${offer.percentage}%
-                                    </span>
+                                        <g:if test="${offer}">
 
-                                </g:if><g:else>
-
-                                    <span class="featured-status">
-                                        AVAILABLE
-                                    </span>
-
-                                </g:else>
-
-                            </div>
-
-
-                            <div class="featured-body">
-
-                                <div class="featured-top">
-
-                                    <div>
-
-                                        <h3 class="featured-name">
-                                            ${offerCar.brand}
-                                            ${offerCar.model}
-                                        </h3>
-
-                                        <span class="featured-year">
-                                            ${offerCar.year}
-                                            ·
-                                            ${offerCar.category?.name ?: 'Vehicle'}
-                                        </span>
-
-                                    </div>
-
-
-                                    <g:if test="${offer}">
-
-                                        <div class="offer-prices">
-
-                                            <span class="offer-price-old">
-                                                ${offer.basePrice}
+                                            <span class="coverflow-badge coverflow-badge-offer">
+                                                <i class="bi bi-tag-fill"></i>
+                                                SAVE ${offer.percentage}%
                                             </span>
 
-                                            <span class="offer-price-new">
-                                                ${offer.dailyPrice}
-                                                <small>/ day</small>
+                                        </g:if><g:else>
+
+                                            <span class="coverflow-badge">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                                AVAILABLE
                                             </span>
+
+                                        </g:else>
+
+                                        <div class="coverflow-card-content">
+
+                                            <div>
+                                                <h3 class="coverflow-card-name">
+                                                    ${offerCar.brand} ${offerCar.model}
+                                                </h3>
+
+                                                <span class="coverflow-card-meta">
+                                                    ${offerCar.year}
+                                                    ·
+                                                    ${offerCar.category?.name ?: 'Vehicle'}
+                                                </span>
+                                            </div>
+
+                                            <div class="coverflow-card-prices">
+
+                                                <g:if test="${offer}">
+                                                    <span class="coverflow-card-old-price">
+                                                        ${offer.basePrice}
+                                                    </span>
+                                                </g:if>
+
+                                                <span class="coverflow-card-price">
+                                                    ${offer ? offer.dailyPrice : offerCar.pricePerDay}
+                                                    <small>/ day</small>
+                                                </span>
+
+                                            </div>
 
                                         </div>
 
-                                    </g:if><g:else>
+                                    </a>
 
-                                        <div class="featured-price">
-                                            ${offerCar.pricePerDay}
-                                            <small>/ day</small>
-                                        </div>
+                                </article>
 
-                                    </g:else>
+                            </g:each>
 
-                                </div>
+                        </div>
 
+                        <g:if test="${landingCars.size() > 1}">
 
-                                <g:if test="${offer}">
+                            <div class="coverflow-navigation">
 
-                                    <div class="offer-meta">
+                                <button
+                                    type="button"
+                                    class="coverflow-nav-button"
+                                    data-coverflow-previous
+                                    aria-label="Previous vehicle">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
 
-                                        <span class="offer-meta-name">
-                                            <i class="bi bi-tag"></i>
-                                            ${offer.name}
-                                        </span>
-
-                                        <span>
-                                            Ends ${offer.endDate}
-                                        </span>
-
-                                    </div>
-
-                                </g:if><g:else>
-
-                                    <div class="offer-meta">
-
-                                        <span class="offer-meta-name">
-                                            <i class="bi bi-check-circle"></i>
-                                            Available now
-                                        </span>
-
-                                        <span>
-                                            ${offerCar.category?.name ?: 'Vehicle'}
-                                        </span>
-
-                                    </div>
-
-                                </g:else>
-
-
-                                <a
-                                    href="${createLink(uri:'/login/auth')}"
-                                    class="featured-action offer-login-action">
-
-                                    <span>
-                                        Sign in to Book
-                                    </span>
-
-                                    <i class="bi bi-arrow-right"></i>
-
-                                </a>
+                                <button
+                                    type="button"
+                                    class="coverflow-nav-button"
+                                    data-coverflow-next
+                                    aria-label="Next vehicle">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
 
                             </div>
 
-                        </article>
+                        </g:if>
 
-                    </g:each>
-
-                </g:if><g:else>
-
-                    <div class="featured-empty">
-                        No available vehicles right now.
                     </div>
 
-                </g:else>
+                    <div class="coverflow-caption" aria-live="polite">
 
-            </div>
+                        <div class="coverflow-caption-main">
+
+                            <span
+                                class="coverflow-caption-label"
+                                data-coverflow-caption-label>
+                                ${heroOffer ? heroOffer.name : 'Available now'}
+                            </span>
+
+                            <h3
+                                class="coverflow-caption-title"
+                                data-coverflow-caption-title>
+                                ${heroCar.brand} ${heroCar.model}
+                            </h3>
+
+                            <p
+                                class="coverflow-caption-subtitle"
+                                data-coverflow-caption-subtitle>
+                                ${heroCar.year}
+                                ·
+                                ${heroCar.category?.name ?: 'Vehicle'}
+                                <g:if test="${heroOffer}">
+                                    · Ends ${heroOffer.endDate}
+                                </g:if>
+                            </p>
+
+                        </div>
+
+                        <div class="coverflow-caption-price">
+                            <span data-coverflow-caption-price>
+                                ${heroOffer ? heroOffer.dailyPrice : heroCar.pricePerDay}
+                            </span>
+                            <small>/ day</small>
+                        </div>
+
+                    </div>
+
+                    <g:if test="${landingCars.size() > 1}">
+
+                        <div class="coverflow-pagination" aria-label="Choose vehicle">
+
+                            <g:each
+                                in="${landingCars}"
+                                var="paginationItem"
+                                status="paginationIndex">
+
+                                <button
+                                    type="button"
+                                    class="coverflow-dot ${paginationIndex == 0 ? 'is-active' : ''}"
+                                    data-coverflow-dot
+                                    data-slide-index="${paginationIndex}"
+                                    aria-label="Go to vehicle ${paginationIndex + 1}"
+                                    aria-current="${paginationIndex == 0 ? 'true' : 'false'}">
+                                </button>
+
+                            </g:each>
+
+                        </div>
+
+                    </g:if>
+
+                </div>
+
+            </g:if><g:else>
+
+                <div class="featured-empty">
+                    No available vehicles right now.
+                </div>
+
+            </g:else>
 
         </div>
 
@@ -1818,6 +2150,318 @@
 </div>
 
 <asset:javascript src="application.js"/>
+
+<script>
+    (() => {
+        document.querySelectorAll('[data-coverflow]').forEach((root) => {
+            const stage = root.querySelector('[data-coverflow-stage]');
+            const cards = Array.from(root.querySelectorAll('[data-coverflow-card]'));
+            const dots = Array.from(root.querySelectorAll('[data-coverflow-dot]'));
+            const previousButton = root.querySelector('[data-coverflow-previous]');
+            const nextButton = root.querySelector('[data-coverflow-next]');
+            const captionLabel = root.querySelector('[data-coverflow-caption-label]');
+            const captionTitle = root.querySelector('[data-coverflow-caption-title]');
+            const captionSubtitle = root.querySelector('[data-coverflow-caption-subtitle]');
+            const captionPrice = root.querySelector('[data-coverflow-caption-price]');
+            const count = cards.length;
+
+            if (!stage || !count) {
+                return;
+            }
+
+            const loop = count > 2;
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let position = 0;
+            let target = 0;
+            let selectedIndex = 0;
+            let cardWidth = 0;
+            let animationFrame = null;
+            let drag = null;
+            let suppressClickUntil = 0;
+
+            const indexAt = (value) => {
+                if (!loop) {
+                    return Math.max(0, Math.min(count - 1, Math.round(value)));
+                }
+
+                return ((Math.round(value) % count) + count) % count;
+            };
+
+            const clampPosition = (value) => {
+                if (loop) {
+                    return value;
+                }
+
+                return Math.max(0, Math.min(count - 1, value));
+            };
+
+            const updateCaption = (index) => {
+                const card = cards[index];
+
+                if (!card) {
+                    return;
+                }
+
+                const offerName = card.dataset.offerName || '';
+                const offerEnd = card.dataset.offerEnd || '';
+                const details = [card.dataset.year, card.dataset.category]
+                    .filter(Boolean);
+
+                if (offerEnd) {
+                    details.push('Ends ' + offerEnd);
+                }
+
+                if (captionLabel) {
+                    captionLabel.textContent = offerName || 'Available now';
+                }
+
+                if (captionTitle) {
+                    captionTitle.textContent = card.dataset.title || '';
+                }
+
+                if (captionSubtitle) {
+                    captionSubtitle.textContent = details.join(' · ');
+                }
+
+                if (captionPrice) {
+                    captionPrice.textContent = card.dataset.price || '';
+                }
+            };
+
+            const select = (index) => {
+                if (selectedIndex === index && cards[index].classList.contains('is-active')) {
+                    return;
+                }
+
+                selectedIndex = index;
+
+                cards.forEach((card, cardIndex) => {
+                    const active = cardIndex === index;
+                    const link = card.querySelector('.coverflow-card-link');
+                    card.classList.toggle('is-active', active);
+                    card.setAttribute('aria-current', active ? 'true' : 'false');
+
+                    if (link) {
+                        link.tabIndex = active ? 0 : -1;
+                    }
+                });
+
+                dots.forEach((dot, dotIndex) => {
+                    const active = dotIndex === index;
+                    dot.classList.toggle('is-active', active);
+                    dot.setAttribute('aria-current', active ? 'true' : 'false');
+                });
+
+                updateCaption(index);
+            };
+
+            const paint = () => {
+                if (!cardWidth) {
+                    return;
+                }
+
+                const pitch = cardWidth * 0.62;
+
+                cards.forEach((card, index) => {
+                    let offset = index - position;
+
+                    if (loop) {
+                        offset = ((offset % count) + count) % count;
+
+                        if (offset > count / 2) {
+                            offset -= count;
+                        }
+                    }
+
+                    const distance = Math.abs(offset);
+                    const ramp = Math.pow(distance, 0.62);
+                    const tilt = Math.min(48 * ramp, 78) * Math.sign(offset);
+                    const translateX = offset * pitch;
+                    const translateZ = -cardWidth * 0.56 * ramp;
+                    const edge = loop
+                        ? Math.min(1, Math.max(0, (count / 2 - distance) * 2))
+                        : 1;
+                    const opacity = Math.max(0, 1 - 0.17 * distance) * edge;
+
+                    card.style.transform =
+                        'translate3d(calc(-50% + ' + translateX +
+                        'px), -50%, ' + translateZ +
+                        'px) rotateY(' + (-tilt) + 'deg)';
+                    card.style.opacity = String(opacity);
+                    card.style.zIndex = String(200 - Math.round(distance * 10));
+                    card.style.visibility = opacity < 0.01 ? 'hidden' : 'visible';
+                    card.style.pointerEvents = distance <= 2 ? 'auto' : 'none';
+                    card.setAttribute('aria-hidden', distance < 0.5 ? 'false' : 'true');
+                });
+
+                select(indexAt(position));
+            };
+
+            const settle = (nextTarget) => {
+                if (animationFrame !== null) {
+                    cancelAnimationFrame(animationFrame);
+                }
+
+                target = clampPosition(nextTarget);
+
+                if (reducedMotion) {
+                    position = target;
+                    paint();
+                    animationFrame = null;
+                    return;
+                }
+
+                const step = () => {
+                    const remaining = target - position;
+
+                    if (Math.abs(remaining) < 0.0004) {
+                        position = target;
+                        paint();
+                        animationFrame = null;
+                        return;
+                    }
+
+                    position += remaining * 0.16;
+                    paint();
+                    animationFrame = requestAnimationFrame(step);
+                };
+
+                animationFrame = requestAnimationFrame(step);
+            };
+
+            const goTo = (index) => {
+                const nextTarget = loop
+                    ? index + Math.round((target - index) / count) * count
+                    : index;
+
+                settle(nextTarget);
+            };
+
+            const nudge = (amount) => {
+                settle(Math.round(target) + amount);
+            };
+
+            stage.addEventListener('pointerdown', (event) => {
+                if (event.target.closest('[data-coverflow-previous], [data-coverflow-next]')) {
+                    return;
+                }
+
+                if (animationFrame !== null) {
+                    cancelAnimationFrame(animationFrame);
+                    animationFrame = null;
+                }
+
+                stage.setPointerCapture(event.pointerId);
+                target = position;
+                drag = {
+                    id: event.pointerId,
+                    startX: event.clientX,
+                    startPosition: position,
+                    previousPosition: position,
+                    previousTime: performance.now(),
+                    velocity: 0,
+                    moved: false
+                };
+            });
+
+            stage.addEventListener('pointermove', (event) => {
+                if (!drag || drag.id !== event.pointerId || !cardWidth) {
+                    return;
+                }
+
+                const pitch = cardWidth * 0.62;
+                const now = performance.now();
+                const nextPosition = clampPosition(
+                    drag.startPosition - (event.clientX - drag.startX) / pitch
+                );
+
+                drag.moved = drag.moved || Math.abs(event.clientX - drag.startX) > 5;
+                drag.velocity =
+                    ((nextPosition - drag.previousPosition) /
+                    Math.max(now - drag.previousTime, 1)) * 1000;
+                drag.previousPosition = nextPosition;
+                drag.previousTime = now;
+                position = nextPosition;
+                target = nextPosition;
+                paint();
+            });
+
+            const finishDrag = (event) => {
+                if (!drag || drag.id !== event.pointerId) {
+                    return;
+                }
+
+                const carried = Math.max(-2, Math.min(2, drag.velocity * 0.16));
+
+                if (drag.moved) {
+                    suppressClickUntil = Date.now() + 300;
+                }
+
+                drag = null;
+                settle(Math.round(position + carried));
+            };
+
+            stage.addEventListener('pointerup', finishDrag);
+            stage.addEventListener('pointercancel', finishDrag);
+
+            stage.addEventListener('click', (event) => {
+                if (Date.now() < suppressClickUntil) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    return;
+                }
+
+                const card = event.target.closest('[data-coverflow-card]');
+
+                if (!card) {
+                    return;
+                }
+
+                const cardIndex = Number(card.dataset.slideIndex);
+
+                if (cardIndex !== selectedIndex) {
+                    event.preventDefault();
+                    goTo(cardIndex);
+                }
+            });
+
+            stage.addEventListener('keydown', (event) => {
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    nudge(-1);
+                }
+
+                if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    nudge(1);
+                }
+            });
+
+            previousButton?.addEventListener('click', () => nudge(-1));
+            nextButton?.addEventListener('click', () => nudge(1));
+
+            dots.forEach((dot) => {
+                dot.addEventListener('click', () => {
+                    goTo(Number(dot.dataset.slideIndex));
+                });
+            });
+
+            const measure = () => {
+                cardWidth = cards[0].getBoundingClientRect().width;
+                paint();
+            };
+
+            measure();
+
+            if ('ResizeObserver' in window) {
+                const observer = new ResizeObserver(measure);
+                observer.observe(stage);
+            } else {
+                window.addEventListener('resize', measure);
+            }
+        });
+    })();
+</script>
 
 </body>
 </html>

@@ -102,8 +102,10 @@ class HomeController {
         Integer activeOfferCount =
                 activeOfferCars.size()
 
+        Integer landingCarLimit = 7
+
         List<Map> landingCars =
-                activeOfferCars.take(3)
+                activeOfferCars.take(landingCarLimit)
 
         Set<Long> selectedCarIds =
                 landingCars.collect { Map item ->
@@ -111,7 +113,7 @@ class HomeController {
                 }.toSet()
 
         Integer remainingPlaces =
-                3 - landingCars.size()
+                landingCarLimit - landingCars.size()
 
         if (remainingPlaces > 0) {
 

@@ -1,919 +1,509 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8"/>
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1"/>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>Sign In | Car Rental</title>
-
-    <asset:link
-        rel="icon"
-        href="favicon.ico"
-        type="image/x-ico"/>
-
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com">
-
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin>
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@500;600;700&display=swap"
-        rel="stylesheet">
-
+    <asset:link rel="icon" href="favicon.ico" type="image/x-ico"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <asset:stylesheet src="application.css"/>
-
     <style>
-
         :root {
-            --login-black: #0b0c0f;
-            --login-black-soft: #111318;
-            --login-panel: #16181d;
-
             --login-gold: #f5a623;
-            --login-gold-light: #ffd078;
-            --login-gold-dark: #c9860f;
-
-            --login-white: #f7f7f5;
-            --login-muted: #96989f;
-
-            --login-border:
-                rgba(255, 255, 255, 0.10);
+            --login-gold-light: #ffd27c;
+            --login-white: #f8f8f6;
+            --login-muted: #a8abb2;
+            --login-border: rgba(255, 255, 255, .14);
+            --login-panel: rgba(9, 11, 15, .72);
         }
-
 
         * {
             box-sizing: border-box;
         }
-
 
         html,
         body {
             min-height: 100%;
         }
 
-
         body {
             margin: 0;
-
-            min-height: 100vh;
-
             color: var(--login-white);
-
-            background:
-                radial-gradient(
-                    circle at 15% 15%,
-                    rgba(245, 166, 35, 0.10),
-                    transparent 24%
-                ),
-                radial-gradient(
-                    circle at 85% 80%,
-                    rgba(245, 166, 35, 0.06),
-                    transparent 30%
-                ),
-                var(--login-black);
-
-            font-family:
-                'Inter',
-                sans-serif;
+            background: #07090c;
+            font-family: 'Inter', sans-serif;
         }
 
-
-        /* =====================================
-           PAGE
-           ===================================== */
+        button,
+        input {
+            font: inherit;
+        }
 
         .login-page {
+            position: relative;
             min-height: 100vh;
-
-            display: grid;
-
-            grid-template-columns:
-                1.05fr
-                0.95fr;
-        }
-
-
-        /* =====================================
-           LEFT PANEL
-           ===================================== */
-
-        .login-visual {
-            position: relative;
-
             display: flex;
-
-            flex-direction: column;
-
-            justify-content: space-between;
-
+            align-items: center;
             overflow: hidden;
-
-            padding: 42px 52px;
-
-            border-right:
-                1px solid var(--login-border);
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #111318,
-                    #08090b
-                );
-        }
-
-
-        .login-visual::before {
-            content: "";
-
-            position: absolute;
-
-            inset: 0;
-
-            opacity: .35;
-
+            isolation: isolate;
             background-image:
-                linear-gradient(
-                    rgba(255,255,255,.025) 1px,
-                    transparent 1px
-                ),
-                linear-gradient(
-                    90deg,
-                    rgba(255,255,255,.025) 1px,
-                    transparent 1px
-                );
-
-            background-size:
-                55px 55px;
+                linear-gradient(90deg, rgba(3, 5, 8, .88) 0%, rgba(3, 5, 8, .69) 38%, rgba(3, 5, 8, .22) 72%, rgba(3, 5, 8, .30) 100%),
+                url('https://images.unsplash.com/photo-1525198748134-37e71b522e9c?auto=format&fit=crop&w=2400&q=88');
+            background-position: center;
+            background-size: cover;
         }
 
-
-        .login-visual::after {
+        .login-page::before {
             content: "";
-
             position: absolute;
-
-            width: 520px;
-            height: 520px;
-
-            right: -160px;
-            bottom: -180px;
-
-            border-radius: 50%;
-
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
             background:
-                radial-gradient(
-                    circle,
-                    rgba(245,166,35,.15),
-                    transparent 67%
-                );
+                radial-gradient(circle at 24% 54%, rgba(245, 166, 35, .12), transparent 31%),
+                linear-gradient(180deg, rgba(0, 0, 0, .27), transparent 32%, transparent 68%, rgba(0, 0, 0, .62));
         }
 
+        .login-page::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: .15;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px);
+            background-size: 54px 54px;
+            mask-image: linear-gradient(90deg, #000, transparent 68%);
+        }
 
-        .visual-content {
+        .login-shell {
+            width: min(100% - 48px, 1280px);
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 58px 0;
+            display: grid;
+            grid-template-columns: minmax(340px, 480px) 1fr;
+            align-items: center;
+            gap: clamp(48px, 8vw, 130px);
+        }
+
+        .login-card {
             position: relative;
-            z-index: 2;
+            width: 100%;
+            padding: clamp(30px, 4vw, 46px);
+            overflow: hidden;
+            border: 1px solid var(--login-border);
+            border-radius: 26px;
+            background:
+                linear-gradient(145deg, rgba(24, 27, 33, .79), rgba(7, 9, 13, .68)),
+                var(--login-panel);
+            box-shadow:
+                0 32px 90px rgba(0, 0, 0, .48),
+                inset 0 1px 0 rgba(255, 255, 255, .08);
+            backdrop-filter: blur(24px) saturate(125%);
+            -webkit-backdrop-filter: blur(24px) saturate(125%);
         }
 
-
-        /* =====================================
-           BRAND
-           ===================================== */
+        .login-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 44px;
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--login-gold), transparent);
+            box-shadow: 0 0 18px rgba(245, 166, 35, .55);
+        }
 
         .login-brand {
             display: inline-flex;
-
             align-items: center;
-
             gap: 12px;
-
-            color: var(--login-white);
-
+            color: #fff;
             text-decoration: none;
         }
 
-
-        .brand-icon {
+        .brand-mark {
             width: 48px;
             height: 48px;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            border:
-                1px solid rgba(245,166,35,.55);
-
-            border-radius: 13px;
-
+            display: grid;
+            place-items: center;
+            flex: 0 0 48px;
+            border: 1px solid rgba(245, 166, 35, .5);
+            border-radius: 15px;
             color: var(--login-gold);
-
-            background:
-                rgba(245,166,35,.06);
-
-            font-size: 22px;
+            background: rgba(245, 166, 35, .1);
+            box-shadow: inset 0 0 22px rgba(245, 166, 35, .05);
+            font-size: 1.25rem;
         }
 
-
         .brand-name {
-            font-family:
-                'Space Grotesk',
-                sans-serif;
-
-            font-size: 1.1rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.05rem;
             font-weight: 700;
-
             letter-spacing: -.02em;
         }
 
-
         .brand-subtitle {
             display: block;
-
             margin-top: 2px;
-
             color: var(--login-gold);
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: .57rem;
-
-            letter-spacing: .18em;
-
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .55rem;
+            font-weight: 600;
+            letter-spacing: .16em;
             text-transform: uppercase;
         }
-
-
-        /* =====================================
-           HERO TEXT
-           ===================================== */
-
-        .visual-main {
-            max-width: 620px;
-
-            margin:
-                auto 0;
-        }
-
-
-        .visual-eyebrow {
-            margin-bottom: 16px;
-
-            color: var(--login-gold);
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: .7rem;
-
-            font-weight: 500;
-
-            letter-spacing: .18em;
-
-            text-transform: uppercase;
-        }
-
-
-        .visual-main h1 {
-            margin:
-                0 0 22px;
-
-            color: #fff;
-
-            font-family:
-                'Space Grotesk',
-                sans-serif;
-
-            font-size:
-                clamp(3rem, 5vw, 5.5rem);
-
-            line-height: .98;
-
-            letter-spacing: -.055em;
-
-            font-weight: 700;
-        }
-
-
-        .visual-main h1 span {
-            color: var(--login-gold);
-        }
-
-
-        .visual-main p {
-            max-width: 520px;
-
-            margin: 0;
-
-            color: #a7a9af;
-
-            font-size: 1rem;
-
-            line-height: 1.8;
-        }
-
-
-        .visual-footer {
-            position: relative;
-            z-index: 2;
-
-            color: #65676d;
-
-            font-size: .72rem;
-        }
-
-
-        /* =====================================
-           RIGHT PANEL
-           ===================================== */
-
-        .login-form-side {
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            padding: 40px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #0d0e11,
-                    #121419
-                );
-        }
-
-
-        .login-container {
-            width: 100%;
-            max-width: 430px;
-        }
-
-
-        .mobile-brand {
-            display: none;
-
-            margin-bottom: 45px;
-        }
-
 
         .login-heading {
-            margin-bottom: 34px;
+            margin: 42px 0 30px;
         }
 
-
-        .login-heading .eyebrow {
+        .login-eyebrow {
             margin-bottom: 10px;
-
             color: var(--login-gold);
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: .67rem;
-
-            font-weight: 500;
-
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .66rem;
+            font-weight: 600;
             letter-spacing: .16em;
-
             text-transform: uppercase;
         }
 
-
-        .login-heading h2 {
-            margin:
-                0 0 10px;
-
+        .login-heading h1 {
+            margin: 0 0 9px;
             color: #fff;
-
-            font-family:
-                'Space Grotesk',
-                sans-serif;
-
-            font-size: 2rem;
-
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 4vw, 2.55rem);
             font-weight: 700;
-
-            letter-spacing: -.035em;
+            letter-spacing: -.045em;
         }
-
 
         .login-heading p {
             margin: 0;
-
             color: var(--login-muted);
-
-            font-size: .9rem;
-
-            line-height: 1.6;
+            font-size: .91rem;
+            line-height: 1.65;
         }
-
-
-        /* =====================================
-           ERROR
-           ===================================== */
 
         .login-error {
             margin-bottom: 22px;
-
-            padding:
-                13px 15px;
-
-            border:
-                1px solid rgba(229,72,77,.32);
-
-            border-radius: 9px;
-
-            color: #ff9699;
-
-            background:
-                rgba(229,72,77,.08);
-
+            padding: 13px 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            border: 1px solid rgba(255, 96, 102, .36);
+            border-radius: 11px;
+            color: #ffafb2;
+            background: rgba(188, 38, 45, .13);
             font-size: .84rem;
+            line-height: 1.5;
         }
-
-
-        /* =====================================
-           FORM
-           ===================================== */
 
         .login-field {
-            margin-bottom: 20px;
+            margin-bottom: 19px;
         }
-
 
         .login-label {
             display: block;
-
-            margin-bottom: 7px;
-
-            color: #b7b8bd;
-
-            font-family:
-                'JetBrains Mono',
-                monospace;
-
-            font-size: .68rem;
-
-            font-weight: 500;
-
+            margin-bottom: 8px;
+            color: #d0d1d5;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .66rem;
+            font-weight: 600;
             letter-spacing: .08em;
-
             text-transform: uppercase;
         }
-
 
         .input-shell {
             position: relative;
         }
 
-
         .input-icon {
             position: absolute;
-
             top: 50%;
-            left: 15px;
-
-            transform:
-                translateY(-50%);
-
-            color: #6f7178;
-
-            font-size: 1rem;
-
+            left: 16px;
+            transform: translateY(-50%);
+            color: #8d9097;
             pointer-events: none;
         }
 
-
         .login-input {
             width: 100%;
-            height: 52px;
-
-            padding:
-                0 46px;
-
-            border:
-                1px solid
-                rgba(255,255,255,.11);
-
-            border-radius: 10px;
-
+            height: 54px;
+            padding: 0 48px;
+            border: 1px solid rgba(255, 255, 255, .13);
+            border-radius: 12px;
             outline: none;
-
             color: #fff;
-
-            background:
-                rgba(255,255,255,.035);
-
-            font-size: .95rem;
-
-            transition:
-                border-color .18s ease,
-                box-shadow .18s ease,
-                background .18s ease;
+            background: rgba(255, 255, 255, .075);
+            caret-color: var(--login-gold);
+            transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
         }
-
 
         .login-input::placeholder {
-            color: #64666d;
+            color: #82858c;
         }
-
 
         .login-input:focus {
-            border-color:
-                rgba(245,166,35,.75);
-
-            background:
-                rgba(255,255,255,.05);
-
-            box-shadow:
-                0 0 0 4px
-                rgba(245,166,35,.08);
+            border-color: rgba(245, 166, 35, .78);
+            background: rgba(255, 255, 255, .1);
+            box-shadow: 0 0 0 4px rgba(245, 166, 35, .11);
         }
-
 
         .password-toggle {
             position: absolute;
-
             top: 50%;
-            right: 14px;
-
-            transform:
-                translateY(-50%);
-
+            right: 13px;
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            transform: translateY(-50%);
             border: 0;
-
-            padding: 4px;
-
-            color: #74767d;
-
+            border-radius: 9px;
+            color: #92959b;
             background: transparent;
+            cursor: pointer;
+            transition: color .18s ease, background .18s ease;
+        }
 
+        .password-toggle:hover,
+        .password-toggle:focus-visible {
+            color: var(--login-gold-light);
+            background: rgba(245, 166, 35, .1);
+            outline: none;
+        }
+
+        .login-options {
+            margin: 3px 0 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            color: #a4a6ac;
+            font-size: .79rem;
+        }
+
+        .remember-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
         }
 
-
-        .password-toggle:hover {
-            color: var(--login-gold);
-        }
-
-
-        /* =====================================
-           OPTIONS
-           ===================================== */
-
-        .login-options {
-            display: flex;
-
-            justify-content:
-                space-between;
-
-            align-items: center;
-
-            gap: 15px;
-
-            margin:
-                5px 0 26px;
-
-            color: #92949b;
-
-            font-size: .8rem;
-        }
-
-
-        .remember-wrap {
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-        }
-
-
         .remember-wrap input {
-            accent-color:
-                var(--login-gold);
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            accent-color: var(--login-gold);
         }
 
+        .secure-access {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #85888f;
+        }
 
-        /* =====================================
-           LOGIN BUTTON
-           ===================================== */
+        .secure-access i {
+            color: #5fcf8d;
+        }
 
         .login-submit {
             width: 100%;
-            min-height: 52px;
-
+            min-height: 54px;
+            padding: 0 22px;
             display: flex;
-
             align-items: center;
             justify-content: center;
-
-            gap: 9px;
-
+            gap: 10px;
             border: 0;
-
-            border-radius: 10px;
-
-            color: #18120a;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #fac365,
-                    #f5a623
-                );
-
-            font-weight: 700;
-
-            box-shadow:
-                0 12px 30px
-                rgba(245,166,35,.15);
-
+            border-radius: 12px;
+            color: #171108;
+            background: linear-gradient(135deg, #ffd078, #f5a623 62%, #da8b0e);
+            font-weight: 800;
+            box-shadow: 0 15px 36px rgba(245, 166, 35, .22);
             cursor: pointer;
-
-            transition:
-                transform .18s ease,
-                box-shadow .18s ease;
+            transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
         }
-
 
         .login-submit:hover {
-            transform:
-                translateY(-2px);
-
-            box-shadow:
-                0 17px 38px
-                rgba(245,166,35,.25);
+            transform: translateY(-2px);
+            filter: brightness(1.04);
+            box-shadow: 0 19px 44px rgba(245, 166, 35, .31);
         }
 
+        .login-submit:active {
+            transform: translateY(0);
+        }
 
-        /* =====================================
-           BOTTOM
-           ===================================== */
+        .login-submit:focus-visible {
+            outline: 3px solid rgba(255, 208, 120, .35);
+            outline-offset: 3px;
+        }
 
         .login-bottom {
-            margin-top: 30px;
-
-            padding-top: 24px;
-
-            border-top:
-                1px solid var(--login-border);
-
+            margin-top: 26px;
+            padding-top: 21px;
+            border-top: 1px solid rgba(255, 255, 255, .09);
             text-align: center;
-
-            color: #777981;
-
-            font-size: .8rem;
         }
-
 
         .login-bottom a {
-            color: var(--login-gold);
-
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #c5c7cb;
+            font-size: .8rem;
             font-weight: 600;
-
             text-decoration: none;
+            transition: color .18s ease;
         }
-
 
         .login-bottom a:hover {
             color: var(--login-gold-light);
         }
 
+        .login-copy {
+            max-width: 510px;
+            justify-self: end;
+            align-self: end;
+            margin-bottom: 24px;
+            text-align: right;
+            text-shadow: 0 3px 28px rgba(0, 0, 0, .8);
+        }
 
-        /* =====================================
-           MOBILE
-           ===================================== */
+        .login-copy .copy-line {
+            margin-bottom: 12px;
+            color: var(--login-gold-light);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .65rem;
+            font-weight: 600;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
 
-        @media (max-width: 991px) {
+        .login-copy h2 {
+            margin: 0;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.2rem, 4vw, 4.7rem);
+            font-weight: 700;
+            line-height: .98;
+            letter-spacing: -.055em;
+        }
 
+        .photo-credit {
+            position: absolute;
+            right: 22px;
+            bottom: 14px;
+            z-index: 2;
+            color: rgba(255, 255, 255, .54);
+            font-size: .62rem;
+            text-decoration: none;
+            transition: color .18s ease;
+        }
+
+        .photo-credit:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 960px) {
             .login-page {
-                grid-template-columns:
-                    1fr;
+                background-position: 64% center;
+                background-image:
+                    linear-gradient(90deg, rgba(3, 5, 8, .82), rgba(3, 5, 8, .55)),
+                    url('https://images.unsplash.com/photo-1525198748134-37e71b522e9c?auto=format&fit=crop&w=1800&q=86');
             }
 
+            .login-shell {
+                grid-template-columns: minmax(0, 480px);
+                justify-content: center;
+            }
 
-            .login-visual {
+            .login-copy {
                 display: none;
             }
-
-
-            .mobile-brand {
-                display: block;
-            }
-
-
-            .login-form-side {
-                min-height: 100vh;
-
-                padding:
-                    35px 20px;
-            }
         }
 
-
-        @media (max-width: 480px) {
-
-            .login-heading h2 {
-                font-size: 1.7rem;
+        @media (max-width: 560px) {
+            .login-page {
+                align-items: stretch;
+                background-position: 61% center;
             }
 
+            .login-shell {
+                width: min(100% - 28px, 480px);
+                min-height: 100vh;
+                padding: 28px 0 44px;
+            }
+
+            .login-card {
+                padding: 28px 22px;
+                border-radius: 22px;
+            }
+
+            .login-heading {
+                margin: 34px 0 27px;
+            }
 
             .login-options {
-                align-items:
-                    flex-start;
+                align-items: flex-start;
+                flex-direction: column;
+            }
 
-                flex-direction:
-                    column;
+            .photo-credit {
+                right: 14px;
+                bottom: 10px;
             }
         }
 
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+        }
     </style>
-
+    <asset:stylesheet src="theme-advent.css"/>
 </head>
-
-
 <body>
-
-
-<div class="login-page">
-
-
-    <!-- ==================================
-         LEFT
-         ================================== -->
-
-    <section class="login-visual">
-
-
-        <div class="visual-content">
-
-            <a
-                href="${createLink(uri: '/')}"
-                class="login-brand">
-
-                <div class="brand-icon">
+<main class="login-page">
+    <div class="login-shell">
+        <section class="login-card" aria-labelledby="loginTitle">
+            <a href="${createLink(uri: '/')}" class="login-brand">
+                <span class="brand-mark">
                     <i class="bi bi-car-front-fill"></i>
-                </div>
-
-                <div>
-
-                    <div class="brand-name">
-                        Car Rental
-                    </div>
-
-                    <span class="brand-subtitle">
-                        Premium Mobility
-                    </span>
-
-                </div>
-
+                </span>
+                <span>
+                    <span class="brand-name">Car Rental</span>
+                    <span class="brand-subtitle">Premium Mobility</span>
+                </span>
             </a>
 
-        </div>
-
-
-        <div class="visual-content visual-main">
-
-            <div class="visual-eyebrow">
-                Member Access
-            </div>
-
-
-            <h1>
-                Your next
-                <span>drive</span>
-                starts here.
-            </h1>
-
-
-            <p>
-                Sign in to browse the fleet,
-                manage your rentals and keep
-                track of your bookings from one
-                secure account.
-            </p>
-
-        </div>
-
-
-        <div class="visual-footer">
-            Car Rental Management System · 2026
-        </div>
-
-
-    </section>
-
-
-
-    <!-- ==================================
-         RIGHT
-         ================================== -->
-
-    <section class="login-form-side">
-
-        <div class="login-container">
-
-
-            <!-- Mobile logo -->
-            <div class="mobile-brand">
-
-                <a
-                    href="${createLink(uri: '/')}"
-                    class="login-brand">
-
-                    <div class="brand-icon">
-                        <i class="bi bi-car-front-fill"></i>
-                    </div>
-
-                    <div>
-
-                        <div class="brand-name">
-                            Car Rental
-                        </div>
-
-                        <span class="brand-subtitle">
-                            Premium Mobility
-                        </span>
-
-                    </div>
-
-                </a>
-
-            </div>
-
-
             <div class="login-heading">
-
-                <div class="eyebrow">
-                    Secure Sign In
-                </div>
-
-                <h2>
-                    Welcome back
-                </h2>
-
-                <p>
-                    Enter your account details
-                    to continue.
-                </p>
-
+                <div class="login-eyebrow">Secure Member Access</div>
+                <h1 id="loginTitle">Welcome back</h1>
+                <p>Enter your account details to manage your rentals and continue your journey.</p>
             </div>
 
-
-            <!-- Error -->
             <g:if test="${flash.message}">
-
-                <div class="login-error">
-
-                    <i class="bi bi-exclamation-circle me-2"></i>
-
-                    ${flash.message}
-
+                <div class="login-error" role="alert">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>${flash.message}</span>
                 </div>
-
             </g:if>
 
-
-            <!-- Form -->
-            <form
-                action="${postUrl ?: createLink(uri: '/login/authenticate')}"
-                method="POST"
-                autocomplete="off">
-
-
-                <!-- Username -->
+            <form action="${postUrl ?: createLink(uri: '/login/authenticate')}" method="POST" autocomplete="off">
                 <div class="login-field">
-
-                    <label
-                        class="login-label"
-                        for="username">
-
-                        Email Address
-
-                    </label>
-
-
+                    <label class="login-label" for="username">Email Address</label>
                     <div class="input-shell">
-
-                        <i
-                            class="bi bi-envelope input-icon">
-                        </i>
-
-
+                        <i class="bi bi-envelope input-icon"></i>
                         <input
                             type="text"
                             name="${usernameParameter ?: 'username'}"
@@ -923,31 +513,13 @@
                             autocomplete="username"
                             autofocus
                             required/>
-
                     </div>
-
                 </div>
 
-
-                <!-- Password -->
                 <div class="login-field">
-
-                    <label
-                        class="login-label"
-                        for="password">
-
-                        Password
-
-                    </label>
-
-
+                    <label class="login-label" for="password">Password</label>
                     <div class="input-shell">
-
-                        <i
-                            class="bi bi-lock input-icon">
-                        </i>
-
-
+                        <i class="bi bi-lock input-icon"></i>
                         <input
                             type="password"
                             name="${passwordParameter ?: 'password'}"
@@ -956,118 +528,72 @@
                             placeholder="Enter your password"
                             autocomplete="current-password"
                             required/>
-
-
-                        <button
-                            type="button"
-                            class="password-toggle"
-                            onclick="togglePassword()"
-                            aria-label="Show or hide password">
-
-                            <i
-                                id="passwordIcon"
-                                class="bi bi-eye">
-                            </i>
-
+                        <button type="button" class="password-toggle" id="passwordToggle" aria-label="Show password" aria-pressed="false">
+                            <i id="passwordIcon" class="bi bi-eye"></i>
                         </button>
-
                     </div>
-
                 </div>
 
-
-                <!-- Options -->
                 <div class="login-options">
-
                     <label class="remember-wrap">
-
                         <input
                             type="checkbox"
                             name="${rememberMeParameter ?: 'remember-me'}"
-                            <g:if test="${hasCookie}">
-                                checked="checked"
-                            </g:if>/>
-
-                        <span>
-                            Remember me
-                        </span>
-
+                            <g:if test="${hasCookie}">checked="checked"</g:if>/>
+                        <span>Remember me</span>
                     </label>
-
-
-                    <span>
-                        Secure account access
+                    <span class="secure-access">
+                        <i class="bi bi-shield-check"></i>
+                        Secure access
                     </span>
-
                 </div>
 
-
-                <!-- Submit -->
-                <button
-                    type="submit"
-                    class="login-submit">
-
-                    Sign In
-
+                <button type="submit" class="login-submit">
+                    <span>Sign In</span>
                     <i class="bi bi-arrow-right"></i>
-
                 </button>
-
-
             </form>
 
-
             <div class="login-bottom">
-
                 <a href="${createLink(uri: '/')}">
-                    ← Back to home
+                    <i class="bi bi-arrow-left"></i>
+                    Back to home
                 </a>
-
             </div>
+        </section>
 
+        <section class="login-copy" aria-hidden="true">
+            <div class="copy-line">Luxury in every journey</div>
+            <h2>Your next drive starts here.</h2>
+        </section>
+    </div>
 
-        </div>
-
-    </section>
-
-</div>
-
+    <a class="photo-credit" href="https://unsplash.com/photos/black-mercedes-benz-sedan-qqUik37MSb0" target="_blank" rel="noreferrer">
+        Photo by Jeremy Thomas on Unsplash
+    </a>
+</main>
 
 <asset:javascript src="application.js"/>
-
-
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const password = document.getElementById('password');
+        const toggle = document.getElementById('passwordToggle');
+        const icon = document.getElementById('passwordIcon');
 
-    function togglePassword() {
-
-        const password =
-            document.getElementById('password');
-
-        const icon =
-            document.getElementById('passwordIcon');
-
-
-        if (password.type === 'password') {
-
-            password.type = 'text';
-
-            icon.classList.remove('bi-eye');
-
-            icon.classList.add('bi-eye-slash');
-
-        } else {
-
-            password.type = 'password';
-
-            icon.classList.remove('bi-eye-slash');
-
-            icon.classList.add('bi-eye');
+        if (!password || !toggle || !icon) {
+            return;
         }
-    }
 
+        toggle.addEventListener('click', function () {
+            const isHidden = password.type === 'password';
+            password.type = isHidden ? 'text' : 'password';
+            toggle.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+            toggle.setAttribute('aria-pressed', isHidden ? 'true' : 'false');
+            icon.classList.toggle('bi-eye', !isHidden);
+            icon.classList.toggle('bi-eye-slash', isHidden);
+            password.focus();
+        });
+    });
 </script>
-
-
 </body>
-
 </html>
