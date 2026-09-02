@@ -89,7 +89,8 @@ class RentalDynamicPricingSpec extends Specification {
         rental.id
         rental.status == 'PENDING'
         !rental.depositPaid
-        rental.totalPrice == 440.00G
+        rental.totalPrice == 430.00G
+        rental.systemCalculatedPrice == 430.00G
 
         when:
         rule.percentage = 50.00G
@@ -108,8 +109,9 @@ class RentalDynamicPricingSpec extends Specification {
         rental.refresh()
 
         then:
-        newQuote == 500.00G
-        rental.totalPrice == 440.00G
+        newQuote == 490.00G
+        rental.totalPrice == 430.00G
+        rental.systemCalculatedPrice == 430.00G
     }
 
     private java.sql.Date day(LocalDate value) {

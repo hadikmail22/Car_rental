@@ -7,7 +7,7 @@ grails:
     controllers:
         upload:
             maxFileSize: 10485760
-            maxRequestSize: 11534336
+            maxRequestSize: 52428800
 
     gorm:
         reactor:

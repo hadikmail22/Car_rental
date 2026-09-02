@@ -143,15 +143,43 @@
         }
 
         .fleet-search{
-            display:flex;
+            display:grid;
+            grid-template-columns:
+                minmax(240px,1fr)
+                minmax(170px,210px)
+                125px
+                125px
+                auto
+                auto
+                auto;
+            align-items:end;
             gap:.5rem;
-            flex-wrap:wrap;
+            padding:.8rem;
             margin-bottom:1.6rem;
+            background:var(--card);
+            border:1px solid var(--rule);
+            border-top:3px solid var(--ink);
+            border-radius:2px;
         }
 
-        .fleet-search input{
-            flex:1;
-            min-width:220px;
+        .fleet-search-field{
+            min-width:0;
+            display:grid;
+            gap:.3rem;
+        }
+
+        .fleet-search-label{
+            font-family:'IBM Plex Mono', monospace;
+            font-size:.55rem;
+            font-weight:600;
+            letter-spacing:.1em;
+            color:var(--ink-4);
+        }
+
+        .fleet-search input[type="text"],
+        .fleet-search input[type="number"]{
+            width:100%;
+            min-width:0;
             height:38px;
             padding:0 .8rem;
             background:var(--card);
@@ -163,17 +191,20 @@
             outline:none;
         }
 
-        .fleet-search input::placeholder{
+        .fleet-search input[type="text"]::placeholder,
+        .fleet-search input[type="number"]::placeholder{
             color:var(--ink-4);
         }
 
-        .fleet-search input:focus{
+        .fleet-search input[type="text"]:focus,
+        .fleet-search input[type="number"]:focus{
             border-color:var(--accent);
             box-shadow:inset 0 0 0 1px var(--accent);
         }
 
         .fleet-search select{
-            min-width:170px;
+            width:100%;
+            min-width:0;
             height:38px;
             padding:0 2rem 0 .8rem;
             background:var(--card);
@@ -199,6 +230,51 @@
         .fleet-search select:focus{
             border-color:var(--accent);
             box-shadow:inset 0 0 0 1px var(--accent);
+        }
+
+        .fleet-offer-toggle{
+            min-height:38px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:.5rem;
+            padding:0 .8rem;
+            color:var(--ok);
+            background:var(--ok-soft);
+            border:1px solid #bfd5c7;
+            border-radius:2px;
+            font-family:'IBM Plex Mono', monospace;
+            font-size:.62rem;
+            font-weight:600;
+            letter-spacing:.06em;
+            cursor:pointer;
+            white-space:nowrap;
+        }
+
+        .fleet-offer-toggle input{
+            width:15px;
+            height:15px;
+            margin:0;
+            accent-color:var(--ok);
+            cursor:pointer;
+        }
+
+        .fleet-filter-error{
+            grid-column:1/-1;
+            padding:.55rem .7rem;
+            color:var(--stop);
+            background:var(--stop-soft);
+            border-left:4px solid var(--stop);
+            font-size:.78rem;
+        }
+
+        .rate-base{
+            display:block;
+            margin-top:.15rem;
+            color:var(--ink-4);
+            font-family:'IBM Plex Mono', monospace;
+            font-size:.6rem;
+            text-decoration:line-through;
         }
 
         .fleet-grid{
@@ -646,12 +722,28 @@
         }
 
         @media (max-width: 900px){
+            .fleet-search{
+                grid-template-columns:repeat(2,minmax(0,1fr));
+            }
+
             .fleet-grid{
                 grid-template-columns:1fr;
             }
         }
 
         @media (max-width: 560px){
+            .fleet-search{
+                grid-template-columns:1fr;
+            }
+
+            .fleet-filter-error{
+                grid-column:auto;
+            }
+
+            .fleet-search .pbtn{
+                width:100%;
+            }
+
             .fleet-title{
                 font-size:2rem;
             }
@@ -731,20 +823,96 @@
         method="GET"
         class="fleet-search">
 
-        <input
-            type="text"
-            name="q"
-            value="${q}"
-            placeholder="Search by brand, model, plate, or category"/>
+        <label class="fleet-search-field">
 
-        <g:select
-            name="categoryId"
-            from="${categoryList}"
-            optionKey="id"
-            optionValue="name"
-            value="${categoryId}"
-            noSelection="${['': 'ALL CATEGORIES']}"
-            aria-label="Filter cars by category"/>
+            <span class="fleet-search-label">
+                SEARCH
+            </span>
+
+            <input
+                type="text"
+                name="q"
+                value="${q}"
+                placeholder="Brand, model, plate, or category"/>
+
+        </label>
+
+
+        <label class="fleet-search-field">
+
+            <span class="fleet-search-label">
+                CATEGORY
+            </span>
+
+            <g:select
+                name="categoryId"
+                from="${categoryList}"
+                optionKey="id"
+                optionValue="name"
+                value="${categoryId}"
+                noSelection="${['': 'ALL CATEGORIES']}"
+                aria-label="Filter cars by category"/>
+
+        </label>
+
+
+        <label class="fleet-search-field">
+
+            <span class="fleet-search-label">
+                PRICE FROM
+            </span>
+
+            <input
+                type="number"
+                name="minPrice"
+                value="${minPrice}"
+                min="0"
+                step="0.01"
+                placeholder="0.00"/>
+
+        </label>
+
+
+        <label class="fleet-search-field">
+
+            <span class="fleet-search-label">
+                PRICE TO
+            </span>
+
+            <input
+                type="number"
+                name="maxPrice"
+                value="${maxPrice}"
+                min="0"
+                step="0.01"
+                placeholder="Any"/>
+
+        </label>
+
+
+        <label class="fleet-offer-toggle">
+
+            <g:if test="${offersOnly}">
+
+                <input
+                    type="checkbox"
+                    name="offersOnly"
+                    value="true"
+                    checked="checked"/>
+
+            </g:if><g:else>
+
+                <input
+                    type="checkbox"
+                    name="offersOnly"
+                    value="true"/>
+
+            </g:else>
+
+            <i class="bi bi-tags-fill"></i>
+            Offers Only
+
+        </label>
 
         <button
             type="submit"
@@ -762,6 +930,14 @@
 
         </g:link>
 
+        <g:if test="${priceRangeError}">
+
+            <div class="fleet-filter-error">
+                ${priceRangeError}
+            </div>
+
+        </g:if>
+
     </g:form>
 
     <g:if test="${carList}">
@@ -776,7 +952,11 @@
 
                 <g:set
                     var="primaryPricingHighlight"
-                    value="${carPricingHighlights ? carPricingHighlights[0] : null}"/>
+                    value="${carPricingHighlights.find { it.current == true }}"/>
+
+                <g:set
+                    var="currentPricing"
+                    value="${currentPricingByCar?.get(car.id)}"/>
 
                 <article class="unit">
 
@@ -898,14 +1078,14 @@
 
                     </div>
 
-                    <g:if test="${carPricingHighlights}">
+                    <g:if test="${primaryPricingHighlight}">
 
                         <div
                             id="pricingDetails${car.id}"
                             class="collapse unit-pricing">
 
                             <g:each
-                                in="${carPricingHighlights}"
+                                in="${[primaryPricingHighlight]}"
                                 var="pricingHighlight">
 
                                 <g:set
@@ -919,7 +1099,7 @@
                                         <div class="price-record-head">
 
                                             <span class="price-record-state">
-                                                ${pricingHighlight.current ? 'ACTIVE NOW' : 'UPCOMING'}
+                                                ACTIVE NOW
                                             </span>
 
                                             <span class="price-record-name">
@@ -982,12 +1162,20 @@
                         <div>
 
                             <div class="rate-label">
-                                BASE DAILY RATE
+                                ${currentPricing?.currentHighlight ? 'CURRENT DAILY RATE' : 'BASE DAILY RATE'}
                             </div>
 
                             <div class="rate-value">
-                                ${car.pricePerDay}
+                                ${currentPricing?.effectivePrice ?: car.pricePerDay}
                             </div>
+
+                            <g:if test="${currentPricing?.activeDiscount}">
+
+                                <span class="rate-base">
+                                    ${car.pricePerDay}
+                                </span>
+
+                            </g:if>
 
                         </div>
 
@@ -1115,15 +1303,15 @@
             </div>
 
             <p>
-                <g:if test="${q || categoryId}">
-                    No vehicle matched that search or category filter.
+                <g:if test="${hasFilters}">
+                    No vehicle matched the selected search and price filters.
                 </g:if>
                 <g:else>
                     The register is empty.
                 </g:else>
             </p>
 
-            <g:if test="${q || categoryId}">
+            <g:if test="${hasFilters}">
 
                 <g:link
                     action="index"
@@ -1137,7 +1325,7 @@
 
             <sec:ifAllGranted roles="ROLE_ADMIN">
 
-                <g:if test="${!q && !categoryId}">
+                <g:if test="${!hasFilters}">
 
                     <g:link
                         action="create"
@@ -1160,7 +1348,13 @@
         <g:paginate
             total="${carCount ?: 0}"
             max="6"
-            params="[q: q, categoryId: categoryId]"/>
+            params="[
+                q: q,
+                categoryId: categoryId,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
+                offersOnly: offersOnly
+            ]"/>
 
     </div>
 

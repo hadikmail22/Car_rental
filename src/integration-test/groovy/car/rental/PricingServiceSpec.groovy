@@ -13,7 +13,7 @@ class PricingServiceSpec extends Specification {
     CarCategory category
     Car car
 
-    void 'uses the base price when no pricing rule applies'() {
+    void 'uses the base daily price and applies the duration tier to a rental'() {
 
         given:
         setupData()
@@ -29,7 +29,42 @@ class PricingServiceSpec extends Specification {
                 car,
                 day('2035-09-01'),
                 day('2035-09-03')
-        ) == 300.00G
+        ) == 285.00G
+    }
+
+
+    void 'applies the configured duration discount tiers'() {
+
+        given:
+        setupData()
+
+        expect:
+        pricingService.calculateRentalPrice(
+                car,
+                day('2035-09-01'),
+                day('2035-09-02')
+        ) == 200.00G
+
+        and:
+        pricingService.calculateRentalPrice(
+                car,
+                day('2035-09-01'),
+                day('2035-09-03')
+        ) == 285.00G
+
+        and:
+        pricingService.calculateRentalPrice(
+                car,
+                day('2035-09-01'),
+                day('2035-09-07')
+        ) == 616.00G
+
+        and:
+        pricingService.calculateRentalPrice(
+                car,
+                day('2035-09-01'),
+                day('2035-09-14')
+        ) == 1120.00G
     }
 
 
@@ -149,6 +184,40 @@ class PricingServiceSpec extends Specification {
     }
 
 
+    void 'combines a promotional discount with the duration discount'() {
+
+        given:
+        setupData()
+
+        and:
+        createRule(
+                name: 'Car Promotion',
+                scope: 'CAR',
+                car: car,
+                adjustmentType: 'DISCOUNT',
+                percentage: 10.00G,
+                priority: 10,
+                startDate: day('2035-09-01'),
+                endDate: day('2035-09-03')
+        )
+
+        when:
+        Map quote =
+                pricingService.calculateRentalQuote(
+                        car,
+                        day('2035-09-01'),
+                        day('2035-09-03')
+                )
+
+        then:
+        quote.totalPrice == 256.50G
+        quote.hasDurationDiscount
+        quote.dailyPrices.every { Map dayPrice ->
+            dayPrice.adjustments.size() == 2
+        }
+    }
+
+
     void 'calculates a rental day by day across a pricing period'() {
 
         given:
@@ -170,7 +239,7 @@ class PricingServiceSpec extends Specification {
                 car,
                 day('2035-09-01'),
                 day('2035-09-04')
-        ) == 440.00G
+        ) == 430.00G
     }
 
 

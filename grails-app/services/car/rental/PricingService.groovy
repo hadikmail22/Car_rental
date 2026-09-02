@@ -9,6 +9,40 @@ import java.time.ZoneId
 @Transactional(readOnly = true)
 class PricingService {
 
+    static final List<Map> DURATION_PRICING_TIERS = [
+            [
+                    name      : 'Standard Daily Rate',
+                    minDays   : 1,
+                    maxDays   : 2,
+                    percentage: 0.00G
+            ],
+            [
+                    name      : '3-6 Day Discount',
+                    minDays   : 3,
+                    maxDays   : 6,
+                    percentage: 5.00G
+            ],
+            [
+                    name      : '7-13 Day Discount',
+                    minDays   : 7,
+                    maxDays   : 13,
+                    percentage: 12.00G
+            ],
+            [
+                    name      : '14+ Day Discount',
+                    minDays   : 14,
+                    maxDays   : null,
+                    percentage: 20.00G
+            ]
+    ].asImmutable()
+
+    List<Map> getDurationPricingTiers() {
+
+        DURATION_PRICING_TIERS.collect { Map tier ->
+            new LinkedHashMap(tier)
+        }
+    }
+
     PricingRule findApplicableRule(
             Car car,
             Date date) {
@@ -74,47 +108,11 @@ class PricingService {
             Date startDate,
             Date endDate) {
 
-        if (!car) {
-            throw new IllegalArgumentException(
-                    'Car is required.'
-            )
-        }
-
-        if (!startDate || !endDate) {
-            throw new IllegalArgumentException(
-                    'Start date and end date are required.'
-            )
-        }
-
-        LocalDate firstDay =
-                toLocalDate(startDate)
-
-        LocalDate lastDay =
-                toLocalDate(endDate)
-
-        if (lastDay.isBefore(firstDay)) {
-            throw new IllegalArgumentException(
-                    'End date cannot be before start date.'
-            )
-        }
-
-        BigDecimal total = 0.00G
-        LocalDate currentDay = firstDay
-
-        while (!currentDay.isAfter(lastDay)) {
-
-            total += calculateDailyPrice(
-                    car,
-                    java.sql.Date.valueOf(currentDay)
-            )
-
-            currentDay = currentDay.plusDays(1)
-        }
-
-        total.setScale(
-                2,
-                RoundingMode.HALF_UP
-        )
+        calculateRentalQuote(
+                car,
+                startDate,
+                endDate
+        ).totalPrice as BigDecimal
     }
 
     Map calculateRentalQuote(
@@ -158,11 +156,25 @@ class PricingService {
                         RoundingMode.HALF_UP
                 )
 
+        Integer rentalDays =
+                (lastDay.toEpochDay() -
+                        firstDay.toEpochDay() + 1) as Integer
+
+        Map durationTier =
+                findDurationPricingTier(
+                        rentalDays
+                )
+
+        Map durationDiscount =
+                durationTier.percentage > 0G ?
+                        durationTier :
+                        null
+
         BigDecimal baseTotal = 0.00G
         BigDecimal finalTotal = 0.00G
 
         List<Map> dailyPrices = []
-        Map<Long, Map> appliedRuleMap = [:]
+        Map<String, Map> appliedRuleMap = [:]
 
         LocalDate currentDay = firstDay
 
@@ -171,17 +183,41 @@ class PricingService {
             Date pricingDate =
                     java.sql.Date.valueOf(currentDay)
 
-            PricingRule rule =
+            PricingRule dateRule =
                     findApplicableRule(
                             car,
                             pricingDate
                     )
 
-            BigDecimal finalPrice =
-                    applyRuleToBasePrice(
-                            basePrice,
-                            rule
+            List<Map> dailyAdjustments =
+                    selectRentalAdjustments(
+                            dateRule,
+                            durationDiscount
                     )
+
+            BigDecimal finalPrice =
+                    basePrice
+
+            dailyAdjustments.each { Map adjustment ->
+
+                finalPrice =
+                        applyAdjustmentToBasePrice(
+                                finalPrice,
+                                adjustment
+                        )
+            }
+
+            List<Map> dailyAdjustmentDetails =
+                    dailyAdjustments.collect { Map adjustment ->
+                        [
+                                name          : adjustment.name,
+                                adjustmentType:
+                                        adjustment.adjustmentType,
+                                percentage    : adjustment.percentage,
+                                scope         : adjustment.scope,
+                                source        : adjustment.source
+                        ]
+                    }
 
             baseTotal += basePrice
             finalTotal += finalPrice
@@ -190,19 +226,40 @@ class PricingService {
                     date          : currentDay.toString(),
                     basePrice     : basePrice,
                     finalPrice    : finalPrice,
-                    ruleName      : rule?.name,
-                    adjustmentType: rule?.adjustmentType,
-                    percentage    : rule?.percentage,
-                    scope         : rule?.scope
+                    ruleName      : dailyAdjustments ?
+                            dailyAdjustments*.name.join(' + ') :
+                            null,
+                    adjustmentType:
+                            dailyAdjustments.size() == 1 ?
+                                    dailyAdjustments.first()
+                                            .adjustmentType :
+                                    null,
+                    percentage    :
+                            dailyAdjustments.size() == 1 ?
+                                    dailyAdjustments.first()
+                                            .percentage :
+                                    null,
+                    scope         : dailyAdjustments.size() == 1 ?
+                            dailyAdjustments.first().scope :
+                            null,
+                    pricingSource : dailyAdjustments.size() == 1 ?
+                            dailyAdjustments.first().source :
+                            'COMBINED',
+                    adjustments   : dailyAdjustmentDetails
             ]
 
-            if (rule) {
-                appliedRuleMap[rule.id] = [
-                        id            : rule.id,
-                        name          : rule.name,
-                        adjustmentType: rule.adjustmentType,
-                        percentage    : rule.percentage,
-                        scope         : rule.scope
+            dailyAdjustments.each { Map adjustment ->
+
+                appliedRuleMap[
+                        adjustment.ruleKey as String
+                ] = [
+                        id            : adjustment.id,
+                        name          : adjustment.name,
+                        adjustmentType:
+                                adjustment.adjustmentType,
+                        percentage    : adjustment.percentage,
+                        scope         : adjustment.scope,
+                        source        : adjustment.source
                 ]
             }
 
@@ -223,7 +280,7 @@ class PricingService {
                 )
 
         [
-                rentalDays      : dailyPrices.size(),
+                rentalDays      : rentalDays,
                 basePricePerDay : basePrice,
                 baseTotal       : baseTotal,
                 totalPrice      : finalTotal,
@@ -234,6 +291,11 @@ class PricingService {
                         ),
                 hasDynamicPricing:
                         !appliedRuleMap.isEmpty(),
+                durationTier    : durationTier,
+                hasDurationDiscount:
+                        appliedRuleMap.values().any { Map rule ->
+                            rule.source == 'DURATION'
+                        },
                 appliedRules    :
                         appliedRuleMap.values() as List,
                 dailyPrices     : dailyPrices
@@ -302,6 +364,79 @@ class PricingService {
         }
 
         highlightsByCar
+    }
+
+    private Map findDurationPricingTier(
+            Integer rentalDays) {
+
+        Map tier =
+                DURATION_PRICING_TIERS.find { Map candidate ->
+
+                    rentalDays >= candidate.minDays &&
+                            (candidate.maxDays == null ||
+                                    rentalDays <= candidate.maxDays)
+                }
+
+        if (!tier) {
+            throw new IllegalStateException(
+                    'No duration pricing tier is configured.'
+            )
+        }
+
+        new LinkedHashMap(tier) + [
+                id            : null,
+                ruleKey       :
+                        "duration:${tier.minDays}",
+                adjustmentType:
+                        tier.percentage > 0G ?
+                                'DISCOUNT' :
+                                null,
+                scope         : 'DURATION',
+                source        : 'DURATION'
+        ]
+    }
+
+    private List<Map> selectRentalAdjustments(
+            PricingRule dateRule,
+            Map durationDiscount) {
+
+        Map dateAdjustment =
+                pricingRuleToAdjustment(
+                        dateRule
+                )
+
+        if (!dateAdjustment) {
+            return durationDiscount ?
+                    [durationDiscount] :
+                    []
+        }
+
+        if (dateAdjustment.adjustmentType == 'INCREASE') {
+            return [dateAdjustment]
+        }
+
+        durationDiscount ?
+                [dateAdjustment, durationDiscount] :
+                [dateAdjustment]
+    }
+
+    private Map pricingRuleToAdjustment(
+            PricingRule rule) {
+
+        if (!rule) {
+            return null
+        }
+
+        [
+                id            : rule.id,
+                ruleKey       : "pricing:${rule.id}",
+                name          : rule.name,
+                adjustmentType: rule.adjustmentType,
+                percentage    : rule.percentage,
+                scope         : rule.scope,
+                priority      : rule.priority ?: 0,
+                source        : 'PRICING_RULE'
+        ]
     }
 
     private boolean appliesToCar(
@@ -505,13 +640,25 @@ class PricingService {
             BigDecimal basePrice,
             PricingRule rule) {
 
-        if (!rule) {
+        applyAdjustmentToBasePrice(
+                basePrice,
+                pricingRuleToAdjustment(rule)
+        )
+    }
+
+    private BigDecimal applyAdjustmentToBasePrice(
+            BigDecimal basePrice,
+            Map adjustment) {
+
+        if (!adjustment) {
             return basePrice
         }
 
         BigDecimal adjustmentAmount =
                 basePrice
-                        .multiply(rule.percentage)
+                        .multiply(
+                                adjustment.percentage as BigDecimal
+                        )
                         .divide(
                                 100G,
                                 2,
@@ -520,10 +667,10 @@ class PricingService {
 
         BigDecimal finalPrice
 
-        if (rule.adjustmentType == 'DISCOUNT') {
+        if (adjustment.adjustmentType == 'DISCOUNT') {
             finalPrice =
                     basePrice - adjustmentAmount
-        } else if (rule.adjustmentType == 'INCREASE') {
+        } else if (adjustment.adjustmentType == 'INCREASE') {
             finalPrice =
                     basePrice + adjustmentAmount
         } else {

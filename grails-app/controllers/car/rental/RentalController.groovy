@@ -14,6 +14,7 @@ class RentalController {
         quote     : 'GET',
         payDeposit: 'POST',
         cancel    : 'POST',
+        adjustPrice: 'POST',
         pickup    : 'POST',
         complete  : 'POST'
     ]
@@ -61,22 +62,20 @@ class RentalController {
                     rentalService.getReturnDueTodayIds()
 
 
+            Map<Long, List<RentalPriceAdjustment>> priceAdjustmentsByRental =
+                    rentalService.getPriceAdjustmentsByRental(rentalList)
+
+
             return [
                     rentalList        : rentalList,
                     rentalCount       : rentalList.totalCount,
                     pickupDueTodayIds : pickupDueTodayIds,
-                    returnDueTodayIds : returnDueTodayIds
+                    returnDueTodayIds : returnDueTodayIds,
+                    priceAdjustmentsByRental: priceAdjustmentsByRental
             ]
         }
 
 
-        /*
-         * Customer index shows ACTIVE rentals only.
-         *
-         * PENDING
-         * CONFIRMED
-         * PICKED_UP
-         */
         def rentalList =
                 rentalService.listActiveForCustomer(
                         currentUser,
@@ -94,12 +93,6 @@ class RentalController {
     }
 
 
-    /**
-     * Customer rental history.
-     *
-     * COMPLETED / CANCELLED rentals are kept in the
-     * database and shown here instead of My Rentals.
-     */
     @Secured(['ROLE_CUSTOMER'])
     def history() {
 
@@ -162,19 +155,14 @@ class RentalController {
 
 
         [
-                car     : car,
-                bookings: bookings
+                car                 : car,
+                bookings            : bookings,
+                durationPricingTiers:
+                        pricingService.durationPricingTiers
         ]
     }
 
 
-    /**
-     * Returns a dynamic price preview for the selected car and dates.
-     *
-     * This action does not create or update any database records.
-     * RentalService still performs the final calculation and saves the
-     * locked total when the customer submits the rental.
-     */
     @Secured(['ROLE_CUSTOMER'])
     def quote() {
 
@@ -375,13 +363,6 @@ class RentalController {
 
 
 
-    /**
-     * Customer cancellation.
-     *
-     * PENDING cancellation has no payment loss.
-     * CONFIRMED cancellation keeps the paid booking
-     * deposit as non-refundable.
-     */
     @Secured(['ROLE_CUSTOMER'])
     def cancel(Long id) {
 
@@ -410,6 +391,78 @@ class RentalController {
                 flash.message =
                         'Rental cancelled successfully.'
             }
+
+        } catch (
+                IllegalArgumentException |
+                IllegalStateException e
+        ) {
+
+            flash.message =
+                    e.message
+        }
+
+
+        redirect(
+                action: 'index'
+        )
+    }
+
+
+    @Secured(['ROLE_ADMIN'])
+    def adjustPrice(Long id) {
+
+        User admin =
+                springSecurityService.currentUser as User
+
+
+        try {
+
+            String finalPriceValue =
+                    params.finalPrice
+                            ?.toString()
+                            ?.trim()
+
+
+            if (!finalPriceValue) {
+                throw new NumberFormatException()
+            }
+
+
+            BigDecimal finalPrice =
+                    new BigDecimal(
+                            finalPriceValue
+                    )
+
+
+            RentalPriceAdjustment adjustment =
+                    rentalService.adjustRentalPrice(
+                            id,
+                            finalPrice,
+                            params.reason?.toString(),
+                            admin
+                    )
+
+
+            BigDecimal difference =
+                    adjustment.newPrice -
+                    adjustment.previousPrice
+
+
+            String differenceText =
+                    difference < 0 ?
+                            "discount ${difference.abs()}" :
+                            "increase ${difference}"
+
+
+            flash.message =
+                    "Final rental price changed from " +
+                    "${adjustment.previousPrice} to " +
+                    "${adjustment.newPrice} (${differenceText})."
+
+        } catch (NumberFormatException e) {
+
+            flash.message =
+                    'Final rental price must be a valid number.'
 
         } catch (
                 IllegalArgumentException |
@@ -493,10 +546,23 @@ class RentalController {
             }
 
 
+            BigDecimal rentalCredit =
+                    rental.depositPaid &&
+                    rental.bookingDeposit > rental.totalPrice ?
+                            rental.bookingDeposit -
+                            rental.totalPrice :
+                            0.00
+
+
+            BigDecimal totalRefund =
+                    securityRefund +
+                    rentalCredit
+
+
             flash.message =
                     "Rental completed. " +
                     "Damage cost: ${rental.damageCost}. " +
-                    "Refundable security amount: ${securityRefund}."
+                    "Total amount to return to the customer: ${totalRefund}."
 
         } catch (NumberFormatException e) {
 

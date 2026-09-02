@@ -38,23 +38,113 @@ static allowedMethods = [
                         CarCategory.get(categoryId) :
                         null
 
-        def carList = carService.search(
+        BigDecimal minPrice =
+                parsePrice(params.minPrice)
+
+        BigDecimal maxPrice =
+                parsePrice(params.maxPrice)
+
+        boolean offersOnly =
+                params.offersOnly in [
+                        true,
+                        'true',
+                        'on',
+                        '1'
+                ]
+
+        String priceRangeError =
+                minPrice != null &&
+                        maxPrice != null &&
+                        minPrice > maxPrice ?
+                        'Minimum price cannot exceed maximum price.' :
+                        null
+
+        List<Car> matchingCars =
+                carService.search(
                 params.q,
                 selectedCategory,
-                [
-                        max   : params.max,
-                        offset: params.offset
-                ]
-        )
+                [:]
+                ) as List<Car>
 
         Map<Long, List<Map>> pricingHighlightsByCar =
                 pricingService.getPricingHighlightsForCars(
-                        carList
+                        matchingCars
                 )
+
+        Map<Long, Map> currentPricingByCar = [:]
+
+        matchingCars.each { Car car ->
+
+            Map currentHighlight =
+                    (pricingHighlightsByCar[car.id] ?: [])
+                            .find { Map highlight ->
+                                highlight.current == true
+                            }
+
+            BigDecimal effectivePrice =
+                    currentHighlight?.dailyPrice != null ?
+                            currentHighlight.dailyPrice as BigDecimal :
+                            car.pricePerDay
+
+            boolean activeDiscount =
+                    currentHighlight?.adjustmentType ==
+                            'DISCOUNT' &&
+                            effectivePrice < car.pricePerDay
+
+            currentPricingByCar[car.id] = [
+                    effectivePrice : effectivePrice,
+                    activeDiscount : activeDiscount,
+                    currentHighlight: currentHighlight
+            ]
+        }
+
+        List<Car> filteredCars =
+                priceRangeError ?
+                        [] :
+                        matchingCars.findAll { Car car ->
+
+                            Map currentPricing =
+                                    currentPricingByCar[car.id]
+
+                            BigDecimal effectivePrice =
+                                    currentPricing.effectivePrice as BigDecimal
+
+                            if (offersOnly &&
+                                    !currentPricing.activeDiscount) {
+                                return false
+                            }
+
+                            if (minPrice != null &&
+                                    effectivePrice < minPrice) {
+                                return false
+                            }
+
+                            if (maxPrice != null &&
+                                    effectivePrice > maxPrice) {
+                                return false
+                            }
+
+                            true
+                        }
+
+        Integer carCount =
+                filteredCars.size()
+
+        List<Car> carList =
+                filteredCars
+                        .drop(params.offset)
+                        .take(params.max)
+
+        boolean hasFilters =
+                params.q?.trim() ||
+                        selectedCategory ||
+                        minPrice != null ||
+                        maxPrice != null ||
+                        offersOnly
 
         [
                 carList : carList,
-                carCount: carList.totalCount,
+                carCount: carCount,
                 q       : params.q,
                 categoryList: CarCategory.list(
                         sort: 'name',
@@ -62,8 +152,38 @@ static allowedMethods = [
                 ),
                 categoryId: selectedCategory?.id,
                 pricingHighlightsByCar:
-                        pricingHighlightsByCar
+                        pricingHighlightsByCar,
+                currentPricingByCar:
+                        currentPricingByCar,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
+                offersOnly: offersOnly,
+                priceRangeError: priceRangeError,
+                hasFilters: hasFilters
         ]
+    }
+
+    private BigDecimal parsePrice(Object value) {
+
+        String normalizedValue =
+                value?.toString()?.trim()
+
+        if (!normalizedValue) {
+            return null
+        }
+
+        try {
+
+            BigDecimal price =
+                    new BigDecimal(normalizedValue)
+
+            price >= 0G ?
+                    price :
+                    null
+
+        } catch (NumberFormatException ignored) {
+            null
+        }
     }
 
     @Secured(['ROLE_ADMIN', 'ROLE_CUSTOMER'])
@@ -124,7 +244,6 @@ def save(Car car) {
 
     car.category = category
 
-    // Main image
     MultipartFile image =
             request.getFile('carImage')
 
@@ -158,7 +277,6 @@ def save(Car car) {
     }
 
 
-    // Additional gallery images
     List<MultipartFile> galleryImages =
         request.getFiles('newGalleryImages')
     galleryImages =
@@ -167,7 +285,6 @@ def save(Car car) {
             }
 
 
-    // Maximum 6 additional images
     if (galleryImages.size() > 6) {
 
         flash.message =
@@ -180,7 +297,6 @@ def save(Car car) {
     }
 
 
-    // Validate every gallery image
     for (MultipartFile galleryImage : galleryImages) {
 
         if (!galleryImage.contentType?.startsWith('image/')) {
@@ -207,7 +323,6 @@ def save(Car car) {
     }
 
 
-    // Validate car fields
     if (car.hasErrors()) {
 
         render view: 'create',
@@ -217,13 +332,6 @@ def save(Car car) {
     }
 
 
-    /*
-     * Convert MultipartFile objects
-     * into simple data maps.
-     *
-     * The Service will save everything
-     * inside a transaction.
-     */
     def galleryFiles =
             galleryImages.collect { MultipartFile galleryImage ->
 
@@ -240,7 +348,6 @@ def save(Car car) {
     )
 
 
-    // Temporary debugging
     println "GALLERY FILES RECEIVED: ${galleryImages.size()}"
     println "CAR IMAGES IN DATABASE: ${CarImage.countByCar(car)}"
 
@@ -301,7 +408,6 @@ def update(Long id) {
     car.category = category
 
 
-    // Update normal car fields manually
     car.brand = params.brand
     car.model = params.model
 
@@ -319,7 +425,6 @@ def update(Long id) {
     car.status = params.status
 
 
-    // Main image
     MultipartFile image =
             request.getFile('newCarImage')
 
@@ -352,7 +457,6 @@ def update(Long id) {
     }
 
 
-    // New gallery uploads
     List<MultipartFile> galleryImages =
             request.getFiles('newGalleryImages')
 
@@ -362,7 +466,6 @@ def update(Long id) {
             }
 
 
-    // Maximum gallery size
     int currentGalleryCount =
             carService.countGalleryImages(car.id)
 
@@ -378,7 +481,6 @@ def update(Long id) {
     }
 
 
-    // Validate gallery files
     for (MultipartFile galleryImage : galleryImages) {
 
         if (!galleryImage.contentType?.startsWith('image/')) {

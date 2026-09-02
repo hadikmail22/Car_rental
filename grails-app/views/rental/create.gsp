@@ -58,7 +58,6 @@
             border-radius:8px;
         }
 
-        /* ---------- Car info card ---------- */
         .rent-car-card{
             border:1px solid var(--hairline) !important;
             border-radius:14px;
@@ -110,7 +109,6 @@
         .status-badge.maintenance{ background:#fff3e0; color:var(--headlight-dim); }
         .status-badge.maintenance::before{ background:var(--headlight); box-shadow:0 0 6px var(--headlight); }
 
-        /* ---------- Rental details card ---------- */
         .rental-details-card{
             border:1px solid var(--hairline) !important;
             border-radius:14px;
@@ -133,7 +131,6 @@
             font-family:'JetBrains Mono', monospace;
         }
 
-        /* ---------- Form fields ---------- */
         .field-group{
             margin-bottom:1.5rem;
         }
@@ -159,7 +156,6 @@
             box-shadow:0 0 0 0.2rem rgba(245,166,35,0.18);
         }
 
-        /* ---------- Price summary: signature odometer panel ---------- */
         .price-box{
             border:1px solid var(--hairline) !important;
             border-radius:12px;
@@ -285,7 +281,98 @@
             font-size:0.78rem;
         }
 
+        .duration-guide{
+            margin-bottom:1.6rem;
+            padding:1.1rem;
+            background:#fffaf0;
+            border:1px solid #ecd39f;
+            border-left:5px solid var(--headlight);
+            border-radius:10px;
+        }
+
+        .duration-guide-head{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            gap:1rem;
+            margin-bottom:0.9rem;
+        }
+
+        .duration-guide-title{
+            margin:0;
+            color:var(--asphalt-900);
+            font-family:'Space Grotesk', sans-serif;
+            font-size:1rem;
+            font-weight:700;
+        }
+
+        .duration-guide-copy{
+            margin:0.25rem 0 0;
+            color:var(--ink-soft);
+            font-size:0.8rem;
+        }
+
+        .duration-tier-grid{
+            display:grid;
+            grid-template-columns:repeat(4,minmax(0,1fr));
+            gap:0.55rem;
+        }
+
+        .duration-tier{
+            padding:0.75rem;
+            background:#fff;
+            border:1px solid var(--hairline);
+            border-radius:8px;
+            transition:
+                border-color .16s ease,
+                background .16s ease,
+                box-shadow .16s ease;
+        }
+
+        .duration-tier.selected{
+            background:#fff2d7;
+            border-color:var(--headlight);
+            box-shadow:0 0 0 3px rgba(245,166,35,.12);
+        }
+
+        .duration-tier-days{
+            display:block;
+            margin-bottom:0.3rem;
+            color:var(--ink-soft);
+            font-family:'JetBrains Mono', monospace;
+            font-size:0.64rem;
+            font-weight:600;
+            letter-spacing:0.05em;
+            text-transform:uppercase;
+        }
+
+        .duration-tier-rate{
+            display:block;
+            color:var(--go-green);
+            font-family:'Space Grotesk', sans-serif;
+            font-size:1.05rem;
+            font-weight:700;
+        }
+
+        .duration-tier-rate.standard{
+            color:var(--ink-soft);
+        }
+
+        .duration-guide-note{
+            display:flex;
+            align-items:flex-start;
+            gap:0.45rem;
+            margin-top:0.8rem;
+            color:#8a6415;
+            font-size:0.74rem;
+            line-height:1.5;
+        }
+
         @media (max-width: 575.98px){
+            .duration-tier-grid{
+                grid-template-columns:repeat(2,minmax(0,1fr));
+            }
+
             .daily-price-row{
                 grid-template-columns:1fr auto;
             }
@@ -300,7 +387,6 @@
             border-radius:8px;
         }
 
-        /* ---------- Buttons ---------- */
         .btn-primary{
             background:var(--headlight);
             border:none;
@@ -331,7 +417,6 @@
             color:var(--ink);
         }
 
-        /* ---------- Booking confirmation notice ---------- */
         .booking-notice{
             margin:1.75rem 0;
             overflow:hidden;
@@ -466,7 +551,6 @@
     </div>
 
 
-    <!-- Error Message -->
     <g:if test="${flash.message}">
         <div class="alert alert-danger">
             ${flash.message}
@@ -474,12 +558,10 @@
     </g:if>
 
 
-    <!-- Car Information -->
     <div class="card shadow-sm mb-4 rent-car-card">
 
         <div class="row g-0">
 
-            <!-- Image -->
             <div class="col-md-5">
 
                 <g:if test="${car?.carImage}">
@@ -516,7 +598,6 @@
             </div>
 
 
-            <!-- Car Details -->
             <div class="col-md-7">
 
                 <div class="card-body p-4">
@@ -570,7 +651,6 @@
     </div>
 
 
-    <!-- Rental Form -->
     <div class="card shadow-sm rental-details-card">
 
         <div class="card-body p-4">
@@ -580,7 +660,79 @@
             </h4>
 
 
-            <!-- Booked Dates -->
+            <div class="duration-guide">
+
+                <div class="duration-guide-head">
+
+                    <div>
+
+                        <h5 class="duration-guide-title">
+                            Stay Longer, Pay Less Per Day
+                        </h5>
+
+                        <p class="duration-guide-copy">
+                            Your discount tier is selected automatically
+                            from the total rental duration.
+                        </p>
+
+                    </div>
+
+                    <i class="bi bi-calendar2-week text-warning fs-4"></i>
+
+                </div>
+
+
+                <div class="duration-tier-grid">
+
+                    <g:each
+                        in="${durationPricingTiers}"
+                        var="durationTier">
+
+                        <div
+                            class="duration-tier"
+                            data-min-days="${durationTier.minDays}"
+                            data-max-days="${durationTier.maxDays ?: ''}">
+
+                            <span class="duration-tier-days">
+
+                                <g:if test="${durationTier.maxDays}">
+                                    ${durationTier.minDays}–${durationTier.maxDays} days
+                                </g:if><g:else>
+                                    ${durationTier.minDays}+ days
+                                </g:else>
+
+                            </span>
+
+                            <span class="duration-tier-rate ${durationTier.percentage == 0 ? 'standard' : ''}">
+
+                                <g:if test="${durationTier.percentage > 0}">
+                                    ${durationTier.percentage}% off daily
+                                </g:if><g:else>
+                                    Standard rate
+                                </g:else>
+
+                            </span>
+
+                        </div>
+
+                    </g:each>
+
+                </div>
+
+
+                <div class="duration-guide-note">
+                    <i class="bi bi-info-circle"></i>
+                    <span>
+                        Existing promotional discounts are applied first,
+                        then the duration discount is applied to the reduced
+                        price. Holiday and seasonal increases take priority
+                        on their affected days.
+                    </span>
+                </div>
+
+            </div>
+
+
             <div class="mb-4">
 
                 <h5 class="mb-3">
@@ -647,7 +799,6 @@
                     value="${car.id}"/>
 
 
-                <!-- Start Date -->
                 <div class="mb-3 field-group">
 
                     <label
@@ -668,7 +819,6 @@
                 </div>
 
 
-                <!-- End Date -->
                 <div class="mb-4 field-group">
 
                     <label
@@ -689,7 +839,6 @@
                 </div>
 
 
-                <!-- Price Summary -->
                 <div
                     id="priceBox"
                     class="card border-0 mb-4 price-box">
@@ -703,7 +852,6 @@
                         <div class="row">
 
 
-                            <!-- Base Price Per Day -->
                             <div class="col-md-6 col-xl-3 mb-3">
 
                                 <small class="d-block">
@@ -721,7 +869,6 @@
                             </div>
 
 
-                            <!-- Rental Days -->
                             <div class="col-md-6 col-xl-3 mb-3">
 
                                 <small class="d-block">
@@ -739,7 +886,6 @@
                             </div>
 
 
-                            <!-- Base Total -->
                             <div class="col-md-6 col-xl-3 mb-3">
 
                                 <small class="d-block">
@@ -757,7 +903,6 @@
                             </div>
 
 
-                            <!-- Final Total Price -->
                             <div class="col-md-6 col-xl-3 mb-3">
 
                                 <small class="d-block">
@@ -777,7 +922,6 @@
                         </div>
 
 
-                        <!-- Dynamic Pricing Result -->
                         <div
                             id="pricingAdjustment"
                             class="price-adjustment"
@@ -804,7 +948,6 @@
                         </div>
 
 
-                        <!-- Daily Price Breakdown -->
                         <details
                             id="dailyPricing"
                             class="daily-pricing"
@@ -832,7 +975,6 @@
                 </div>
 
 
-                <!-- Date Error -->
                 <div
                     id="dateError"
                     class="alert alert-danger"
@@ -844,7 +986,6 @@
 
 
 
-                <!-- Booking Terms / Important Notice -->
                 <div class="booking-notice">
 
                     <div class="booking-notice-header">
@@ -1038,6 +1179,39 @@ function resetDynamicPricingDetails() {
         false;
 
     document.getElementById('dailyPriceList').replaceChildren();
+
+    clearDurationTierSelection();
+}
+
+
+function clearDurationTierSelection() {
+
+    document.querySelectorAll('.duration-tier').forEach(
+        function (tier) {
+            tier.classList.remove('selected');
+        }
+    );
+}
+
+
+function highlightDurationTier(durationTier) {
+
+    clearDurationTierSelection();
+
+    if (!durationTier) {
+        return;
+    }
+
+    const selectedTier =
+        document.querySelector(
+            '.duration-tier[data-min-days="' +
+            durationTier.minDays +
+            '"]'
+        );
+
+    if (selectedTier) {
+        selectedTier.classList.add('selected');
+    }
 }
 
 
@@ -1142,17 +1316,28 @@ function renderDailyPrices(dailyPrices) {
         rule.className =
             'daily-price-rule';
 
-        if (dailyPrice.ruleName) {
+        const adjustments =
+            Array.isArray(dailyPrice.adjustments) ?
+                dailyPrice.adjustments :
+                [];
 
-            const sign =
-                dailyPrice.adjustmentType === 'DISCOUNT' ? '-' : '+';
+        if (adjustments.length) {
 
             rule.textContent =
-                dailyPrice.ruleName +
-                ' ' +
-                sign +
-                formatMoney(dailyPrice.percentage) +
-                '%';
+                adjustments.map(function (adjustment) {
+
+                    const sign =
+                        adjustment.adjustmentType === 'DISCOUNT' ?
+                            '-' :
+                            '+';
+
+                    return adjustment.name +
+                        ' ' +
+                        sign +
+                        formatMoney(adjustment.percentage) +
+                        '%';
+
+                }).join(' + ');
 
         } else {
 
@@ -1188,6 +1373,10 @@ function renderRentalQuote(quote) {
         formatMoney(quote.totalPrice);
 
     resetDynamicPricingDetails();
+
+    highlightDurationTier(
+        quote.durationTier
+    );
 
     if (quote.hasDynamicPricing) {
 

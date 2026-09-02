@@ -18,14 +18,12 @@
     </title>
 
 
-    <!-- Favicon -->
     <asset:link
         rel="icon"
         href="favicon.ico"
         type="image/x-ico"/>
 
 
-    <!-- Fonts -->
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"/>
@@ -40,15 +38,10 @@
         rel="stylesheet"/>
 
 
-    <!-- Application CSS -->
     <asset:stylesheet src="application.css"/>
 
 
     <style>
-
-        /* =========================================================
-           PREMIUM APPLICATION SHELL
-           ========================================================= */
 
         :root {
 
@@ -91,10 +84,6 @@
 
 
 
-        /* =========================================================
-           TOP SHELL
-           ========================================================= */
-
         .top-shell {
 
             position: sticky;
@@ -111,10 +100,6 @@
 
 
 
-        /* =========================================================
-           NAVBAR
-           ========================================================= */
-
         .premium-navbar {
 
             position: relative;
@@ -124,7 +109,7 @@
             padding:
                 0 !important;
 
-            overflow: hidden;
+            overflow: visible;
 
             background:
                 linear-gradient(
@@ -155,34 +140,26 @@
         }
 
 
-        /* subtle gold glow */
-
         .premium-navbar::before {
 
             content: "";
 
             position: absolute;
 
-            width: 430px;
-            height: 230px;
+            inset: 0;
 
-            top: -150px;
-            left: -80px;
-
-            border-radius: 50%;
+            border-radius: inherit;
 
             pointer-events: none;
 
             background:
                 radial-gradient(
-                    circle,
+                    circle at 12% -80%,
                     rgba(245,166,35,.16),
-                    transparent 68%
+                    transparent 42%
                 );
         }
 
-
-        /* bottom gold line */
 
         .premium-navbar::after {
 
@@ -231,10 +208,6 @@
         }
 
 
-
-        /* =========================================================
-           BRAND
-           ========================================================= */
 
         .premium-brand {
 
@@ -369,10 +342,6 @@
 
 
 
-        /* =========================================================
-           NAVIGATION
-           ========================================================= */
-
         .premium-nav-list {
 
             display: flex;
@@ -434,6 +403,70 @@
         }
 
 
+        .premium-message-count {
+
+            position:
+                absolute;
+
+            top:
+                -7px;
+
+            right:
+                -7px;
+
+            z-index:
+                3;
+
+            min-width:
+                21px;
+
+            height:
+                21px;
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            padding:
+                0 5px;
+
+            color:
+                #ffffff;
+
+            background:
+                #c0392b;
+
+            border:
+                2px solid
+                #111318;
+
+            border-radius:
+                999px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(192,57,43,.45);
+
+            font-family:
+                'JetBrains Mono',
+                monospace;
+
+            font-size:
+                .55rem;
+
+            font-weight:
+                800;
+
+            line-height:
+                1;
+        }
+
+
         .premium-navbar
         .premium-nav-link:hover {
 
@@ -455,10 +488,6 @@
         }
 
 
-
-        /* =========================================================
-           ACTIVE NAVIGATION
-           ========================================================= */
 
         .premium-navbar
         .premium-nav-link.active {
@@ -513,10 +542,6 @@
         }
 
 
-
-        /* =========================================================
-           USER AREA
-           ========================================================= */
 
         .premium-user-area {
 
@@ -638,10 +663,6 @@
 
 
 
-        /* =========================================================
-           ROLE BADGES
-           ========================================================= */
-
         .premium-role {
 
             width:
@@ -722,10 +743,6 @@
 
 
 
-        /* =========================================================
-           LOGOUT
-           ========================================================= */
-
         .premium-logout {
 
             min-height:
@@ -790,10 +807,6 @@
 
 
 
-        /* =========================================================
-           SIGN IN
-           ========================================================= */
-
         .premium-signin {
 
             min-height:
@@ -854,10 +867,6 @@
 
 
 
-        /* =========================================================
-           MOBILE TOGGLER
-           ========================================================= */
-
         .premium-toggler {
 
             padding:
@@ -893,10 +902,6 @@
 
 
 
-        /* =========================================================
-           PAGE CONTENT
-           ========================================================= */
-
         .application-content {
 
             flex:
@@ -916,10 +921,6 @@
         }
 
 
-
-        /* =========================================================
-           FOOTER
-           ========================================================= */
 
         .premium-footer {
 
@@ -1034,10 +1035,6 @@
 
 
 
-        /* =========================================================
-           FOOTER TOP
-           ========================================================= */
-
         .premium-footer-top {
 
             display:
@@ -1140,10 +1137,6 @@
 
 
 
-        /* =========================================================
-           FOOTER LINKS
-           ========================================================= */
-
         .premium-footer-links {
 
             display:
@@ -1196,10 +1189,6 @@
         }
 
 
-
-        /* =========================================================
-           FOOTER BOTTOM
-           ========================================================= */
 
         .premium-footer-divider {
 
@@ -1270,10 +1259,6 @@
 
 
 
-        /* =========================================================
-           LOADING SPINNER
-           ========================================================= */
-
         #spinner {
 
             position:
@@ -1323,10 +1308,6 @@
 
 
 
-        /* =========================================================
-           TABLET
-           ========================================================= */
-
         @media (max-width: 1199px) {
 
             .premium-user-card {
@@ -1351,10 +1332,6 @@
         }
 
 
-
-        /* =========================================================
-           MOBILE
-           ========================================================= */
 
         @media (max-width: 991.98px) {
 
@@ -1450,6 +1427,19 @@
             }
 
 
+            .premium-message-count {
+
+                top:
+                    50%;
+
+                right:
+                    12px;
+
+                transform:
+                    translateY(-50%);
+            }
+
+
             .premium-user-area {
 
                 width:
@@ -1459,7 +1449,7 @@
                     grid;
 
                 grid-template-columns:
-                    1fr auto;
+                    minmax(0, 1fr) auto auto;
 
                 padding:
                     14px 0 0;
@@ -1485,10 +1475,6 @@
 
 
 
-        /* =========================================================
-           SMALL MOBILE
-           ========================================================= */
-
         @media (max-width: 576px) {
 
             .premium-brand-subtitle {
@@ -1501,7 +1487,14 @@
             .premium-user-area {
 
                 grid-template-columns:
-                    1fr;
+                    minmax(0, 1fr) auto;
+            }
+
+
+            .premium-user-area > form {
+
+                grid-column:
+                    1 / -1;
             }
 
 
@@ -1550,10 +1543,6 @@
 
 
 
-<!-- =========================================================
-     PREMIUM NAVBAR
-     ========================================================= -->
-
 <header class="top-shell">
 
     <nav
@@ -1564,10 +1553,6 @@
 
             <div class="premium-navbar-inner">
 
-
-                <!-- ============================
-                     BRAND
-                     ============================ -->
 
                 <a
                     href="${createLink(uri: '/')}"
@@ -1596,10 +1581,6 @@
 
 
 
-                <!-- ============================
-                     MOBILE BUTTON
-                     ============================ -->
-
                 <button
                     class="navbar-toggler premium-toggler ms-auto"
                     type="button"
@@ -1615,18 +1596,10 @@
 
 
 
-                <!-- ============================
-                     NAVBAR CONTENT
-                     ============================ -->
-
                 <div
                     class="collapse navbar-collapse premium-navbar-collapse"
                     id="premiumNavbar">
 
-
-                    <!-- ========================
-                         LEFT / CENTER MENU
-                         ======================== -->
 
                     <ul class="navbar-nav me-auto premium-nav-list">
 
@@ -1634,14 +1607,9 @@
 
 
 
-                            <!-- =================
-                                 ADMIN
-                                 ================= -->
-
                             <sec:ifAnyGranted roles="ROLE_ADMIN">
 
 
-                                <!-- Dashboard -->
                                 <li class="nav-item">
 
                                     <g:link
@@ -1661,7 +1629,6 @@
 
 
 
-                                <!-- Cars -->
                                 <li class="nav-item">
 
                                     <g:link
@@ -1681,7 +1648,6 @@
 
 
 
-                                <!-- Rentals -->
                                 <li class="nav-item">
 
                                     <g:link
@@ -1700,7 +1666,6 @@
                                 </li>
 
 
-                                <!-- Pricing Rules -->
                                 <li class="nav-item">
 
                                     <g:link
@@ -1723,14 +1688,9 @@
 
 
 
-                            <!-- =================
-                                 CUSTOMER
-                                 ================= -->
-
                             <sec:ifAnyGranted roles="ROLE_CUSTOMER">
 
 
-                                <!-- Browse Cars -->
                                 <li class="nav-item">
 
                                     <g:link
@@ -1750,7 +1710,6 @@
 
 
 
-                                <!-- My Rentals -->
                                 <li class="nav-item">
 
                                     <g:link
@@ -1772,6 +1731,26 @@
                             </sec:ifAnyGranted>
 
 
+                            <li class="nav-item">
+
+                                <g:link
+                                    controller="rentalChat"
+                                    action="index"
+                                    class="nav-link premium-nav-link ${controllerName == 'rentalChat' ? 'active' : ''}">
+
+                                    <i class="bi bi-chat-square-text"></i>
+
+                                    <span>
+                                        Messages
+                                    </span>
+
+                                    <app:messageBadge/>
+
+                                </g:link>
+
+                            </li>
+
+
                         </sec:ifLoggedIn>
 
 
@@ -1781,16 +1760,10 @@
 
 
 
-                    <!-- ========================
-                         LOGGED USER
-                         ======================== -->
-
                     <sec:ifLoggedIn>
 
                         <div class="premium-user-area">
 
-
-                            <!-- User Card -->
                             <div class="premium-user-card">
 
 
@@ -1812,7 +1785,6 @@
 
 
 
-                                    <!-- Admin Role -->
                                     <sec:ifAnyGranted roles="ROLE_ADMIN">
 
                                         <span class="premium-role admin">
@@ -1825,7 +1797,6 @@
 
 
 
-                                    <!-- Customer Role -->
                                     <sec:ifAnyGranted roles="ROLE_CUSTOMER">
 
                                         <span class="premium-role customer">
@@ -1844,7 +1815,10 @@
 
 
 
-                            <!-- Logout -->
+                            <app:notificationMenu/>
+
+
+
                             <form
                                 action="${createLink(uri: '/logout')}"
                                 method="POST"
@@ -1868,10 +1842,6 @@
                     </sec:ifLoggedIn>
 
 
-
-                    <!-- ========================
-                         NOT LOGGED
-                         ======================== -->
 
                     <sec:ifNotLoggedIn>
 
@@ -1900,10 +1870,6 @@
 
 
 
-<!-- =========================================================
-     PAGE CONTENT
-     ========================================================= -->
-
 <main class="application-content">
 
     <g:layoutBody/>
@@ -1912,10 +1878,6 @@
 
 
 
-<!-- =========================================================
-     PREMIUM FOOTER
-     ========================================================= -->
-
 <footer
     class="premium-footer"
     role="contentinfo">
@@ -1923,14 +1885,9 @@
     <div class="container premium-footer-content">
 
 
-        <!-- ================================
-             FOOTER TOP
-             ================================ -->
-
         <div class="premium-footer-top">
 
 
-            <!-- Brand -->
             <div class="premium-footer-brand">
 
 
@@ -1963,7 +1920,6 @@
 
 
 
-            <!-- Links -->
             <div class="premium-footer-links">
 
 
@@ -2018,14 +1974,9 @@
 
 
 
-        <!-- Divider -->
         <div class="premium-footer-divider"></div>
 
 
-
-        <!-- ================================
-             FOOTER BOTTOM
-             ================================ -->
 
         <div class="premium-footer-bottom">
 
@@ -2059,10 +2010,6 @@
 
 
 
-<!-- =========================================================
-     LOADING
-     ========================================================= -->
-
 <div
     id="spinner"
     style="display:none;">
@@ -2083,7 +2030,6 @@
 
 
 
-<!-- Application JavaScript -->
 <asset:javascript src="application.js"/>
 
 

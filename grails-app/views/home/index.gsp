@@ -49,10 +49,6 @@
                 var(--home-black);
         }
 
-        /* =========================
-           NAVIGATION
-           ========================= */
-
         .home-nav{
             position:absolute;
             inset:0 0 auto 0;
@@ -163,10 +159,6 @@
             background:var(--home-gold);
             border-color:var(--home-gold);
         }
-
-        /* =========================
-           HERO
-           ========================= */
 
         .home-hero{
             position:relative;
@@ -304,8 +296,6 @@
             border-color:rgba(245,166,35,.48);
         }
 
-        /* HERO VEHICLE */
-
         .hero-car-stage{
             position:relative;
             min-height:470px;
@@ -383,6 +373,23 @@
             font-weight:500;
         }
 
+        .hero-car-price-offer{
+            display:flex;
+            align-items:flex-end;
+            gap:10px;
+        }
+
+        .hero-car-price-old{
+            color:#8d9098;
+            font-size:.84rem;
+            font-weight:500;
+            text-decoration:line-through;
+        }
+
+        .hero-car-price-new{
+            color:var(--home-gold-light);
+        }
+
         .hero-car-badge{
             position:absolute;
             top:52px;
@@ -399,6 +406,13 @@
             letter-spacing:.1em;
         }
 
+        .hero-car-badge-offer{
+            color:#17120a;
+            background:linear-gradient(135deg,#ffd37a,#f5a623);
+            border-color:rgba(255,211,122,.8);
+            box-shadow:0 10px 30px rgba(245,166,35,.24);
+        }
+
         .hero-car-fallback{
             height:100%;
             display:grid;
@@ -409,10 +423,6 @@
                 radial-gradient(circle,rgba(245,166,35,.13),transparent 38%),
                 #121419;
         }
-
-        /* =========================
-           STATS
-           ========================= */
 
         .home-stats{
             position:relative;
@@ -475,10 +485,6 @@
             font-size:.77rem;
         }
 
-        /* =========================
-           SECTIONS
-           ========================= */
-
         .home-section{
             padding:108px 0;
         }
@@ -524,7 +530,93 @@
             color:#fff;
         }
 
-        /* FEATURED CARS */
+        .home-offers-section{
+            position:relative;
+            background:
+                radial-gradient(circle at 15% 0%,rgba(245,166,35,.11),transparent 28%),
+                #0a0b0e;
+        }
+
+        .offer-card{
+            border-color:rgba(245,166,35,.22);
+        }
+
+        .offer-badge{
+            position:absolute;
+            z-index:3;
+            top:14px;
+            left:14px;
+            padding:7px 11px;
+            border:1px solid rgba(255,211,122,.72);
+            border-radius:999px;
+            color:#17120a;
+            background:linear-gradient(135deg,#ffd37a,#f5a623);
+            box-shadow:0 8px 24px rgba(245,166,35,.2);
+            font-family:'JetBrains Mono',monospace;
+            font-size:.6rem;
+            font-weight:700;
+            letter-spacing:.08em;
+        }
+
+        .offer-prices{
+            display:flex;
+            flex-direction:column;
+            align-items:flex-end;
+            gap:3px;
+            white-space:nowrap;
+        }
+
+        .offer-price-old{
+            color:#777a83;
+            font-family:'JetBrains Mono',monospace;
+            font-size:.68rem;
+            text-decoration:line-through;
+        }
+
+        .offer-price-new{
+            color:var(--home-gold-light);
+            font-family:'Space Grotesk',sans-serif;
+            font-size:1.1rem;
+            font-weight:700;
+        }
+
+        .offer-price-new small{
+            color:#7d8089;
+            font-family:'Inter',sans-serif;
+            font-size:.64rem;
+            font-weight:500;
+        }
+
+        .offer-meta{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-top:17px;
+            padding-top:15px;
+            border-top:1px solid var(--home-line);
+            color:#858891;
+            font-size:.68rem;
+        }
+
+        .offer-meta-name{
+            min-width:0;
+            overflow:hidden;
+            color:#c8cad0;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+
+        .offer-meta i{
+            margin-right:5px;
+            color:var(--home-gold);
+        }
+
+        .offer-login-action{
+            margin-top:16px;
+            padding-top:16px;
+            border-top:1px solid var(--home-line);
+        }
 
         .featured-grid{
             display:grid;
@@ -678,8 +770,6 @@
             background:#121419;
         }
 
-        /* EXPERIENCE */
-
         .experience-grid{
             display:grid;
             grid-template-columns:repeat(3,1fr);
@@ -726,8 +816,6 @@
             line-height:1.7;
             font-size:.86rem;
         }
-
-        /* CTA */
 
         .home-cta{
             padding:0 0 105px;
@@ -779,8 +867,6 @@
             flex:0 0 auto;
         }
 
-        /* FOOTER */
-
         .home-footer{
             padding:30px 0;
             border-top:1px solid var(--home-line);
@@ -795,8 +881,6 @@
             color:#72757d;
             font-size:.76rem;
         }
-
-        /* RESPONSIVE */
 
         @media (max-width:991px){
             .home-nav-links{ display:none; }
@@ -898,11 +982,12 @@
 
 <body>
 
-<g:set var="heroCar" value="${featuredCars ? featuredCars[0] : null}"/>
+<g:set var="heroOfferItem" value="${landingCars ? landingCars[0] : null}"/>
+<g:set var="heroOffer" value="${heroOfferItem ? heroOfferItem.offer : null}"/>
+<g:set var="heroCar" value="${heroOfferItem ? heroOfferItem.car : (featuredCars ? featuredCars[0] : null)}"/>
 
 <div class="home-shell">
 
-    <!-- NAVBAR -->
     <nav class="home-nav">
 
         <div class="container">
@@ -932,6 +1017,10 @@
 
                     <a href="${createLink(uri:'/')}">
                         Home
+                    </a>
+
+                    <a href="#offers">
+                        ${activeOfferCount ? 'Offers' : 'Top Picks'}
                     </a>
 
                     <a href="#featured">
@@ -988,7 +1077,6 @@
     </nav>
 
 
-    <!-- HERO -->
     <section class="home-hero">
 
         <div class="container">
@@ -1067,9 +1155,19 @@
                             </g:else>
 
 
-                            <span class="hero-car-badge">
-                                AVAILABLE
-                            </span>
+                            <g:if test="${heroOffer}">
+
+                                <span class="hero-car-badge hero-car-badge-offer">
+                                    SAVE ${heroOffer.percentage}%
+                                </span>
+
+                            </g:if><g:else>
+
+                                <span class="hero-car-badge">
+                                    AVAILABLE
+                                </span>
+
+                            </g:else>
 
 
                             <div class="hero-car-info">
@@ -1077,7 +1175,7 @@
                                 <div>
 
                                     <span class="hero-car-kicker">
-                                        Featured Vehicle
+                                        ${heroOffer ? heroOffer.name : 'Featured Vehicle'}
                                     </span>
 
                                     <h2 class="hero-car-name">
@@ -1086,10 +1184,29 @@
 
                                 </div>
 
-                                <div class="hero-car-price">
-                                    ${heroCar.pricePerDay}
-                                    <small>/ day</small>
-                                </div>
+                                <g:if test="${heroOffer}">
+
+                                    <div class="hero-car-price hero-car-price-offer">
+
+                                        <span class="hero-car-price-old">
+                                            ${heroOffer.basePrice}
+                                        </span>
+
+                                        <span class="hero-car-price-new">
+                                            ${heroOffer.dailyPrice}
+                                            <small>/ day</small>
+                                        </span>
+
+                                    </div>
+
+                                </g:if><g:else>
+
+                                    <div class="hero-car-price">
+                                        ${heroCar.pricePerDay}
+                                        <small>/ day</small>
+                                    </div>
+
+                                </g:else>
 
                             </div>
 
@@ -1112,7 +1229,6 @@
     </section>
 
 
-    <!-- LIVE STATS -->
     <section class="home-stats">
 
         <div class="container">
@@ -1166,17 +1282,17 @@
                     <div class="home-stat-top">
 
                         <span class="home-stat-icon">
-                            <i class="bi bi-credit-card"></i>
+                            <i class="bi bi-tags"></i>
                         </span>
 
                         <span class="home-stat-value">
-                            50
+                            ${activeOfferCount ?: 0}
                         </span>
 
                     </div>
 
                     <div class="home-stat-label">
-                        Booking deposit
+                        Active offers today
                     </div>
 
                 </div>
@@ -1209,7 +1325,209 @@
     </section>
 
 
-    <!-- FEATURED VEHICLES -->
+    <section
+        id="offers"
+        class="home-section home-offers-section">
+
+        <div class="container">
+
+            <div class="home-section-header">
+
+                <div>
+
+                    <span class="home-section-label">
+                        ${activeOfferCount ? 'Limited-Time Offers' : 'Featured Vehicles'}
+                    </span>
+
+                    <h2 class="home-section-title">
+                        ${activeOfferCount ? 'More road. Less per day.' : 'Ready for your next drive.'}
+                    </h2>
+
+                </div>
+
+
+                <a
+                    href="${createLink(uri:'/login/auth')}"
+                    class="home-section-link">
+
+                    Sign in to reserve
+                    <i class="bi bi-arrow-right ms-1"></i>
+
+                </a>
+
+            </div>
+
+
+            <div class="featured-grid">
+
+                <g:if test="${landingCars}">
+
+                    <g:each
+                        in="${landingCars}"
+                        var="offerItem">
+
+                        <g:set
+                            var="offerCar"
+                            value="${offerItem.car}"/>
+
+                        <g:set
+                            var="offer"
+                            value="${offerItem.offer}"/>
+
+
+                        <article class="featured-card offer-card">
+
+                            <div class="featured-image-wrap">
+
+                                <g:if test="${offerCar.carImage}">
+
+                                    <img
+                                        src="${createLink(
+                                                controller:'car',
+                                                action:'image',
+                                                id:offerCar.id
+                                        )}"
+                                        alt="${offerCar.brand} ${offerCar.model}"
+                                        class="featured-image"/>
+
+                                </g:if><g:else>
+
+                                    <div class="featured-fallback">
+                                        <i class="bi bi-car-front-fill"></i>
+                                    </div>
+
+                                </g:else>
+
+                                <g:if test="${offer}">
+
+                                    <span class="offer-badge">
+                                        SAVE ${offer.percentage}%
+                                    </span>
+
+                                </g:if><g:else>
+
+                                    <span class="featured-status">
+                                        AVAILABLE
+                                    </span>
+
+                                </g:else>
+
+                            </div>
+
+
+                            <div class="featured-body">
+
+                                <div class="featured-top">
+
+                                    <div>
+
+                                        <h3 class="featured-name">
+                                            ${offerCar.brand}
+                                            ${offerCar.model}
+                                        </h3>
+
+                                        <span class="featured-year">
+                                            ${offerCar.year}
+                                            ·
+                                            ${offerCar.category?.name ?: 'Vehicle'}
+                                        </span>
+
+                                    </div>
+
+
+                                    <g:if test="${offer}">
+
+                                        <div class="offer-prices">
+
+                                            <span class="offer-price-old">
+                                                ${offer.basePrice}
+                                            </span>
+
+                                            <span class="offer-price-new">
+                                                ${offer.dailyPrice}
+                                                <small>/ day</small>
+                                            </span>
+
+                                        </div>
+
+                                    </g:if><g:else>
+
+                                        <div class="featured-price">
+                                            ${offerCar.pricePerDay}
+                                            <small>/ day</small>
+                                        </div>
+
+                                    </g:else>
+
+                                </div>
+
+
+                                <g:if test="${offer}">
+
+                                    <div class="offer-meta">
+
+                                        <span class="offer-meta-name">
+                                            <i class="bi bi-tag"></i>
+                                            ${offer.name}
+                                        </span>
+
+                                        <span>
+                                            Ends ${offer.endDate}
+                                        </span>
+
+                                    </div>
+
+                                </g:if><g:else>
+
+                                    <div class="offer-meta">
+
+                                        <span class="offer-meta-name">
+                                            <i class="bi bi-check-circle"></i>
+                                            Available now
+                                        </span>
+
+                                        <span>
+                                            ${offerCar.category?.name ?: 'Vehicle'}
+                                        </span>
+
+                                    </div>
+
+                                </g:else>
+
+
+                                <a
+                                    href="${createLink(uri:'/login/auth')}"
+                                    class="featured-action offer-login-action">
+
+                                    <span>
+                                        Sign in to Book
+                                    </span>
+
+                                    <i class="bi bi-arrow-right"></i>
+
+                                </a>
+
+                            </div>
+
+                        </article>
+
+                    </g:each>
+
+                </g:if><g:else>
+
+                    <div class="featured-empty">
+                        No available vehicles right now.
+                    </div>
+
+                </g:else>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
     <section
         id="featured"
         class="home-section home-section-dark">
@@ -1345,7 +1663,6 @@
     </section>
 
 
-    <!-- EXPERIENCE -->
     <section id="experience" class="home-section">
 
         <div class="container">
@@ -1441,7 +1758,6 @@
     </section>
 
 
-    <!-- CTA -->
     <section class="home-cta">
 
         <div class="container">
@@ -1479,7 +1795,6 @@
     </section>
 
 
-    <!-- FOOTER -->
     <footer class="home-footer">
 
         <div class="container">

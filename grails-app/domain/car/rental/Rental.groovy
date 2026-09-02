@@ -9,6 +9,7 @@ class Rental {
     Date endDate
 
     BigDecimal totalPrice
+    BigDecimal systemCalculatedPrice
     BigDecimal bookingDeposit = 50.00
     boolean depositPaid = false
 
@@ -16,6 +17,8 @@ class Rental {
     BigDecimal damageCost = 0.00
 
     String status = 'PENDING'
+    boolean chatArchivedByAdmin = false
+    boolean chatArchivedByCustomer = false
 
     static constraints = {
         customer nullable: false
@@ -25,6 +28,7 @@ class Rental {
         endDate nullable: false
 
         totalPrice nullable: false, min: 0.0
+        systemCalculatedPrice nullable: true, min: 0.0
         bookingDeposit nullable: false, min: 0.0
         securityDeposit nullable: false, min: 0.0
         damageCost nullable: false, min: 0.0

@@ -246,19 +246,13 @@
 
         <g:each in="${rentalList}" var="rental">
 
-            <!--
-                Financial rules:
+            <g:set
+                var="systemPrice"
+                value="${rental.systemCalculatedPrice ?: rental.totalPrice ?: 0}"/>
 
-                Booking deposit is PART OF rental price.
-                It is not added on top of rental price.
-
-                Completed rental:
-                remainingRental = totalPrice - bookingDeposit
-                grossPaid       = totalPrice + securityDeposit
-                securityRefund  = max(securityDeposit - damageCost, 0)
-                extraDamageDue  = max(damageCost - securityDeposit, 0)
-                finalNetCost    = totalPrice + damageCost
-            -->
+            <g:set
+                var="agreedPrice"
+                value="${rental.totalPrice ?: 0}"/>
 
             <g:set
                 var="bookingPaid"
@@ -267,7 +261,14 @@
             <g:set
                 var="remainingRental"
                 value="${rental.status == 'COMPLETED' ?
-                    ((rental.totalPrice ?: 0) - bookingPaid) : 0}"/>
+                    (agreedPrice > bookingPaid ?
+                        (agreedPrice - bookingPaid) : 0) : 0}"/>
+
+            <g:set
+                var="rentalCredit"
+                value="${rental.status == 'COMPLETED' ?
+                    (bookingPaid > agreedPrice ?
+                        (bookingPaid - agreedPrice) : 0) : 0}"/>
 
             <g:set
                 var="securityPaid"
@@ -290,6 +291,10 @@
                         ((rental.securityDeposit ?: 0) - damage) : 0) : 0}"/>
 
             <g:set
+                var="totalRefund"
+                value="${securityRefund + rentalCredit}"/>
+
+            <g:set
                 var="extraDamageDue"
                 value="${rental.status == 'COMPLETED' ?
                     (damage > (rental.securityDeposit ?: 0) ?
@@ -298,8 +303,12 @@
             <g:set
                 var="finalNetCost"
                 value="${rental.status == 'COMPLETED' ?
-                    ((rental.totalPrice ?: 0) + damage) :
+                    (agreedPrice + damage) :
                     bookingPaid}"/>
+
+            <g:set
+                var="manualDifference"
+                value="${agreedPrice - systemPrice}"/>
 
 
             <article class="history-card">
@@ -367,9 +376,21 @@
 
                                 <div class="settlement-box">
 
-                                    <div class="settlement-row">
-                                        <span>Full rental price</span>
-                                        <strong>${rental.totalPrice}</strong>
+                                    <g:if test="${manualDifference != 0}">
+                                        <div class="settlement-row">
+                                            <span>System-calculated rental price</span>
+                                            <strong>${systemPrice}</strong>
+                                        </div>
+
+                                        <div class="settlement-row ${manualDifference < 0 ? 'positive' : 'danger'}">
+                                            <span>Manual admin adjustment</span>
+                                            <strong>${manualDifference}</strong>
+                                        </div>
+                                    </g:if>
+
+                                    <div class="settlement-row total-paid">
+                                        <span>Agreed final rental price</span>
+                                        <strong>${agreedPrice}</strong>
                                     </div>
 
                                     <div class="settlement-row">
@@ -400,6 +421,20 @@
                                     <div class="settlement-row positive">
                                         <span>Security deposit returned to you</span>
                                         <strong>${securityRefund}</strong>
+                                    </div>
+
+                                    <g:if test="${rentalCredit > 0}">
+
+                                        <div class="settlement-row positive">
+                                            <span>Booking deposit credit returned to you</span>
+                                            <strong>${rentalCredit}</strong>
+                                        </div>
+
+                                    </g:if>
+
+                                    <div class="settlement-row positive total-paid">
+                                        <span>Total amount returned to you</span>
+                                        <strong>${totalRefund}</strong>
                                     </div>
 
 
@@ -441,9 +476,10 @@
 
                                     <strong>How it was calculated:</strong>
                                     the booking deposit is part of the rental price,
-                                    not an extra charge. Your final cost equals the
-                                    full rental price plus any recorded damage cost.
-                                    The unused part of the security deposit is returned.
+                                    not an extra charge. If the agreed final rental price
+                                    is lower than the booking deposit, the difference is
+                                    returned as booking credit. Your final cost equals the
+                                    agreed rental price plus any recorded damage cost.
 
                                 </div>
 

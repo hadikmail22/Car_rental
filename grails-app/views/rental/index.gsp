@@ -65,7 +65,6 @@
             color:var(--asphalt-900);
         }
 
-        /* ---------- Table: signature logbook/manifest look ---------- */
         .rentals-table-wrap{
             width:100%;
             border:1px solid var(--hairline);
@@ -128,7 +127,6 @@
             font-size:0.86rem;
         }
 
-        /* ---------- Status / deposit badges: dashboard-light style ---------- */
         .status-badge{
             font-family:'JetBrains Mono', monospace;
             font-weight:600;
@@ -191,7 +189,6 @@
             color:var(--ink-soft);
         }
 
-        /* ---------- Action buttons ---------- */
         .btn-success{
             background:var(--go-green);
             border:none;
@@ -217,8 +214,6 @@
 
         
 
-
-        /* ---------- Admin alert: vehicle pickup due today ---------- */
 
         .pickup-due-today > td{
             background:#f3fbf6 !important;
@@ -259,8 +254,6 @@
             box-shadow:0 0 0 4px rgba(105,185,138,.10);
         }
 
-        /* ---------- Admin alert: vehicle return due today ---------- */
-
         .return-due-today > td{
             background:#f2f7fd !important;
             border-top-color:#d7e6f7 !important;
@@ -299,8 +292,6 @@
             background:#6fa2d6;
             box-shadow:0 0 0 4px rgba(111,162,214,.10);
         }
-
-        /* ---------- Rental progress timeline ---------- */
 
         .rental-progress{
             min-width:104px;
@@ -359,13 +350,6 @@
                 0 0 12px rgba(245,166,35,.30);
         }
 
-        /*
-         * .progress-label انحذف — الأسماء صارت
-         * بالـ title attribute (tooltip) على كل خطوة.
-         * الكلام تحت النقاط كان بينكسر على سطرين
-         * وبيضاعف ارتفاع الصف.
-         */
-
         .date-range{
             display:flex;
             flex-direction:column;
@@ -406,8 +390,6 @@
             color:var(--brake-red);
             border-color:#e8aaaa;
         }
-
-        /* ---------- Admin rental workflow ---------- */
 
         .admin-return-form{
             width:155px;
@@ -460,13 +442,95 @@
             white-space:nowrap;
         }
 
-        .table th:last-child,
-        .table td:last-child{
-            width:175px;
-            min-width:175px;
+        .price-adjustment-box{
+            width:220px;
+            min-width:220px;
+            margin-bottom:.75rem;
+            padding:.7rem;
+            border:1px solid #f0d9a6;
+            border-radius:9px;
+            background:#fffaf0;
         }
 
-        /* ---------- Empty state ---------- */
+        .price-adjustment-summary{
+            margin-bottom:.55rem;
+            font-family:'JetBrains Mono', monospace;
+            font-size:.66rem;
+            line-height:1.45;
+            color:var(--ink-soft);
+        }
+
+        .price-adjustment-summary strong{
+            color:var(--asphalt-900);
+        }
+
+        .price-adjustment-box .form-control{
+            border:1px solid var(--hairline);
+            border-radius:7px;
+            font-size:.78rem;
+        }
+
+        .price-adjustment-box .form-control:focus{
+            border-color:var(--headlight);
+            box-shadow:0 0 0 .15rem rgba(245,166,35,.15);
+        }
+
+        .price-adjustment-box textarea{
+            resize:vertical;
+            min-height:58px;
+        }
+
+        .price-adjustment-box .btn{
+            width:100%;
+            white-space:nowrap;
+        }
+
+        .price-adjustment-history{
+            margin-top:.55rem;
+            padding-top:.5rem;
+            border-top:1px dashed #e4c98e;
+            font-size:.68rem;
+            color:var(--ink-soft);
+        }
+
+        .price-adjustment-history summary{
+            cursor:pointer;
+            font-weight:700;
+            color:var(--asphalt-900);
+        }
+
+        .price-adjustment-record{
+            margin-top:.5rem;
+            padding:.45rem;
+            border-radius:6px;
+            background:#fff;
+            line-height:1.45;
+            overflow-wrap:anywhere;
+        }
+
+        .price-final-label{
+            display:block;
+            font-family:'JetBrains Mono', monospace;
+            font-size:.6rem;
+            font-weight:700;
+            letter-spacing:.04em;
+            color:var(--go-green);
+        }
+
+        .price-original{
+            display:block;
+            margin-top:.2rem;
+            font-family:'JetBrains Mono', monospace;
+            font-size:.68rem;
+            color:var(--ink-soft);
+            text-decoration:line-through;
+        }
+
+        .table th:last-child,
+        .table td:last-child{
+            width:240px;
+            min-width:240px;
+        }
 
         .rentals-empty{
             padding:3.2rem 1.5rem;
@@ -496,7 +560,6 @@
             margin-bottom:1.2rem;
         }
 
-        /* ---------- Mobile ---------- */
         @media (max-width: 767.98px){
             .table td, .table th{
                 font-size:0.82rem;
@@ -562,7 +625,6 @@
     </div>
 
 
-    <!-- Flash Message -->
     <g:if test="${flash.message}">
 
         <div class="alert alert-info">
@@ -572,7 +634,6 @@
     </g:if>
 
 
-    <!-- Rental List -->
     <g:if test="${rentalList}">
 
         <div class="table-responsive rentals-table-wrap">
@@ -621,7 +682,6 @@
                     <tr class="${pickupDueToday ? 'pickup-due-today' : (returnDueToday ? 'return-due-today' : '')}">
 
 
-                        <!-- Car -->
                         <td>
 
                             <strong>
@@ -652,7 +712,6 @@
                         </td>
 
 
-                        <!-- Customer - Admin Only -->
                         <sec:ifAllGranted roles="ROLE_ADMIN">
 
                             <td>
@@ -664,7 +723,6 @@
                         </sec:ifAllGranted>
 
 
-                        <!-- Dates (Start + End merged) -->
                         <td>
 
                             <div class="date-range">
@@ -688,17 +746,24 @@
                         </td>
 
 
-                        <!-- Total Price -->
                         <td>
 
                             <strong>
                                 ${rental.totalPrice}
                             </strong>
 
+                            <g:if test="${rental.systemCalculatedPrice != null && rental.systemCalculatedPrice.compareTo(rental.totalPrice) != 0}">
+                                <span class="price-final-label">
+                                    FINAL PRICE
+                                </span>
+                                <span class="price-original">
+                                    ${rental.systemCalculatedPrice}
+                                </span>
+                            </g:if>
+
                         </td>
 
 
-                        <!-- Status + Booking Deposit merged -->
                         <td>
 
                             <g:if test="${rental.status == 'PENDING'}">
@@ -745,10 +810,6 @@
                             </g:else>
 
 
-                            <!--
-                                الوديعة انتقلت لهون من عمود مستقل.
-                                القيمة بتظهر بالـ tooltip عند الوقوف عليها.
-                            -->
                             <g:if test="${rental.status != 'CANCELLED'}">
 
                                 <g:if test="${rental.depositPaid}">
@@ -775,7 +836,6 @@
                         </td>
 
 
-                        <!-- Progress Timeline -->
                         <td>
 
                             <g:if test="${rental.status == 'CANCELLED'}">
@@ -832,15 +892,12 @@
                         </td>
 
 
-                        <!-- Actions -->
                         <td>
 
 
-                            <!-- Customer Actions -->
                             <sec:ifAllGranted roles="ROLE_CUSTOMER">
 
 
-                                <!-- PENDING: Pay Deposit + Free Cancellation -->
                                 <g:if test="${rental.status == 'PENDING' && !rental.depositPaid}">
 
                                     <div class="d-flex gap-2 flex-wrap">
@@ -885,7 +942,6 @@
                                 </g:if>
 
 
-                                <!-- CONFIRMED: Deposit is non-refundable if cancelled -->
                                 <g:if test="${rental.status == 'CONFIRMED' && rental.depositPaid}">
 
                                     <div>
@@ -916,7 +972,6 @@
                                 </g:if>
 
 
-                                <!-- Picked Up -->
                                 <g:if test="${rental.status == 'PICKED_UP'}">
 
                                     <span class="action-text pickedup">
@@ -926,7 +981,6 @@
                                 </g:if>
 
 
-                                <!-- Completed -->
                                 <g:if test="${rental.status == 'COMPLETED'}">
 
                                     <span class="action-text completed">
@@ -936,7 +990,6 @@
                                 </g:if>
 
 
-                                <!-- Cancelled -->
                                 <g:if test="${rental.status == 'CANCELLED'}">
 
                                     <span class="action-text cancelled">
@@ -948,8 +1001,7 @@
                             </sec:ifAllGranted>
 
 
-                           <!-- Admin Actions -->
-                            <sec:ifAllGranted roles="ROLE_ADMIN">
+                           <sec:ifAllGranted roles="ROLE_ADMIN">
 
                                 <g:if test="${rental.status == 'PENDING'}">
 
@@ -958,6 +1010,13 @@
                                     </span>
 
                                 </g:if><g:elseif test="${rental.status == 'CONFIRMED'}">
+
+                                    <g:render
+                                        template="priceAdjustment"
+                                        model="${[
+                                            rental: rental,
+                                            adjustments: priceAdjustmentsByRental?.get(rental.id)
+                                        ]}"/>
 
                                     <div class="mb-2 admin-action-box">
 
@@ -990,6 +1049,13 @@
                                     </div>
 
                                 </g:elseif><g:elseif test="${rental.status == 'PICKED_UP'}">
+
+                                    <g:render
+                                        template="priceAdjustment"
+                                        model="${[
+                                            rental: rental,
+                                            adjustments: priceAdjustmentsByRental?.get(rental.id)
+                                        ]}"/>
 
                                     <g:form
                                         action="complete"
@@ -1029,6 +1095,13 @@
                                     </g:form>
 
                                 </g:elseif><g:elseif test="${rental.status == 'COMPLETED'}">
+
+                                    <g:render
+                                        template="priceAdjustment"
+                                        model="${[
+                                            rental: rental,
+                                            adjustments: priceAdjustmentsByRental?.get(rental.id)
+                                        ]}"/>
 
                                     <span class="action-text completed">
                                         <i class="bi bi-check-circle me-1"></i>
@@ -1107,7 +1180,6 @@
     </g:else>
 
 
-    <!-- Pagination -->
     <div class="d-flex justify-content-center mt-4">
 
         <g:paginate
