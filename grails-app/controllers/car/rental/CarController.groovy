@@ -200,10 +200,36 @@ static allowedMethods = [
                         [car]
                 )
 
+        List<Map> pricingHighlights =
+                pricingHighlightsByCar[car.id] ?: []
+
+        Map currentHighlight =
+                pricingHighlights.find { Map highlight ->
+                    highlight.current == true
+                }
+
+        BigDecimal effectivePrice =
+                currentHighlight?.dailyPrice != null ?
+                        currentHighlight.dailyPrice as BigDecimal :
+                        car.pricePerDay
+
+        boolean activeDiscount =
+                currentHighlight?.adjustmentType == 'DISCOUNT' &&
+                        effectivePrice < car.pricePerDay
+
+        boolean activeIncrease =
+                currentHighlight?.adjustmentType == 'INCREASE' &&
+                        effectivePrice > car.pricePerDay
+
         [
                 car              : car,
-                pricingHighlights:
-                        pricingHighlightsByCar[car.id] ?: []
+                pricingHighlights: pricingHighlights,
+                currentPricing   : [
+                        effectivePrice : effectivePrice,
+                        activeDiscount : activeDiscount,
+                        activeIncrease : activeIncrease,
+                        currentHighlight: currentHighlight
+                ]
         ]
     }
 

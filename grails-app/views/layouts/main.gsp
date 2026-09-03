@@ -1621,7 +1621,7 @@
 
                                         <i class="bi bi-grid"></i>
 
-                                        <span>
+                                        <span class="premium-nav-label">
                                             Dashboard
                                         </span>
 
@@ -1640,7 +1640,7 @@
 
                                         <i class="bi bi-car-front"></i>
 
-                                        <span>
+                                        <span class="premium-nav-label">
                                             Fleet
                                         </span>
 
@@ -1659,7 +1659,7 @@
 
                                         <i class="bi bi-calendar-check"></i>
 
-                                        <span>
+                                        <span class="premium-nav-label">
                                             Rentals
                                         </span>
 
@@ -1677,7 +1677,7 @@
 
                                         <i class="bi bi-tags"></i>
 
-                                        <span>
+                                        <span class="premium-nav-label">
                                             Pricing
                                         </span>
 
@@ -1702,7 +1702,7 @@
 
                                         <i class="bi bi-car-front"></i>
 
-                                        <span>
+                                        <span class="premium-nav-label">
                                             Browse Cars
                                         </span>
 
@@ -1721,7 +1721,7 @@
 
                                         <i class="bi bi-calendar-check"></i>
 
-                                        <span>
+                                        <span class="premium-nav-label">
                                             My Rentals
                                         </span>
 
@@ -1742,7 +1742,7 @@
 
                                     <i class="bi bi-chat-square-text"></i>
 
-                                    <span>
+                                    <span class="premium-nav-label">
                                         Messages
                                     </span>
 
@@ -1881,130 +1881,159 @@
 
 
 <footer
-    class="premium-footer"
+    class="premium-footer cinematic-footer"
     role="contentinfo">
+
+    <div class="cinematic-footer-grid"></div>
+
+    <div class="cinematic-footer-glow"></div>
+
+    <div class="cinematic-footer-marquee" aria-hidden="true">
+        <div>
+            PREMIUM MOBILITY <span>✦</span> DRIVE WITH CONFIDENCE <span>✦</span> YOUR NEXT JOURNEY STARTS HERE <span>✦</span>
+            PREMIUM MOBILITY <span>✦</span> DRIVE WITH CONFIDENCE <span>✦</span> YOUR NEXT JOURNEY STARTS HERE <span>✦</span>
+        </div>
+    </div>
+
+    <div class="cinematic-footer-word" aria-hidden="true">
+        DRIVE
+    </div>
 
     <div class="container premium-footer-content">
 
+        <div class="cinematic-footer-main">
 
-        <div class="premium-footer-top">
+            <span class="cinematic-footer-kicker">
+                CAR RENTAL MANAGEMENT
+            </span>
 
+            <h2>
+                Ready for your next <span>drive?</span>
+            </h2>
 
-            <div class="premium-footer-brand">
+            <p>
+                Browse the fleet, reserve with confidence and keep every rental in one clear place.
+            </p>
 
+            <div class="cinematic-footer-actions">
 
-                <div class="premium-footer-logo">
+                <g:link
+                    controller="car"
+                    action="index"
+                    class="cinematic-footer-action cinematic-footer-action-primary">
 
                     <i class="bi bi-car-front-fill"></i>
+                    Browse Fleet
 
-                </div>
+                </g:link>
 
+                <sec:ifNotLoggedIn>
 
-                <div>
+                    <a
+                        href="${createLink(uri: '/login/auth')}"
+                        class="cinematic-footer-action">
 
-                    <div class="premium-footer-name">
+                        <i class="bi bi-person"></i>
+                        Sign In
 
-                        Car Rental
+                    </a>
 
-                    </div>
-
-
-                    <div class="premium-footer-caption">
-
-                        Premium Mobility Management
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-
-            <div class="premium-footer-links">
-
-
-                <a href="${createLink(uri: '/')}">
-
-                    Home
-
-                </a>
-
+                </sec:ifNotLoggedIn>
 
                 <sec:ifLoggedIn>
 
-
-                    <g:link
-                        controller="car"
-                        action="index">
-
-                        Fleet
-
-                    </g:link>
-
-
                     <g:link
                         controller="rental"
-                        action="index">
+                        action="index"
+                        class="cinematic-footer-action">
 
-                        Rentals
+                        <i class="bi bi-calendar-check"></i>
+                        My Rentals
 
                     </g:link>
 
+                </sec:ifLoggedIn>
+
+            </div>
+
+        </div>
+
+        <div class="cinematic-footer-bottom">
+
+            <div class="premium-footer-brand">
+
+                <div class="premium-footer-logo">
+                    <i class="bi bi-car-front-fill"></i>
+                </div>
+
+                <div>
+                    <div class="premium-footer-name">
+                        Car Rental
+                    </div>
+
+                    <div class="premium-footer-caption">
+                        Premium Mobility Management
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="premium-footer-links">
+
+                <a href="${createLink(uri: '/')}">
+                    Home
+                </a>
+
+                <sec:ifLoggedIn>
+
+                    <g:link controller="car" action="index">
+                        Fleet
+                    </g:link>
+
+                    <g:link controller="rental" action="index">
+                        Rentals
+                    </g:link>
+
+                    <g:link controller="rentalChat" action="index">
+                        Messages
+                    </g:link>
 
                     <sec:ifAnyGranted roles="ROLE_ADMIN">
 
-                        <g:link
-                            controller="dashboard"
-                            action="index">
-
+                        <g:link controller="dashboard" action="index">
                             Dashboard
-
                         </g:link>
 
                     </sec:ifAnyGranted>
 
-
                 </sec:ifLoggedIn>
-
 
             </div>
 
+            <button
+                type="button"
+                class="cinematic-footer-top-button"
+                data-scroll-top
+                aria-label="Back to top">
+
+                <i class="bi bi-arrow-up"></i>
+
+            </button>
 
         </div>
-
-
-
-        <div class="premium-footer-divider"></div>
-
-
 
         <div class="premium-footer-bottom">
 
-
             <span>
-
                 © 2026 Car Rental Management System
-
             </span>
-
-
 
             <span class="system-online">
-
-
                 <span class="online-dot"></span>
-
-
                 System Online
-
-
             </span>
 
-
         </div>
-
 
     </div>
 
@@ -2033,6 +2062,14 @@
 
 
 <asset:javascript src="application.js"/>
+
+<script>
+    document.querySelectorAll('[data-scroll-top]').forEach((button) => {
+        button.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+</script>
 
 
 </body>

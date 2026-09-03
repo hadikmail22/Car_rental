@@ -1251,16 +1251,355 @@
                 text-align:center;
             }
         }
+
+        .home-hero.home-hero-gallery{
+            min-height:720px;
+            display:block;
+            padding:128px 0 105px;
+        }
+
+        .home-hero-compact{
+            position:relative;
+            z-index:3;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:26px;
+            margin-bottom:24px;
+            padding-bottom:18px;
+            border-bottom:1px solid var(--home-line);
+        }
+
+        .home-hero-message{
+            min-width:0;
+            display:flex;
+            align-items:center;
+            gap:18px;
+        }
+
+        .home-hero-compact .home-eyebrow{
+            flex:0 0 auto;
+            margin:0;
+            white-space:nowrap;
+        }
+
+        .home-hero-compact .home-eyebrow::after{
+            width:30px;
+        }
+
+        .home-hero-compact h1{
+            flex:0 0 auto;
+            margin:0;
+            max-width:none;
+            color:var(--home-white);
+            font-size:clamp(1.15rem,1.75vw,1.7rem);
+            line-height:1.15;
+            letter-spacing:-.045em;
+            white-space:nowrap;
+        }
+
+        .home-hero-compact .home-hero-copy{
+            max-width:335px;
+            margin:0;
+            color:var(--home-muted);
+            font-size:.7rem;
+            line-height:1.55;
+        }
+
+        .home-hero-compact .home-actions{
+            flex:0 0 auto;
+            flex-wrap:nowrap;
+            gap:8px;
+        }
+
+        .home-hero-compact .home-button{
+            min-height:40px;
+            padding:0 15px;
+            font-size:.68rem;
+        }
+
+        .luxury-gallery-heading{
+            position:relative;
+            z-index:3;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:20px;
+            margin-bottom:12px;
+            color:var(--home-white);
+        }
+
+        .luxury-gallery-heading span{
+            color:var(--home-gold-light);
+            font-size:.68rem;
+            font-weight:700;
+            letter-spacing:.12em;
+            text-transform:uppercase;
+        }
+
+        .luxury-gallery-heading small{
+            color:var(--home-muted);
+            font-size:.62rem;
+        }
+
+        .luxury-gallery{
+            position:relative;
+            z-index:3;
+            width:100%;
+            height:430px;
+            display:flex;
+            gap:9px;
+            overflow:hidden;
+        }
+
+        .luxury-gallery-item{
+            position:relative;
+            min-width:0;
+            flex:1 1 0;
+            overflow:hidden;
+            color:#fff;
+            background:var(--home-panel);
+            border:1px solid var(--home-line);
+            border-radius:0;
+            text-decoration:none;
+            box-shadow:0 18px 45px rgba(0,0,0,.18);
+            isolation:isolate;
+            transition:
+                flex-grow .48s cubic-bezier(.2,.75,.25,1),
+                border-color .25s ease,
+                box-shadow .25s ease,
+                transform .25s ease;
+        }
+
+        .luxury-gallery:hover .luxury-gallery-item{
+            flex-grow:1;
+        }
+
+        .luxury-gallery .luxury-gallery-item:hover,
+        .luxury-gallery .luxury-gallery-item:focus-visible{
+            flex-grow:3.8;
+            color:#fff;
+            border-color:var(--home-gold);
+            outline:none;
+            box-shadow:6px 6px 0 rgba(49,120,198,.26);
+            transform:translateY(-2px);
+        }
+
+        .luxury-gallery-image,
+        .luxury-gallery-fallback{
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+        }
+
+        .luxury-gallery-image{
+            display:block;
+            object-fit:cover;
+            transform:scale(1.01);
+            transition:transform .65s cubic-bezier(.2,.75,.25,1),filter .3s ease;
+        }
+
+        .luxury-gallery-item:hover .luxury-gallery-image,
+        .luxury-gallery-item:focus-visible .luxury-gallery-image{
+            transform:scale(1.075);
+        }
+
+        .luxury-gallery-fallback{
+            display:grid;
+            place-items:center;
+            color:var(--home-gold);
+            background:
+                radial-gradient(circle,rgba(247,220,111,.22),transparent 40%),
+                var(--home-panel-2);
+            font-size:4.5rem;
+        }
+
+        .luxury-gallery-shade{
+            position:absolute;
+            inset:0;
+            z-index:1;
+            pointer-events:none;
+            background:
+                linear-gradient(to top,rgba(8,12,18,.92),rgba(8,12,18,.12) 58%,transparent 78%),
+                linear-gradient(to right,rgba(8,12,18,.35),transparent 45%);
+        }
+
+        .luxury-gallery-rank{
+            position:absolute;
+            top:14px;
+            left:14px;
+            z-index:2;
+            min-width:31px;
+            height:27px;
+            display:grid;
+            place-items:center;
+            padding:0 7px;
+            color:#171717;
+            background:var(--home-gold);
+            border:1px solid rgba(255,255,255,.45);
+            font-size:.61rem;
+            font-weight:800;
+        }
+
+        .luxury-gallery-details{
+            position:absolute;
+            z-index:2;
+            left:18px;
+            right:18px;
+            bottom:17px;
+            min-width:210px;
+            display:flex;
+            flex-direction:column;
+            align-items:flex-start;
+            opacity:0;
+            transform:translateY(10px);
+            transition:opacity .3s ease .08s,transform .3s ease .08s;
+        }
+
+        .luxury-gallery-item:hover .luxury-gallery-details,
+        .luxury-gallery-item:focus-visible .luxury-gallery-details{
+            opacity:1;
+            transform:translateY(0);
+        }
+
+        .luxury-gallery-kicker{
+            margin-bottom:7px;
+            color:var(--home-gold);
+            font-size:.59rem;
+            font-weight:700;
+            letter-spacing:.1em;
+            text-transform:uppercase;
+        }
+
+        .luxury-gallery-details strong{
+            color:#fff;
+            font-size:1.18rem;
+            line-height:1.15;
+            letter-spacing:-.04em;
+        }
+
+        .luxury-gallery-meta{
+            display:flex;
+            align-items:center;
+            gap:7px;
+            margin-top:7px;
+            color:#d9dde4;
+            font-size:.67rem;
+        }
+
+        .luxury-gallery-empty{
+            position:relative;
+            z-index:3;
+            min-height:330px;
+            display:grid;
+            place-items:center;
+            color:var(--home-muted);
+            background:var(--home-panel);
+            border:1px dashed var(--home-line);
+        }
+
+        @media (max-width:1199px){
+            .home-hero-message{
+                flex-wrap:wrap;
+                gap:10px 16px;
+            }
+
+            .home-hero-compact .home-hero-copy{
+                max-width:520px;
+            }
+
+            .luxury-gallery{
+                height:395px;
+            }
+        }
+
+        @media (max-width:991px){
+            .home-hero.home-hero-gallery{
+                padding:132px 0 100px;
+            }
+
+            .home-hero-compact{
+                align-items:flex-start;
+                flex-direction:column;
+            }
+
+            .home-hero-compact .home-actions{
+                width:100%;
+            }
+
+            .home-hero-compact .home-button{
+                flex:1;
+            }
+
+            .luxury-gallery{
+                height:360px;
+            }
+
+            .luxury-gallery .luxury-gallery-item:hover,
+            .luxury-gallery .luxury-gallery-item:focus-visible{
+                flex-grow:4.4;
+            }
+        }
+
+        @media (max-width:640px){
+            .home-hero.home-hero-gallery{
+                padding:120px 0 92px;
+            }
+
+            .home-hero-compact h1{
+                width:100%;
+                font-size:1.22rem;
+                white-space:normal;
+            }
+
+            .home-hero-compact .home-hero-copy{
+                max-width:none;
+            }
+
+            .home-hero-compact .home-actions{
+                flex-direction:column;
+            }
+
+            .luxury-gallery-heading{
+                align-items:flex-start;
+                flex-direction:column;
+                gap:4px;
+            }
+
+            .luxury-gallery{
+                height:330px;
+                gap:12px;
+                overflow-x:auto;
+                scroll-snap-type:x mandatory;
+                scrollbar-width:none;
+            }
+
+            .luxury-gallery::-webkit-scrollbar{
+                display:none;
+            }
+
+            .luxury-gallery-item,
+            .luxury-gallery:hover .luxury-gallery-item,
+            .luxury-gallery .luxury-gallery-item:hover,
+            .luxury-gallery .luxury-gallery-item:focus-visible{
+                min-width:82%;
+                flex:0 0 82%;
+                scroll-snap-align:start;
+                transform:none;
+            }
+
+            .luxury-gallery-details{
+                opacity:1;
+                transform:none;
+            }
+        }
     </style>
 
     <asset:stylesheet src="theme-advent.css"/>
 </head>
 
 <body>
-
-<g:set var="heroOfferItem" value="${landingCars ? landingCars[0] : null}"/>
-<g:set var="heroOffer" value="${heroOfferItem ? heroOfferItem.offer : null}"/>
-<g:set var="heroCar" value="${heroOfferItem ? heroOfferItem.car : (featuredCars ? featuredCars[0] : null)}"/>
 
 <div class="home-shell">
 
@@ -1291,24 +1630,50 @@
 
                 <div class="home-nav-links">
 
-                    <a href="${createLink(uri:'/')}">
-                        Home
+                    <a
+                        href="${createLink(uri:'/')}"
+                        class="home-nav-link active"
+                        aria-label="Home">
+
+                        <i class="bi bi-house-door"></i>
+                        <span>Home</span>
                     </a>
 
-                    <a href="#offers">
-                        ${activeOfferCount ? 'Offers' : 'Top Picks'}
+                    <a
+                        href="#offers"
+                        class="home-nav-link"
+                        aria-label="${activeOfferCount ? 'Offers' : 'Top Picks'}">
+
+                        <i class="bi bi-tags"></i>
+                        <span>${activeOfferCount ? 'Offers' : 'Top Picks'}</span>
                     </a>
 
-                    <a href="#featured">
-                        Fleet
+                    <a
+                        href="#featured"
+                        class="home-nav-link"
+                        aria-label="Fleet">
+
+                        <i class="bi bi-car-front"></i>
+                        <span>Fleet</span>
                     </a>
 
-                    <a href="#experience">
-                        How It Works
+                    <a
+                        href="#experience"
+                        class="home-nav-link"
+                        aria-label="How it works">
+
+                        <i class="bi bi-compass"></i>
+                        <span>How It Works</span>
                     </a>
 
-                    <g:link controller="car" action="index">
-                        Browse Cars
+                    <g:link
+                        controller="car"
+                        action="index"
+                        class="home-nav-link"
+                        aria-label="Browse cars">
+
+                        <i class="bi bi-search"></i>
+                        <span>Browse Cars</span>
                     </g:link>
 
                 </div>
@@ -1353,152 +1718,145 @@
     </nav>
 
 
-    <section class="home-hero">
+    <section class="home-hero home-hero-gallery">
 
         <div class="container">
 
-            <div class="home-hero-grid">
+            <div class="home-hero-compact">
 
-                <div>
+                <div class="home-hero-message">
 
-                    <div class="home-eyebrow">
+                    <span class="home-eyebrow">
                         Premium Car Rental
-                    </div>
+                    </span>
 
                     <h1>
-                        Drive luxury.
-                        <br/>
-                        Rent with
+                        Drive luxury. Rent with
                         <span class="gold">confidence.</span>
                     </h1>
 
                     <p class="home-hero-copy">
-                        Browse real vehicles, compare daily prices and
-                        reserve your next car through a simple rental
-                        experience built around clear availability.
+                        Explore our highest daily-rate vehicles and choose your next drive.
                     </p>
-
-                    <div class="home-actions">
-
-                        <g:link
-                            controller="car"
-                            action="index"
-                            class="home-button home-button-primary">
-
-                            <i class="bi bi-car-front"></i>
-                            Explore Cars
-
-                        </g:link>
-
-
-                        <a
-                            href="#featured"
-                            class="home-button home-button-ghost">
-
-                            <i class="bi bi-stars"></i>
-                            Featured Fleet
-
-                        </a>
-
-                    </div>
 
                 </div>
 
 
-                <div class="hero-car-stage">
+                <div class="home-actions">
 
-                    <div class="hero-car-card">
+                    <g:link
+                        controller="car"
+                        action="index"
+                        class="home-button home-button-primary">
 
-                        <g:if test="${heroCar}">
+                        <i class="bi bi-car-front"></i>
+                        Explore Cars
 
-                            <g:if test="${heroCar.carImage}">
+                    </g:link>
+
+
+                    <a
+                        href="#featured"
+                        class="home-button home-button-ghost">
+
+                        <i class="bi bi-stars"></i>
+                        Featured Fleet
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="luxury-gallery-heading">
+
+                <span>
+                    Highest Daily Rates
+                </span>
+
+                <small>
+                    Hover over a vehicle to explore it
+                </small>
+
+            </div>
+
+
+            <g:if test="${highestPriceCars}">
+
+                <div class="luxury-gallery" data-luxury-gallery>
+
+                    <g:each
+                        in="${highestPriceCars}"
+                        var="premiumCar"
+                        status="premiumIndex">
+
+                        <g:link
+                            controller="car"
+                            action="show"
+                            id="${premiumCar.id}"
+                            class="luxury-gallery-item"
+                            aria-label="View ${premiumCar.brand} ${premiumCar.model}">
+
+                            <g:if test="${premiumCar.carImage}">
 
                                 <img
                                     src="${createLink(
                                             controller:'car',
                                             action:'image',
-                                            id:heroCar.id
+                                            id:premiumCar.id
                                     )}"
-                                    alt="${heroCar.brand} ${heroCar.model}"
-                                    class="hero-car-image"/>
+                                    alt="${premiumCar.brand} ${premiumCar.model}"
+                                    class="luxury-gallery-image"/>
 
                             </g:if><g:else>
 
-                                <div class="hero-car-fallback">
+                                <span class="luxury-gallery-fallback">
                                     <i class="bi bi-car-front-fill"></i>
-                                </div>
-
-                            </g:else>
-
-
-                            <g:if test="${heroOffer}">
-
-                                <span class="hero-car-badge hero-car-badge-offer">
-                                    SAVE ${heroOffer.percentage}%
-                                </span>
-
-                            </g:if><g:else>
-
-                                <span class="hero-car-badge">
-                                    AVAILABLE
                                 </span>
 
                             </g:else>
 
 
-                            <div class="hero-car-info">
+                            <span class="luxury-gallery-shade"></span>
 
-                                <div>
 
-                                    <span class="hero-car-kicker">
-                                        ${heroOffer ? heroOffer.name : 'Featured Vehicle'}
-                                    </span>
+                            <span class="luxury-gallery-rank">
+                                <g:formatNumber number="${premiumIndex + 1}" format="00"/>
+                            </span>
 
-                                    <h2 class="hero-car-name">
-                                        ${heroCar.brand} ${heroCar.model}
-                                    </h2>
 
-                                </div>
+                            <span class="luxury-gallery-details">
 
-                                <g:if test="${heroOffer}">
+                                <span class="luxury-gallery-kicker">
+                                    ${premiumCar.category?.name ?: 'Premium Vehicle'}
+                                </span>
 
-                                    <div class="hero-car-price hero-car-price-offer">
+                                <strong>
+                                    ${premiumCar.brand} ${premiumCar.model}
+                                </strong>
 
-                                        <span class="hero-car-price-old">
-                                            ${heroOffer.basePrice}
-                                        </span>
+                                <span class="luxury-gallery-meta">
+                                    ${premiumCar.year}
+                                    <span aria-hidden="true">·</span>
+                                    ${premiumCar.pricePerDay} / day
+                                </span>
 
-                                        <span class="hero-car-price-new">
-                                            ${heroOffer.dailyPrice}
-                                            <small>/ day</small>
-                                        </span>
+                            </span>
 
-                                    </div>
+                        </g:link>
 
-                                </g:if><g:else>
-
-                                    <div class="hero-car-price">
-                                        ${heroCar.pricePerDay}
-                                        <small>/ day</small>
-                                    </div>
-
-                                </g:else>
-
-                            </div>
-
-                        </g:if><g:else>
-
-                            <div class="hero-car-fallback">
-                                <i class="bi bi-car-front-fill"></i>
-                            </div>
-
-                        </g:else>
-
-                    </div>
+                    </g:each>
 
                 </div>
 
-            </div>
+            </g:if><g:else>
+
+                <div class="luxury-gallery-empty">
+                    No available vehicles right now.
+                </div>
+
+            </g:else>
 
         </div>
 
@@ -1635,6 +1993,18 @@
 
 
             <g:if test="${landingCars}">
+
+                <g:set
+                    var="coverflowFirstItem"
+                    value="${landingCars[0]}"/>
+
+                <g:set
+                    var="coverflowFirstCar"
+                    value="${coverflowFirstItem.car}"/>
+
+                <g:set
+                    var="coverflowFirstOffer"
+                    value="${coverflowFirstItem.offer}"/>
 
                 <div
                     class="coverflow"
@@ -1790,23 +2160,23 @@
                             <span
                                 class="coverflow-caption-label"
                                 data-coverflow-caption-label>
-                                ${heroOffer ? heroOffer.name : 'Available now'}
+                                ${coverflowFirstOffer ? coverflowFirstOffer.name : 'Available now'}
                             </span>
 
                             <h3
                                 class="coverflow-caption-title"
                                 data-coverflow-caption-title>
-                                ${heroCar.brand} ${heroCar.model}
+                                ${coverflowFirstCar.brand} ${coverflowFirstCar.model}
                             </h3>
 
                             <p
                                 class="coverflow-caption-subtitle"
                                 data-coverflow-caption-subtitle>
-                                ${heroCar.year}
+                                ${coverflowFirstCar.year}
                                 ·
-                                ${heroCar.category?.name ?: 'Vehicle'}
-                                <g:if test="${heroOffer}">
-                                    · Ends ${heroOffer.endDate}
+                                ${coverflowFirstCar.category?.name ?: 'Vehicle'}
+                                <g:if test="${coverflowFirstOffer}">
+                                    · Ends ${coverflowFirstOffer.endDate}
                                 </g:if>
                             </p>
 
@@ -1814,7 +2184,7 @@
 
                         <div class="coverflow-caption-price">
                             <span data-coverflow-caption-price>
-                                ${heroOffer ? heroOffer.dailyPrice : heroCar.pricePerDay}
+                                ${coverflowFirstOffer ? coverflowFirstOffer.dailyPrice : coverflowFirstCar.pricePerDay}
                             </span>
                             <small>/ day</small>
                         </div>
@@ -2127,20 +2497,99 @@
     </section>
 
 
-    <footer class="home-footer">
+    <footer class="home-footer home-cinematic-footer">
 
-        <div class="container">
+        <div class="home-footer-grid"></div>
 
-            <div class="home-footer-row">
+        <div class="home-footer-glow"></div>
 
-                <span>
-                    Car Rental Management System
+        <div class="home-footer-marquee" aria-hidden="true">
+            <div>
+                PREMIUM MOBILITY <span>✦</span> DRIVE WITH CONFIDENCE <span>✦</span> YOUR NEXT JOURNEY STARTS HERE <span>✦</span>
+                PREMIUM MOBILITY <span>✦</span> DRIVE WITH CONFIDENCE <span>✦</span> YOUR NEXT JOURNEY STARTS HERE <span>✦</span>
+            </div>
+        </div>
+
+        <div class="home-footer-word" aria-hidden="true">
+            DRIVE
+        </div>
+
+        <div class="container home-footer-content">
+
+            <div class="home-footer-main">
+
+                <span class="home-footer-kicker">
+                    CAR RENTAL MANAGEMENT
                 </span>
 
-                <span>
-                    © 2026 Car Rental
-                </span>
+                <h2>
+                    Ready for your next <span>drive?</span>
+                </h2>
 
+                <p>
+                    Choose your car, reserve your dates and start your journey with confidence.
+                </p>
+
+                <div class="home-footer-actions">
+
+                    <g:link
+                        controller="car"
+                        action="index"
+                        class="home-footer-action home-footer-action-primary">
+
+                        <i class="bi bi-car-front-fill"></i>
+                        Browse Fleet
+
+                    </g:link>
+
+                    <a
+                        href="${createLink(uri:'/login/auth')}"
+                        class="home-footer-action">
+
+                        <i class="bi bi-person"></i>
+                        Sign In
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="home-footer-bottom">
+
+                <div class="home-footer-brand">
+
+                    <span class="home-footer-logo">
+                        <i class="bi bi-car-front-fill"></i>
+                    </span>
+
+                    <span>
+                        <strong>Car Rental</strong>
+                        <small>Premium Mobility</small>
+                    </span>
+
+                </div>
+
+                <div class="home-footer-links">
+                    <a href="#offers">Offers</a>
+                    <a href="#featured">Fleet</a>
+                    <a href="#experience">How It Works</a>
+                </div>
+
+                <button
+                    type="button"
+                    class="home-footer-top-button"
+                    data-home-scroll-top
+                    aria-label="Back to top">
+
+                    <i class="bi bi-arrow-up"></i>
+
+                </button>
+
+            </div>
+
+            <div class="home-footer-legal">
+                © 2026 Car Rental Management System
             </div>
 
         </div>
@@ -2152,6 +2601,12 @@
 <asset:javascript src="application.js"/>
 
 <script>
+    document.querySelectorAll('[data-home-scroll-top]').forEach((button) => {
+        button.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
     (() => {
         document.querySelectorAll('[data-coverflow]').forEach((root) => {
             const stage = root.querySelector('[data-coverflow-stage]');

@@ -53,6 +53,24 @@ class HomeController {
         List<Car> featuredCars =
                 availableCarList.take(3)
 
+        List<Car> highestPriceCars =
+                availableCarList
+                        .toList()
+                        .sort { Car first, Car second ->
+
+                            int priceComparison =
+                                    (second.pricePerDay ?: 0.0G) <=>
+                                    (first.pricePerDay ?: 0.0G)
+
+                            if (priceComparison != 0) {
+                                return priceComparison
+                            }
+
+                            (second.id ?: 0L) <=>
+                                    (first.id ?: 0L)
+                        }
+                        .take(6)
+
 
         Map<Long, List<Map>> pricingHighlightsByCar =
                 pricingService.getPricingHighlightsForCars(
@@ -145,6 +163,7 @@ class HomeController {
                 totalCars    : totalCars,
                 availableCars: availableCars,
                 featuredCars : featuredCars,
+                highestPriceCars: highestPriceCars,
                 landingCars  : landingCars,
                 activeOfferCount: activeOfferCount
         ]
